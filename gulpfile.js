@@ -1,5 +1,8 @@
 'use strict';
 
+const dotenv = require('dotenv');
+dotenv.config({silent: true});
+
 const gulp = require('gulp'),
   $ = require('gulp-load-plugins')(),
   del = require('del'),
@@ -58,6 +61,7 @@ gulp.task('scripts:dev', ['eslint'], () => {
     })
     .pipe(source('app.js'))
     .pipe(buffer())
+    .pipe($.envify(process.env))
     .pipe(gulp.dest(basePaths.dest + folders.scripts))
     .pipe($.livereload());
 });
@@ -66,6 +70,7 @@ gulp.task('scripts:prod', ['eslint'], () => {
   return getCommonScriptsTransform({debug: false})
     .pipe(source('app.js'))
     .pipe(buffer())
+    .pipe($.envify(process.env))
     .pipe($.uglify())
     .pipe(gulp.dest(basePaths.dest + folders.scripts));
 });
