@@ -42,13 +42,28 @@ export class App extends React.Component {
       .sort((key1, key2) => key1 - key2)
       .first();
     if (typeof lastCompletedDay !== 'undefined') {
-      // const maxActualDate = repetitionsGroupedByPlannedDay
-      //   .get(lastCompletedDay)
-      //   .max((rep1, rep2) => moment(rep1.get('actualDate')).diff(moment(rep2.get('actualDate')), 'days'));
-      // const firstAvailableDayAfterLastCompletedDay = repetitionsGroupedByPlannedDay
-      //   .keySeq()
-      //   .sort((key1, key2) => key1 - key2)
-      //   .find(day => day > lastCompletedDay && day <= lastCompletedDay + moment(this.props.date).diff(moment(maxActualDate), 'days'));
+      const maxActualDate = repetitionsGroupedByPlannedDay
+        .get(lastCompletedDay)
+        .max((rep1, rep2) => moment(rep1.get('actualDate')).diff(moment(rep2.get('actualDate')), 'days'))
+        .get('actualDate');
+      if (this.props.date <= maxActualDate) {
+        return repetitions.map(repetition =>
+          repetition.set('today',
+            repetition.get('actualDate') === maxActualDate
+          )
+        );
+      } else {
+        const firstAvailableDayAfterLastCompletedDay = repetitionsGroupedByPlannedDay
+          .keySeq()
+          .sort((key1, key2) => key1 - key2)
+          .find(day => day > lastCompletedDay && day <= lastCompletedDay + this.dateDiff(this.props.date, maxActualDate));
+        return repetitions.map(repetition =>
+          repetition.set('today',
+            repetition.get('plannedDay') === firstAvailableDayAfterLastCompletedDay &&
+            (!repetition.get('actualDate') || repetition.get('actualDate') >= this.props.date)
+          )
+        );
+      }
     } else if (repetitions.size) {
       return repetitions.map(repetition =>
         repetition.set('today',
@@ -60,6 +75,10 @@ export class App extends React.Component {
     } else {
       return repetitions;
     }
+  }
+
+  memorize (repetition) {
+    this.props.memorizeRepetition(repetition.get('uuid'));
   }
 
   render () {
@@ -133,7 +152,15 @@ export class App extends React.Component {
                     <td>{repetition.get('plannedDay')}</td>
                     <td>{repetition.get('actualDate')}</td>
                     <td>{repetition.get('updatedAt')}</td>
-                    <td></td>
+                    <td>
+                      {repetition.get('today') && !repetition.get('actualDate') ?
+                        <button
+                            onClick={this.memorize.bind(this, repetition)}>
+                          Memorize
+                        </button> :
+                        null
+                      }
+                    </td>
                   </tr>
                 ))}
               </tbody>

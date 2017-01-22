@@ -74,6 +74,28 @@ function getUpdatedState (state, action) {
           .set('updatedAt', currentTime)
       );
   }
+  case 'MEMORIZE_REPETITION': {
+    const currentTime = Date.now();
+    const index = state.get('repetitions').findIndex(repetition => repetition.get('uuid') === action.uuid);
+    const updatedRepetition = state.getIn(['repetitions', index])
+      .set('actualDate', state.get('date'))
+      .set('updatedAt', currentTime);
+    return state
+      .setIn(['repetitions', index], updatedRepetition)
+      .update('repetitions', repetitions => updatedRepetition.get('seq') < constants.MAX_REPETITIONS ?
+        repetitions.push(fromJS({
+          uuid: uuid.v4(),
+          flashcardUuid: updatedRepetition.get('flashcardUuid'),
+          seq: updatedRepetition.get('seq') + 1,
+          plannedDay: updatedRepetition.get('seq') === 1 ?
+            updatedRepetition.get('plannedDay') + 5 + Math.floor(Math.random() * 6) :
+            updatedRepetition.get('plannedDay') + 20 + Math.floor(Math.random() * 11),
+          createdAt: currentTime,
+          updatedAt: currentTime
+        })) :
+        repetitions
+      );
+  }
   default:
     return state;
   }

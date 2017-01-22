@@ -13,3 +13,7 @@ export function createFlashcard () {
 export function changeFlashcardFrontText (uuid, text) {
   return {type: 'CHANGE_FLASHCARD_FRONT_TEXT', uuid, text};
 }
+
+export function memorizeRepetition (uuid) {
+  return {type: 'MEMORIZE_REPETITION', uuid};
+}
