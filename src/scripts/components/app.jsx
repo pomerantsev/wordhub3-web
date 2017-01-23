@@ -7,6 +7,10 @@ import * as actionCreators from '../data/action-creators';
 
 export class App extends React.Component {
 
+  componentWillMount () {
+    this.props.getData(this.props.syncedAt);
+  }
+
   onChangeDate (event) {
     this.props.changeDate(event.target.value);
   }
@@ -177,7 +181,8 @@ export const AppContainer = connect(
     newFlashcardText: state.get('newFlashcardText'),
     flashcards: state.get('flashcards'),
     repetitions: state.get('repetitions'),
-    date: state.get('date')
+    date: state.get('date'),
+    syncedAt: state.get('syncedAt')
   }),
   actionCreators
 )(App);

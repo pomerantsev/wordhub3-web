@@ -1,3 +1,5 @@
+import * as sync from './sync';
+
 export function changeDate (date) {
   return {type: 'CHANGE_DATE', date};
 }
@@ -16,4 +18,11 @@ export function changeFlashcardFrontText (uuid, text) {
 
 export function memorizeRepetition (uuid) {
   return {type: 'MEMORIZE_REPETITION', uuid};
+}
+
+export function getData (timestamp) {
+  return {
+    type: 'GET_DATA',
+    promise: sync.getData(timestamp)
+  };
 }

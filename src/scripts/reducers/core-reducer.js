@@ -8,7 +8,8 @@ const DEFAULT_INITIAL_STATE = fromJS({
   newFlashcardText: '',
   flashcards: [],
   repetitions: [],
-  date: moment().format('YYYY-MM-DD')
+  date: moment().format('YYYY-MM-DD'),
+  syncedAt: 0
 });
 
 const INITIAL_STATE = (() => {
@@ -94,6 +95,50 @@ function getUpdatedState (state, action) {
           updatedAt: currentTime
         })) :
         repetitions
+      );
+  }
+  case 'GET_DATA': {
+    const currentTime = Date.now();
+    const result = fromJS(action.result);
+    const existingFlashcards = result.get('flashcards').filter(receivedFlashcard =>
+        state.get('flashcards').find(flashcard => flashcard.get('uuid') === receivedFlashcard.get('uuid')));
+    const newFlashcards = result.get('flashcards').filter(receivedFlashcard =>
+        !state.get('flashcards').find(flashcard => flashcard.get('uuid') === receivedFlashcard.get('uuid')));
+    const existingRepetitions = result.get('repetitions').filter(receivedRepetition =>
+        state.get('repetitions').find(repetition => repetition.get('uuid') === receivedRepetition.get('uuid')));
+    const newRepetitions = result.get('repetitions').filter(receivedRepetition =>
+        !state.get('repetitions').find(repetition => repetition.get('uuid') === receivedRepetition.get('uuid')));
+    return state
+      .set('syncedAt', result.get('updatedAt'))
+      .update('flashcards', flashcards => flashcards
+        .map(flashcard => {
+          const flashcardFromServer = existingFlashcards
+            .find(existingFlashcard => existingFlashcard.get('uuid') === flashcard.get('uuid'));
+          return flashcardFromServer ?
+            flashcard
+              .set('frontText', flashcardFromServer.get('frontText'))
+              .set('updatedAt', currentTime) :
+            flashcard;
+        })
+        .concat(newFlashcards.map(flashcardFromServer => flashcardFromServer.merge({
+          createdAt: currentTime,
+          updatedAt: currentTime
+        })))
+      )
+      .update('repetitions', repetitions => repetitions
+        .map(repetition => {
+          const repetitionFromServer = existingRepetitions
+            .find(existingRepetition => existingRepetition.get('uuid') === repetition.get('uuid'));
+          return repetitionFromServer ?
+            repetition
+              .set('actualDate', repetitionFromServer.get('actualDate'))
+              .set('updatedAt', currentTime) :
+            repetition;
+        })
+        .concat(newRepetitions.map(repetitionFromServer => repetitionFromServer.merge({
+          createdAt: currentTime,
+          updatedAt: currentTime
+        })))
       );
   }
   default:
