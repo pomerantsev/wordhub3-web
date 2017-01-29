@@ -1,3 +1,5 @@
+import 'whatwg-fetch';
+
 import React from 'react';
 import {connect} from 'react-redux';
 import moment from 'moment';
@@ -7,8 +9,16 @@ import * as actionCreators from '../data/action-creators';
 
 export class App extends React.Component {
 
-  componentWillMount () {
-    this.props.getData(this.props.syncedAt);
+  getDataFromServer () {
+    this.props.getData(this.props.lastSyncServerTime);
+  }
+
+  sendDataToServer () {
+    this.props.sendData();
+  }
+
+  resetSendDataTime () {
+    this.props.resetSendDataTime();
   }
 
   onChangeDate (event) {
@@ -89,6 +99,29 @@ export class App extends React.Component {
     return (
       <div>
         <h1>Wordhub</h1>
+
+        <div>
+          <button
+              onClick={this.getDataFromServer.bind(this)}>
+            Get data from server
+          </button>
+          Latest server time: {new Date(this.props.lastSyncServerTime).toString()}
+        </div>
+
+        <div>
+          <button
+              onClick={this.sendDataToServer.bind(this)}>
+            Send data to server
+          </button>
+          Latest client time: {new Date(this.props.lastSyncClientTime).toString()}
+        </div>
+
+        <div>
+          <button
+              onClick={this.resetSendDataTime.bind(this)}>
+            Reset send data time
+          </button>
+        </div>
 
         <input
             type="date"
@@ -182,7 +215,8 @@ export const AppContainer = connect(
     flashcards: state.get('flashcards'),
     repetitions: state.get('repetitions'),
     date: state.get('date'),
-    syncedAt: state.get('syncedAt')
+    lastSyncServerTime: state.get('lastSyncServerTime'),
+    lastSyncClientTime: state.get('lastSyncClientTime')
   }),
   actionCreators
 )(App);

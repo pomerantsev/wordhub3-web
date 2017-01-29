@@ -26,3 +26,37 @@ export function getData (timestamp) {
     promise: sync.getData(timestamp)
   };
 }
+
+export function sendData () {
+  return function (dispatch, getState) {
+    const syncSince = getState().get('lastSyncClientTime') || 0;
+    const flashcards = getState().get('flashcards')
+      .filter(flashcard => flashcard.get('updatedAt') > syncSince)
+      .map(flashcard => ({
+        uuid: flashcard.get('uuid'),
+        frontText: flashcard.get('frontText')
+      }));
+    const repetitions = getState().get('repetitions')
+      .filter(repetition => repetition.get('updatedAt') > syncSince)
+      .map(repetition => ({
+        uuid: repetition.get('uuid'),
+        flashcardUuid: repetition.get('flashcardUuid'),
+        seq: repetition.get('seq'),
+        plannedDay: repetition.get('plannedDay'),
+        actualDate: repetition.get('actualDate')
+      }));
+
+    // TODO: we have to ensure data is sorted before sending it.
+    return {
+      type: 'SEND_DATA',
+      promise: sync.sendData({
+        flashcards,
+        repetitions
+      })
+    };
+  };
+}
+
+export function resetSendDataTime () {
+  return {type: 'RESET_SEND_DATA_TIME'};
+}

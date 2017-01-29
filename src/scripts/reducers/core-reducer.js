@@ -9,7 +9,9 @@ const DEFAULT_INITIAL_STATE = fromJS({
   flashcards: [],
   repetitions: [],
   date: moment().format('YYYY-MM-DD'),
-  syncedAt: 0
+  lastSyncServerTime: 0,
+  lastSyncClientTime: 0,
+  lastSyncRequestClientTime: 0
 });
 
 const INITIAL_STATE = (() => {
@@ -38,6 +40,8 @@ function getUpdatedState (state, action) {
     return state
       .set('newFlashcardText', action.text);
   case 'CREATE_FLASHCARD': {
+    // TODO: make sure a repetition is never planned for a day earlier than
+    // the earliest not completed one.
     const currentTime = Date.now();
     if (state.get('newFlashcardText')) {
       const flashcardUuid = uuid.v4();
@@ -109,7 +113,7 @@ function getUpdatedState (state, action) {
     const newRepetitions = result.get('repetitions').filter(receivedRepetition =>
         !state.get('repetitions').find(repetition => repetition.get('uuid') === receivedRepetition.get('uuid')));
     return state
-      .set('syncedAt', result.get('updatedAt'))
+      .set('lastSyncServerTime', result.get('updatedAt'))
       .update('flashcards', flashcards => flashcards
         .map(flashcard => {
           const flashcardFromServer = existingFlashcards
@@ -141,6 +145,23 @@ function getUpdatedState (state, action) {
         })))
       );
   }
+
+  case 'SEND_DATA_REQUEST': {
+    return state
+      .set('lastSyncRequestClientTime', Date.now());
+  }
+
+  case 'SEND_DATA': {
+    // TODO: are we sure it's the same request?
+    return state
+      .set('lastSyncClientTime', state.get('lastSyncRequestClientTime'));
+  }
+
+  case 'RESET_SEND_DATA_TIME': {
+    return state
+      .set('lastSyncClientTime', 0);
+  }
+
   default:
     return state;
   }
