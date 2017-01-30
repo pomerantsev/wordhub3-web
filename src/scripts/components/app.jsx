@@ -9,12 +9,13 @@ import * as actionCreators from '../data/action-creators';
 
 export class App extends React.Component {
 
-  getDataFromServer () {
-    this.props.getData(this.props.lastSyncServerTime);
+  componentDidMount () {
+    // TODO: make sure to display a spinner when the page opens
+    // while we are fetching latest data from server.
   }
 
-  sendDataToServer () {
-    this.props.sendData();
+  syncDataWithServer () {
+    this.props.syncData();
   }
 
   resetSendDataTime () {
@@ -102,17 +103,14 @@ export class App extends React.Component {
 
         <div>
           <button
-              onClick={this.getDataFromServer.bind(this)}>
-            Get data from server
+              onClick={this.syncDataWithServer.bind(this)}>
+            Sync data with server
           </button>
+        </div>
+        <div>
           Latest server time: {new Date(this.props.lastSyncServerTime).toString()}
         </div>
-
         <div>
-          <button
-              onClick={this.sendDataToServer.bind(this)}>
-            Send data to server
-          </button>
           Latest client time: {new Date(this.props.lastSyncClientTime).toString()}
         </div>
 

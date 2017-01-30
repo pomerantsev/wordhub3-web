@@ -20,17 +20,9 @@ export function memorizeRepetition (uuid) {
   return {type: 'MEMORIZE_REPETITION', uuid};
 }
 
-export function getData (timestamp) {
-  return {
-    type: 'GET_DATA',
-    promise: sync.getData(timestamp)
-  };
-}
-
-export function sendData () {
+export function syncData () {
   return function (dispatch, getState) {
     const syncSince = getState().get('lastSyncClientTime') || 0;
-    console.log(syncSince);
     const flashcards = getState().get('flashcards')
       .filter(flashcard => flashcard.get('updatedAt') > syncSince)
       .map(flashcard => ({
@@ -49,8 +41,8 @@ export function sendData () {
 
     // TODO: we have to ensure data is sorted before sending it.
     return {
-      type: 'SEND_DATA',
-      promise: sync.sendData({
+      type: 'SYNC_DATA',
+      promise: sync.syncData(getState().get('lastSyncServerTime') || 0, {
         flashcards,
         repetitions
       })

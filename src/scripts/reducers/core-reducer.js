@@ -101,7 +101,13 @@ function getUpdatedState (state, action) {
         repetitions
       );
   }
-  case 'GET_DATA': {
+
+  case 'SYNC_DATA_REQUEST': {
+    return state
+      .set('lastSyncRequestClientTime', Date.now());
+  }
+
+  case 'SYNC_DATA': {
     const currentTime = Date.now();
     const result = fromJS(action.result);
     const existingFlashcards = result.get('flashcards').filter(receivedFlashcard =>
@@ -112,7 +118,11 @@ function getUpdatedState (state, action) {
         state.get('repetitions').find(repetition => repetition.get('uuid') === receivedRepetition.get('uuid')));
     const newRepetitions = result.get('repetitions').filter(receivedRepetition =>
         !state.get('repetitions').find(repetition => repetition.get('uuid') === receivedRepetition.get('uuid')));
+
+    // TODO: are we sure it's the same request?
+    // Handle the case when request didn't go through.
     return state
+      .set('lastSyncClientTime', state.get('lastSyncRequestClientTime'))
       .set('lastSyncServerTime', result.get('updatedAt'))
       .update('flashcards', flashcards => flashcards
         .map(flashcard => {
@@ -142,18 +152,6 @@ function getUpdatedState (state, action) {
           updatedAt: 0
         })))
       );
-  }
-
-  case 'SEND_DATA_REQUEST': {
-    return state
-      .set('lastSyncRequestClientTime', Date.now());
-  }
-
-  case 'SEND_DATA': {
-    // TODO: are we sure it's the same request?
-    // Handle the case when request didn't go through.
-    return state
-      .set('lastSyncClientTime', state.get('lastSyncRequestClientTime'));
   }
 
   case 'RESET_SEND_DATA_TIME': {
