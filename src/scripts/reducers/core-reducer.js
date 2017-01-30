@@ -120,13 +120,12 @@ function getUpdatedState (state, action) {
             .find(existingFlashcard => existingFlashcard.get('uuid') === flashcard.get('uuid'));
           return flashcardFromServer ?
             flashcard
-              .set('frontText', flashcardFromServer.get('frontText'))
-              .set('updatedAt', currentTime) :
+              .set('frontText', flashcardFromServer.get('frontText')) :
             flashcard;
         })
         .concat(newFlashcards.map(flashcardFromServer => flashcardFromServer.merge({
           createdAt: currentTime,
-          updatedAt: currentTime
+          updatedAt: 0
         })))
       )
       .update('repetitions', repetitions => repetitions
@@ -135,13 +134,12 @@ function getUpdatedState (state, action) {
             .find(existingRepetition => existingRepetition.get('uuid') === repetition.get('uuid'));
           return repetitionFromServer ?
             repetition
-              .set('actualDate', repetitionFromServer.get('actualDate'))
-              .set('updatedAt', currentTime) :
+              .set('actualDate', repetitionFromServer.get('actualDate')) :
             repetition;
         })
         .concat(newRepetitions.map(repetitionFromServer => repetitionFromServer.merge({
           createdAt: currentTime,
-          updatedAt: currentTime
+          updatedAt: 0
         })))
       );
   }
@@ -153,6 +151,7 @@ function getUpdatedState (state, action) {
 
   case 'SEND_DATA': {
     // TODO: are we sure it's the same request?
+    // Handle the case when request didn't go through.
     return state
       .set('lastSyncClientTime', state.get('lastSyncRequestClientTime'));
   }

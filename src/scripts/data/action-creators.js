@@ -30,6 +30,7 @@ export function getData (timestamp) {
 export function sendData () {
   return function (dispatch, getState) {
     const syncSince = getState().get('lastSyncClientTime') || 0;
+    console.log(syncSince);
     const flashcards = getState().get('flashcards')
       .filter(flashcard => flashcard.get('updatedAt') > syncSince)
       .map(flashcard => ({
