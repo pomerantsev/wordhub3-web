@@ -1,5 +1,5 @@
 export function syncData (timestamp, data) {
-  return fetch(process.env.API_SERVER + '/sync-data' + (timestamp ? '?timestamp=' + timestamp : ''), {
+  return fetch(process.env.API_SERVER + '/sync-data?token=' + process.env.TEMP_TOKEN + (timestamp ? '&timestamp=' + timestamp : ''), {
     method: 'POST',
     headers: new Headers({
       'Content-Type': 'application/json'
