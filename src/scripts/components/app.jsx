@@ -99,7 +99,7 @@ export class App extends React.Component {
   render () {
     return (
       <div>
-        <h1>Wordhub</h1>
+        {/*<h1>Wordhub</h1>
 
         <div>
           <button
@@ -201,7 +201,8 @@ export class App extends React.Component {
               </tbody>
             </table>
           </div>
-        </div>
+        </div>*/}
+        {this.props.children}
       </div>
     );
   }

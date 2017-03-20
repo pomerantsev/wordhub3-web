@@ -1,4 +1,4 @@
-import {fromJS} from 'immutable';
+import {fromJS, Map} from 'immutable';
 import moment from 'moment';
 import uuid from 'uuid';
 
@@ -33,6 +33,11 @@ const MAX_DATE_DIFF = 3;
 
 function getUpdatedState (state, action) {
   switch (action.type) {
+  case 'STORE_CREDENTIALS':
+    return state
+      .updateIn(['user', 'credentials'], Map(),
+        credentials => credentials.merge(action.credentials))
+      .setIn(['user', 'loggedIn'], true);
   case 'CHANGE_DATE':
     return state
       .set('date', action.date);

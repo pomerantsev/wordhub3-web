@@ -1,4 +1,39 @@
+import {Map} from 'immutable';
+
 import * as sync from './sync';
+import * as storage from './storage';
+import * as authUtils from '../utils/auth-utils';
+
+export function rehydrateCredentials () {
+  const credentials = storage.getCredentials();
+  return function (dispatch, getState) {
+    if (credentials) {
+      dispatch(storeCredentials(credentials));
+    } else if (authUtils.isLoggedIn(getState())) {
+      dispatch(logout());
+    }
+  };
+}
+
+export function storeCredentials (credentials) {
+  return function (dispatch, getState) {
+    storage.storeCredentials(
+      getState().getIn(['user', 'credentials'], Map()).merge(credentials)
+    );
+    return {type: 'STORE_CREDENTIALS', credentials};
+  };
+}
+
+export function logout () {
+  return function (dispatch) {
+    storage.deleteCredentials();
+    dispatch(resetLoggedInState());
+  };
+}
+
+export function resetLoggedInState () {
+  return {type: 'RESET_LOGGED_IN_STATE'};
+}
 
 export function changeDate (date) {
   return {type: 'CHANGE_DATE', date};
