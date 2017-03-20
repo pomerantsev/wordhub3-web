@@ -4,7 +4,7 @@ import uuid from 'uuid';
 
 import * as constants from '../data/constants';
 
-const DEFAULT_INITIAL_STATE = fromJS({
+const INITIAL_STATE = fromJS({
   newFlashcardText: '',
   flashcards: [],
   repetitions: [],
@@ -14,17 +14,8 @@ const DEFAULT_INITIAL_STATE = fromJS({
   lastSyncRequestClientTime: 0
 });
 
-const INITIAL_STATE = (() => {
-  try {
-    return fromJS(JSON.parse(localStorage.getItem('wordhubData'))) || DEFAULT_INITIAL_STATE;
-  } catch (e) {
-    return DEFAULT_INITIAL_STATE;
-  }
-})();
-
 export default function reducer (state = INITIAL_STATE, action = {}) {
   const updatedState = getUpdatedState(state, action);
-  localStorage.setItem('wordhubData', JSON.stringify(updatedState.toJS()));
   return updatedState;
 }
 

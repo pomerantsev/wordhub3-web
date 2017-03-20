@@ -4,29 +4,30 @@ import * as sync from './sync';
 import * as storage from './storage';
 import * as authUtils from '../utils/auth-utils';
 
-export function rehydrateCredentials () {
-  const credentials = storage.getCredentials();
+export function rehydrateCredentials (credentialsFromRequest, setCookieOnServer) {
+  const credentials = credentialsFromRequest || storage.getCredentials();
   return function (dispatch, getState) {
     if (credentials) {
-      dispatch(storeCredentials(credentials));
+      dispatch(storeCredentials(credentials, setCookieOnServer));
     } else if (authUtils.isLoggedIn(getState())) {
-      dispatch(logout());
+      dispatch(logout(setCookieOnServer));
     }
   };
 }
 
-export function storeCredentials (credentials) {
+export function storeCredentials (credentials, setCookieOnServer) {
   return function (dispatch, getState) {
     storage.storeCredentials(
-      getState().getIn(['user', 'credentials'], Map()).merge(credentials)
+      getState().getIn(['user', 'credentials'], Map()).merge(credentials),
+      setCookieOnServer
     );
     return {type: 'STORE_CREDENTIALS', credentials};
   };
 }
 
-export function logout () {
+export function logout (setCookieOnServer) {
   return function (dispatch) {
-    storage.deleteCredentials();
+    storage.deleteCredentials(setCookieOnServer);
     dispatch(resetLoggedInState());
   };
 }

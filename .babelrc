@@ -1,0 +1,24 @@
+{
+  "env": {
+    "node": {
+      "plugins": [
+        "transform-es2015-destructuring",
+        "transform-es2015-parameters",
+        "transform-object-rest-spread",
+        "transform-es2015-modules-commonjs"
+      ],
+      "presets": [
+        "react"
+      ]
+    },
+    "browser": {
+      "plugins": [
+        "transform-object-rest-spread"
+      ],
+      "presets": [
+        "es2015",
+        "react"
+      ]
+    }
+  }
+}

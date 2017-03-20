@@ -21,7 +21,10 @@ const notify = error => {
 };
 
 const basePaths = {
-  src: './src/',
+  assets: './assets/',
+  clientCode: './client-code',
+  sharedCode: './shared-code',
+  serverCode: './server-code',
   dest: './dist/'
 };
 
@@ -36,7 +39,11 @@ const folders = {
 /* ---------- Scripts ---------- */
 
 gulp.task('eslint', () => {
-  return gulp.src(basePaths.src + folders.scripts + '/**/*.{js,jsx}')
+  return gulp.src([
+    basePaths.serverCode + '/**/*.{js,jsx}',
+    basePaths.clientCode + '/**/*.{js,jsx}',
+    basePaths.sharedCode + '/**/*.{js,jsx}'
+  ])
     .pipe($.plumber(notify))
     .pipe($.eslint())
     .pipe($.eslint.format())
@@ -44,13 +51,12 @@ gulp.task('eslint', () => {
 });
 
 function getCommonScriptsTransform (opts) {
+  process.env.BABEL_ENV = 'browser';
   return browserify({
-    entries: [basePaths.src + folders.scripts + '/index.jsx'],
+    entries: [basePaths.clientCode + '/client.jsx'],
     debug: opts.debug
-  }).transform('babelify', {
-    presets: ['es2015', 'react'],
-    plugins: ['transform-object-rest-spread']
-  }).bundle();
+  }).transform('babelify')
+    .bundle();
 }
 
 gulp.task('scripts:dev', ['eslint'], () => {
@@ -62,8 +68,7 @@ gulp.task('scripts:dev', ['eslint'], () => {
     .pipe(source('app.js'))
     .pipe(buffer())
     .pipe($.envify(process.env))
-    .pipe(gulp.dest(basePaths.dest + folders.scripts))
-    .pipe($.livereload());
+    .pipe(gulp.dest(basePaths.dest + folders.scripts));
 });
 
 gulp.task('scripts:prod', ['eslint'], () => {
@@ -90,18 +95,17 @@ const autoprefixerOptions = {
 };
 
 gulp.task('styles:dev', () => {
-  return gulp.src(basePaths.src + folders.styles + '/main.scss')
+  return gulp.src(basePaths.assets + folders.styles + '/main.scss')
     .pipe($.plumber(notify))
     .pipe($.sourcemaps.init())
     .pipe($.sass())
     .pipe($.autoprefixer(autoprefixerOptions))
     .pipe($.sourcemaps.write())
-    .pipe(gulp.dest(basePaths.dest + folders.styles))
-    .pipe($.livereload());
+    .pipe(gulp.dest(basePaths.dest + folders.styles));
 });
 
 gulp.task('styles:prod', () => {
-  return gulp.src(basePaths.src + folders.styles + '/main.scss')
+  return gulp.src(basePaths.assets + folders.styles + '/main.scss')
     .pipe($.sass())
     .pipe($.autoprefixer(autoprefixerOptions))
     .pipe($.cssnano())
@@ -113,25 +117,14 @@ gulp.task('styles:prod', () => {
 /* ---------- Images ---------- */
 
 gulp.task('images:dev', () => {
-  return gulp.src(basePaths.src + folders.images + '/**/*')
-    .pipe(gulp.dest(basePaths.dest + folders.images))
-    .pipe($.livereload());
-});
-
-gulp.task('images:prod', () => {
-  return gulp.src(basePaths.src + folders.images + '/**/*')
-    .pipe($.imagemin())
+  return gulp.src(basePaths.assets + folders.images + '/**/*')
     .pipe(gulp.dest(basePaths.dest + folders.images));
 });
 
-
-
-/* ---------- Html ---------- */
-
-gulp.task('html', () => {
-  return gulp.src(basePaths.src + '/*.html')
-    .pipe(gulp.dest(basePaths.dest))
-    .pipe($.livereload());
+gulp.task('images:prod', () => {
+  return gulp.src(basePaths.assets + folders.images + '/**/*')
+    .pipe($.imagemin())
+    .pipe(gulp.dest(basePaths.dest + folders.images));
 });
 
 
@@ -153,36 +146,32 @@ gulp.task('gulpfile', () => {
 gulp.task('build:dev', [
   'scripts:dev',
   'styles:dev',
-  'images:dev',
-  'html'
+  'images:dev'
 ]);
 
 gulp.task('connect:dev', ['build:dev'], () => {
   $.connect.server({
     root: basePaths.dest,
     host: '0.0.0.0',
-    port: 9000,
-    livereload: true
+    port: 9000
   });
 });
 
 gulp.task('watch', ['connect:dev'], () => {
-  $.livereload.listen();
-
-  $.watch(basePaths.src + folders.scripts + '/**/*.{js,jsx}', () => {
+  $.watch([
+    basePaths.serverCode + '/**/*.{js,jsx}',
+    basePaths.clientCode + '/**/*.{js,jsx}',
+    basePaths.sharedCode + '/**/*.{js,jsx}'
+  ], () => {
     gulp.start('scripts:dev');
   });
 
-  $.watch(basePaths.src + folders.styles + '/**/*.scss', () => {
+  $.watch(basePaths.assets + folders.styles + '/**/*.scss', () => {
     gulp.start('styles:dev');
   });
 
-  $.watch(basePaths.src + folders.images + '/**/*', () => {
+  $.watch(basePaths.assets + folders.images + '/**/*', () => {
     gulp.start('images:dev');
-  });
-
-  $.watch(basePaths.src + '/*.html', () => {
-    gulp.start('html');
   });
 
   $.watch('./gulpfile.js', () => {
@@ -210,8 +199,7 @@ gulp.task('build:prod', callback => {
     [
       'scripts:prod',
       'styles:prod',
-      'images:prod',
-      'html'
+      'images:prod'
     ],
     callback
   );
