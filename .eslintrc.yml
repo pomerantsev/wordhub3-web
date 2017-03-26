@@ -1,22 +1,15 @@
+parser: babel-eslint
+
 # So parent files don't get applied
 root: true
 
 env:
+  es6: true
   browser: true
   node: true
 
-globals:
-  Promise: false
-
 plugins:
   - react
-
-parserOptions:
-  ecmaVersion: 6
-  sourceType: module
-  ecmaFeatures:
-    jsx: true
-    experimentalObjectRestSpread: true
 
 rules:
   brace-style: [2, 1tbs, {allowSingleLine: false}]

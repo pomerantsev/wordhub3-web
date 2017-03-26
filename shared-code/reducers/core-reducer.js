@@ -4,7 +4,12 @@ import uuid from 'uuid';
 
 import * as constants from '../data/constants';
 
+const INITIAL_USER_STATE = {
+  loggedIn: false
+};
+
 const INITIAL_STATE = fromJS({
+  user: INITIAL_USER_STATE,
   newFlashcardText: '',
   flashcards: [],
   repetitions: [],
@@ -29,6 +34,9 @@ function getUpdatedState (state, action) {
       .updateIn(['user', 'credentials'], Map(),
         credentials => credentials.merge(action.credentials))
       .setIn(['user', 'loggedIn'], true);
+  case 'RESET_LOGGED_IN_STATE':
+    return state
+      .set('user', INITIAL_USER_STATE);
   case 'CHANGE_DATE':
     return state
       .set('date', action.date);

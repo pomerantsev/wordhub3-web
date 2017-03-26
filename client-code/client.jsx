@@ -8,6 +8,8 @@ injectTapEventPlugin();
 
 import getRoutes from '../shared-code/routes.jsx';
 import * as actionCreators from '../shared-code/data/action-creators';
+import * as authUtils from '../shared-code/utils/auth-utils';
+import * as constants from '../shared-code/data/constants';
 
 import {createStore, applyMiddleware} from 'redux';
 import {Provider} from 'react-redux';
@@ -28,6 +30,19 @@ const initialState = (() => {
 const store = applyMiddleware(asyncMiddleware)(createStore)(reducer, initialState);
 
 store.dispatch(actionCreators.rehydrateCredentials());
+
+let wasLoggedIn = authUtils.isLoggedIn(store.getState());
+
+store.subscribe(() => {
+  const isLoggedIn = authUtils.isLoggedIn(store.getState());
+  if (!wasLoggedIn && isLoggedIn) {
+    wasLoggedIn = isLoggedIn;
+    history.replace(constants.defaultAuthedPath);
+  } else if (wasLoggedIn && !isLoggedIn) {
+    wasLoggedIn = isLoggedIn;
+    history.replace(constants.defaultUnauthedPath);
+  }
+});
 
 ReactDOM.render(
   <Provider

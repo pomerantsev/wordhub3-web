@@ -17,7 +17,7 @@ export function getCredentials () {
   try {
     const cookieValue = Cookies.getJSON(constants.credentialsKey);
     if (typeof cookieValue === 'string') {
-      // JSON couldn't really be parsed
+      // JSON isn't an object, which means it wasn't essentially parsed
       throw new Error();
     }
     return fromJS(cookieValue);

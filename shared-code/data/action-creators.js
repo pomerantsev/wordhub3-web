@@ -1,6 +1,6 @@
 import {Map} from 'immutable';
 
-import * as sync from './sync';
+import * as api from './api';
 import * as storage from './storage';
 import * as authUtils from '../utils/auth-utils';
 
@@ -22,6 +22,20 @@ export function storeCredentials (credentials, setCookieOnServer) {
       setCookieOnServer
     );
     return {type: 'STORE_CREDENTIALS', credentials};
+  };
+}
+
+export function login (email, password) {
+  return function (dispatch) {
+    return {
+      type: 'LOGIN',
+      promise: api.login(email, password)
+        .then(credentials => {
+          if (credentials.token) {
+            dispatch(storeCredentials(credentials));
+          }
+        })
+    };
   };
 }
 
@@ -78,7 +92,7 @@ export function syncData () {
     // TODO: we have to ensure data is sorted before sending it.
     return {
       type: 'SYNC_DATA',
-      promise: sync.syncData(getState().get('lastSyncServerTime') || 0, {
+      promise: api.syncData(getState().get('lastSyncServerTime') || 0, {
         flashcards,
         repetitions
       })

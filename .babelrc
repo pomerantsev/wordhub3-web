@@ -2,10 +2,12 @@
   "env": {
     "node": {
       "plugins": [
+        "transform-async-to-generator",
         "transform-es2015-destructuring",
         "transform-es2015-parameters",
         "transform-object-rest-spread",
-        "transform-es2015-modules-commonjs"
+        "transform-es2015-modules-commonjs",
+        "transform-runtime"
       ],
       "presets": [
         "react"
@@ -13,7 +15,9 @@
     },
     "browser": {
       "plugins": [
-        "transform-object-rest-spread"
+        "transform-async-to-generator",
+        "transform-object-rest-spread",
+        "transform-runtime"
       ],
       "presets": [
         "es2015",
