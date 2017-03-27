@@ -6,7 +6,10 @@ import * as constants from './data/constants';
 
 import {AppContainer} from './components/app.jsx';
 import {HomeContainer} from './components/home.jsx';
+import {AuthedRootContainer} from './components/authed-root.jsx';
 import {CreateFlashcardContainer} from './components/create-flashcard.jsx';
+import {FlashcardListContainer} from './components/flashcard-list.jsx';
+import NotFound from './components/not-found.jsx';
 
 function onAuthedEnter (store, nextState, replace) {
   if (!authUtils.isLoggedIn(store.getState())) {
@@ -25,14 +28,31 @@ function getRoutes (store) {
     <Route
         path="/"
         component={AppContainer}>
+
       <IndexRoute
           component={HomeContainer}
           onEnter={onUnauthedEnter.bind(null, store)}
       />
+
       <Route
-          path="/flashcards/new"
-          component={CreateFlashcardContainer}
-          onEnter={onAuthedEnter.bind(null, store)}
+          component={AuthedRootContainer}
+          onEnter={onAuthedEnter.bind(null, store)}>
+
+        <Route
+            path="/flashcards"
+            component={FlashcardListContainer}
+        />
+
+        <Route
+            path="/flashcards/new"
+            component={CreateFlashcardContainer}
+        />
+
+      </Route>
+
+      <Route
+          path="/**"
+          component={NotFound}
       />
 
     </Route>

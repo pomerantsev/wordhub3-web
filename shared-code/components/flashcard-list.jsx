@@ -3,19 +3,19 @@ import {connect} from 'react-redux';
 
 import * as actionCreators from '../data/action-creators';
 
-class CreateFlashcard extends React.Component {
+class FlashcardList extends React.Component {
 
   render () {
     return (
       <div>
-        Here you can create some flashcards
+        All flashcards will be here
       </div>
     );
   }
 
 }
 
-export const CreateFlashcardContainer = connect(
+export const FlashcardListContainer = connect(
   () => ({}),
   actionCreators
-)(CreateFlashcard);
+)(FlashcardList);
