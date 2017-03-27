@@ -1,3 +1,3 @@
 export function isLoggedIn (state) {
-  return !!state.getIn(['user', 'loggedIn']);
+  return !!state.getIn(['credentials', 'token']);
 }
