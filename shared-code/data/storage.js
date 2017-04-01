@@ -7,7 +7,6 @@ export function storeCredentials (credentials, setCookieOnServer) {
   if (setCookieOnServer) {
     setCookieOnServer(constants.credentialsKey, credentials.toJS());
   } else {
-    console.log(credentials.toJS());
     Cookies.set(constants.credentialsKey, credentials.toJS());
   }
 }
