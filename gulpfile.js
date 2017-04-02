@@ -134,6 +134,12 @@ gulp.task('images:prod', () => {
 
 
 
+gulp.task('copy', () => {
+  return gulp.src(basePaths.assets + '/*')
+    .pipe(gulp.dest(basePaths.dest));
+});
+
+
 /* ---------- Gulpfile ---------- */
 
 gulp.task('gulpfile', () => {
@@ -151,7 +157,8 @@ gulp.task('gulpfile', () => {
 gulp.task('build:dev', [
   'scripts:dev',
   'styles:dev',
-  'images:dev'
+  'images:dev',
+  'copy'
 ]);
 
 gulp.task('connect:dev', ['build:dev'], () => {
@@ -204,7 +211,8 @@ gulp.task('build:prod', callback => {
     [
       'scripts:prod',
       'styles:prod',
-      'images:prod'
+      'images:prod',
+      'copy'
     ],
     callback
   );

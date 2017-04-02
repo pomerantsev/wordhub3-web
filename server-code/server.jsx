@@ -40,6 +40,8 @@ app.get('/ping', (req, res) => {
   res.sendStatus(200);
 });
 
+app.use(express.static('dist'));
+
 app.use((req, res, next) => {
   if (process.env.NODE_ENV === 'production') {
     httpsRedirect()(req, res, next);
@@ -47,8 +49,6 @@ app.use((req, res, next) => {
     next();
   }
 });
-
-app.use(express.static('dist'));
 
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
