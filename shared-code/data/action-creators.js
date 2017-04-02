@@ -1,5 +1,7 @@
 import {Map} from 'immutable';
+import uuid from 'uuid';
 
+import * as constants from '../data/constants';
 import * as api from './api';
 import * as storage from './storage';
 import * as authUtils from '../utils/auth-utils';
@@ -59,9 +61,21 @@ export function resetLoggedInState () {
 //   return {type: 'CHANGE_NEW_FLASHCARD_TEXT', text};
 // }
 
-// export function createFlashcard () {
-//   return {type: 'CREATE_FLASHCARD'};
-// }
+export function createFlashcard (frontText, backText) {
+  const currentTime = Date.now();
+  const flashcardUuid = uuid.v4();
+  const repetitionUuid = uuid.v4();
+  const diffDays = constants.MIN_DIFF_DAYS_FIRST_REPETITION +
+    Math.floor(Math.random() * (constants.MAX_DIFF_DAYS_FIRST_REPETITION - constants.MIN_DIFF_DAYS_FIRST_REPETITION + 1));
+  return function (dispatch) {
+    dispatch(createFlashcardLocal(frontText, backText, currentTime, flashcardUuid, repetitionUuid, diffDays));
+    dispatch(syncData());
+  };
+}
+
+export function createFlashcardLocal (frontText, backText, currentTime, flashcardUuid, repetitionUuid, diffDays) {
+  return {type: 'CREATE_FLASHCARD', frontText, backText, currentTime, flashcardUuid, repetitionUuid, diffDays};
+}
 
 // export function changeFlashcardFrontText (uuid, text) {
 //   return {type: 'CHANGE_FLASHCARD_FRONT_TEXT', uuid, text};

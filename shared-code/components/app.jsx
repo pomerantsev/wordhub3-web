@@ -14,10 +14,6 @@ export class App extends React.Component {
     // while we are fetching latest data from server.
   }
 
-  syncDataWithServer () {
-    this.props.syncData();
-  }
-
   resetSendDataTime () {
     this.props.resetSendDataTime();
   }

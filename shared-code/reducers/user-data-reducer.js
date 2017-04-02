@@ -1,32 +1,59 @@
 import {fromJS} from 'immutable';
+import moment from 'moment';
 
-export default function userDataReducer (state, action, credentials) {
+import * as constants from '../data/constants';
+
+export default function userDataReducer (state, action/*, credentials*/) {
   const updatedState = getUpdatedState(state, action);
-  const userId = credentials.get('userId');
-  const storedUserData = localStorage.getItem('userData');
-  if (storedUserData) {
-    try {
-      const newUserData = JSON.stringify(Object.assign({}, JSON.parse(storedUserData), {
-        [userId]: updatedState.toJS()
-      }));
-      localStorage.setItem('userData', newUserData);
-    } catch (e) {
-      const newUserData = JSON.stringify({
-        [userId]: updatedState.toJS()
-      });
-      localStorage.setItem('userData', newUserData);
-    }
-  } else {
-    const newUserData = JSON.stringify({
-      [userId]: updatedState.toJS()
-    });
-    localStorage.setItem('userData', newUserData);
-  }
+  // const userId = credentials.get('userId');
+  // const storedUserData = localStorage.getItem('userData');
+  // if (storedUserData) {
+  //   try {
+  //     const newUserData = JSON.stringify(Object.assign({}, JSON.parse(storedUserData), {
+  //       [userId]: updatedState.toJS()
+  //     }));
+  //     localStorage.setItem('userData', newUserData);
+  //   } catch (e) {
+  //     const newUserData = JSON.stringify({
+  //       [userId]: updatedState.toJS()
+  //     });
+  //     localStorage.setItem('userData', newUserData);
+  //   }
+  // } else {
+  //   const newUserData = JSON.stringify({
+  //     [userId]: updatedState.toJS()
+  //   });
+  //   localStorage.setItem('userData', newUserData);
+  // }
   return updatedState;
 }
 
 function getUpdatedState (state, action) {
   switch (action.type) {
+
+  case 'CREATE_FLASHCARD': {
+    const flashcardCreationDay = moment(action.currentTime).diff(moment(constants.SEED_DATE), 'days');
+    return state
+      .update('flashcards',
+        flashcards => flashcards.push(fromJS({
+          uuid: action.flashcardUuid,
+          frontText: action.frontText,
+          backText: action.backText,
+          createdAt: action.currentTime,
+          updatedAt: action.currentTime
+        }))
+      )
+      .update('repetitions',
+        repetitions => repetitions.push(fromJS({
+          uuid: action.repetitionUuid,
+          flashcardUuid: action.flashcardUuid,
+          seq: 1,
+          plannedDay: flashcardCreationDay + action.diffDays,
+          createdAt: action.currentTime,
+          updatedAt: action.currentTime
+        }))
+      );
+  }
 
   case 'SYNC_DATA_REQUEST': {
     return state

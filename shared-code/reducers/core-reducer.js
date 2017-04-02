@@ -175,7 +175,7 @@ function getUpdatedState (state, action) {
     return state
       .update('userData', userData =>
         authUtils.isLoggedIn(state) ?
-          userDataReducer(userData, action, state.get('credentials')) :
+          userDataReducer(userData, action/*, state.get('credentials')*/) :
           userData
       );
   }
