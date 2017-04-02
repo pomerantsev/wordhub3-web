@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "scripts": {
     "start": "node app.js",
-    "dev": "nodemon --watch server-code --watch shared-code --ext js,jsx app.js"
+    "dev": "nodemon --watch server-code --watch shared-code --ext js,jsx app.js",
+    "aws-deploy": "./scripts/aws-deploy.sh"
   },
   "dependencies": {
     "babel-plugin-transform-async-to-generator": "^6.22.0",

@@ -60,6 +60,7 @@ function getCommonScriptsTransform (opts) {
 }
 
 gulp.task('scripts:dev', ['eslint'], () => {
+  process.env.NODE_ENV = 'development';
   return getCommonScriptsTransform({debug: true})
     .on('error', error => {
       notify(error);
@@ -72,10 +73,14 @@ gulp.task('scripts:dev', ['eslint'], () => {
 });
 
 gulp.task('scripts:prod', ['eslint'], () => {
+  process.env.NODE_ENV = 'production';
   return getCommonScriptsTransform({debug: false})
     .pipe(source('app.js'))
     .pipe(buffer())
-    .pipe($.envify(process.env))
+    .pipe($.envify(Object.assign({}, process.env, {
+      NODE_ENV: process.env.NODE_ENV_PROD,
+      API_SERVER: process.env.API_SERVER_PROD
+    })))
     .pipe($.uglify())
     .pipe(gulp.dest(basePaths.dest + folders.scripts));
 });
