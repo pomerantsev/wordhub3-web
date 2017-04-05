@@ -8,7 +8,18 @@ class FlashcardList extends React.Component {
   render () {
     return (
       <div>
-        All flashcards will be here
+        <ul>
+          {this.props.flashcards.map(flashcard => {
+            return (
+              <li
+                  key={flashcard.get('uuid')}>
+                <span>{flashcard.get('uuid')}</span>
+                <span>&nbsp;</span>
+                <span>{flashcard.get('frontText').match(/([^\n]*)(\n|$)/)[1]}</span>
+              </li>
+            );
+          })}
+        </ul>
       </div>
     );
   }
@@ -16,6 +27,8 @@ class FlashcardList extends React.Component {
 }
 
 export const FlashcardListContainer = connect(
-  () => ({}),
+  state => ({
+    flashcards: state.getIn(['userData', 'flashcards'])
+  }),
   actionCreators
 )(FlashcardList);
