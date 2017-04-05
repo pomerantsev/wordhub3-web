@@ -3,6 +3,7 @@
     "node": {
       "plugins": [
         "transform-async-to-generator",
+        "transform-class-properties",
         "transform-es2015-destructuring",
         "transform-es2015-parameters",
         "transform-object-rest-spread",
@@ -16,6 +17,7 @@
     "browser": {
       "plugins": [
         "transform-async-to-generator",
+        "transform-class-properties",
         "transform-object-rest-spread",
         "transform-runtime"
       ],

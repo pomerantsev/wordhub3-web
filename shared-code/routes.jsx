@@ -8,6 +8,7 @@ import {AppContainer} from './components/app.jsx';
 import {HomeContainer} from './components/home.jsx';
 import {AuthedRootContainer} from './components/authed-root.jsx';
 import {CreateFlashcardContainer} from './components/create-flashcard.jsx';
+import {EditFlashcardContainer} from './components/edit-flashcard.jsx';
 import {FlashcardListContainer} from './components/flashcard-list.jsx';
 import NotFound from './components/not-found.jsx';
 
@@ -46,6 +47,11 @@ function getRoutes (store) {
         <Route
             path="/flashcards/new"
             component={CreateFlashcardContainer}
+        />
+
+        <Route
+            path="/flashcards/:uuid"
+            component={EditFlashcardContainer}
         />
 
       </Route>

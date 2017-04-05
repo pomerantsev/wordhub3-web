@@ -55,6 +55,18 @@ function getUpdatedState (state, action) {
       );
   }
 
+  case 'UPDATE_FLASHCARD': {
+    return state
+      .update('flashcards', flashcards => flashcards.map(flashcard =>
+        flashcard.get('uuid') === action.flashcardUuid ?
+          flashcard
+            .set('frontText', action.frontText)
+            .set('backText', action.backText)
+            .set('updatedAt', action.currentTime) :
+          flashcard
+      ));
+  }
+
   case 'SYNC_DATA_REQUEST': {
     return state
       .set('lastSyncRequestClientTime', Date.now());

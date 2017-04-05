@@ -77,6 +77,14 @@ export function createFlashcardLocal (frontText, backText, currentTime, flashcar
   return {type: 'CREATE_FLASHCARD', frontText, backText, currentTime, flashcardUuid, repetitionUuid, diffDays};
 }
 
+export function updateFlashcard (flashcardUuid, frontText, backText) {
+  const currentTime = Date.now();
+  return function (dispatch) {
+    dispatch(() => ({type: 'UPDATE_FLASHCARD', flashcardUuid, frontText, backText, currentTime}));
+    dispatch(syncData());
+  };
+}
+
 // export function changeFlashcardFrontText (uuid, text) {
 //   return {type: 'CHANGE_FLASHCARD_FRONT_TEXT', uuid, text};
 // }
