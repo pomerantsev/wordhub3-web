@@ -5,13 +5,18 @@ import * as helpers from '../utils/helpers';
 
 import * as actionCreators from '../data/action-creators';
 
+import Paginator from './paginator.jsx';
+
+const FLASHCARDS_PER_PAGE = 25;
+
 class FlashcardList extends React.Component {
 
   render () {
+    const location = this.props.location;
     return (
       <div>
         <ul>
-          {this.props.flashcards.map(flashcard => {
+          {this.props.flashcards.skip((parseInt(location.query.page) - 1) * FLASHCARDS_PER_PAGE).take(FLASHCARDS_PER_PAGE).map(flashcard => {
             return (
               <li
                   key={flashcard.get('uuid')}>
@@ -25,6 +30,11 @@ class FlashcardList extends React.Component {
             );
           })}
         </ul>
+        <Paginator
+            itemCount={this.props.flashcards.size}
+            itemsPerPage={FLASHCARDS_PER_PAGE}
+            location={location}
+        />
       </div>
     );
   }
