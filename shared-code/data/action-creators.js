@@ -68,13 +68,9 @@ export function createFlashcard (frontText, backText) {
   const diffDays = constants.MIN_DIFF_DAYS_FIRST_REPETITION +
     Math.floor(Math.random() * (constants.MAX_DIFF_DAYS_FIRST_REPETITION - constants.MIN_DIFF_DAYS_FIRST_REPETITION + 1));
   return function (dispatch) {
-    dispatch(createFlashcardLocal(frontText, backText, currentTime, flashcardUuid, repetitionUuid, diffDays));
+    dispatch(() => ({type: 'CREATE_FLASHCARD', frontText, backText, currentTime, flashcardUuid, repetitionUuid, diffDays}));
     dispatch(syncData());
   };
-}
-
-export function createFlashcardLocal (frontText, backText, currentTime, flashcardUuid, repetitionUuid, diffDays) {
-  return {type: 'CREATE_FLASHCARD', frontText, backText, currentTime, flashcardUuid, repetitionUuid, diffDays};
 }
 
 export function updateFlashcard (flashcardUuid, frontText, backText) {
