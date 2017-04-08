@@ -73,7 +73,6 @@ function getUpdatedState (state, action) {
   }
 
   case 'SYNC_DATA': {
-    const currentTime = Date.now();
     const result = fromJS(action.result);
     const existingFlashcards = result.get('flashcards').filter(receivedFlashcard =>
         state.get('flashcards').find(flashcard => flashcard.get('uuid') === receivedFlashcard.get('uuid')));
@@ -101,8 +100,8 @@ function getUpdatedState (state, action) {
             flashcard;
         })
         .concat(newFlashcards.map(flashcardFromServer => flashcardFromServer.merge({
-          createdAt: currentTime,
-          updatedAt: 0
+          createdAt: flashcardFromServer.get('createdAt'),
+          updatedAt: flashcardFromServer.get('updatedAt')
         })))
       )
       .update('repetitions', repetitions => repetitions
@@ -116,8 +115,8 @@ function getUpdatedState (state, action) {
             repetition;
         })
         .concat(newRepetitions.map(repetitionFromServer => repetitionFromServer.merge({
-          createdAt: currentTime,
-          updatedAt: 0
+          createdAt: repetitionFromServer.get('createdAt'),
+          updatedAt: repetitionFromServer.get('updatedAt')
         })))
       );
   }
