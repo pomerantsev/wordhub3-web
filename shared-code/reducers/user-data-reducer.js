@@ -120,6 +120,10 @@ function getUpdatedState (state, action) {
         })))
       );
   }
+  case 'SEARCH_STRING_CHANGE': {
+    return state
+      .set('searchString', action.value);
+  }
   default:
     return state;
   }

@@ -17,7 +17,8 @@ const INITIAL_STATE = fromJS({
     repetitions: [],
     lastSyncServerTime: 0,
     lastSyncClientTime: 0,
-    lastSyncRequestClientTime: 0
+    lastSyncRequestClientTime: 0,
+    searchString: ''
   }
   // newFlashcardText: '',
   // flashcards: [],

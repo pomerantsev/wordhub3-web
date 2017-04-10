@@ -2,6 +2,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {Link} from 'react-router';
 import moment from 'moment';
+import escapeStringRegexp from 'escape-string-regexp';
 import * as helpers from '../utils/helpers';
 
 import * as actionCreators from '../data/action-creators';
@@ -15,6 +16,11 @@ class FlashcardList extends React.Component {
   constructor () {
     super();
     this.getDisplayedFlashcards = this.getDisplayedFlashcards.bind(this);
+    this.onSearchStringChange = this.onSearchStringChange.bind(this);
+  }
+
+  onSearchStringChange (event) {
+    this.props.searchStringChange(event.target.value);
   }
 
   getDisplayedFlashcards () {
@@ -28,6 +34,13 @@ class FlashcardList extends React.Component {
     const displayedFlashcards = this.getDisplayedFlashcards();
     return (
       <div>
+        <div>
+          <input
+              type="text"
+              value={this.props.searchString}
+              onChange={this.onSearchStringChange}
+          />
+        </div>
         <ul>
           {displayedFlashcards.map((flashcard, index) => {
             return (
@@ -61,14 +74,26 @@ class FlashcardList extends React.Component {
 }
 
 const getFlashcardsSorted = helpers.createDeepEqualSelector(
-  [state => state.getIn(['userData', 'flashcards'])],
-  flashcards => flashcards
-    .sort((flashcard1, flashcard2) => flashcard2.get('createdAt') - flashcard1.get('createdAt'))
+  [
+    state => state.getIn(['userData', 'flashcards']),
+    state => state.getIn(['userData', 'searchString'])
+  ],
+  (flashcards, searchString) => {
+    const searchStringRegExp = new RegExp(escapeStringRegexp(searchString));
+    return flashcards
+      .filter(flashcard => searchString ?
+        searchStringRegExp.test(flashcard.get('frontText')) ||
+          searchStringRegExp.test(flashcard.get('backText')) :
+        true
+      )
+      .sort((flashcard1, flashcard2) => flashcard2.get('createdAt') - flashcard1.get('createdAt'));
+  }
 );
 
 export const FlashcardListContainer = connect(
   state => ({
-    flashcards: getFlashcardsSorted(state)
+    flashcards: getFlashcardsSorted(state),
+    searchString: state.getIn(['userData', 'searchString'])
   }),
   actionCreators
 )(FlashcardList);

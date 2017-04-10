@@ -129,3 +129,7 @@ export function syncData () {
 // export function resetSendDataTime () {
 //   return {type: 'RESET_SEND_DATA_TIME'};
 // }
+
+export function searchStringChange (value) {
+  return {type: 'SEARCH_STRING_CHANGE', value};
+}
