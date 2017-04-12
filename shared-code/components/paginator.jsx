@@ -1,6 +1,8 @@
 import React from 'react';
 import {Link} from 'react-router';
 
+import * as helpers from '../utils/helpers';
+
 const PAGE_COUNT_AROUND_CURRENT = 2;
 
 export default class Paginator extends React.Component {
@@ -11,10 +13,7 @@ export default class Paginator extends React.Component {
   }
 
   getLink (page) {
-    const location = this.props.location;
-    return page === 1 ?
-      location.pathname :
-      `${location.pathname}?page=${page}`;
+    return helpers.getPaginatedLink(this.props.location.pathname, page);
   }
 
   render () {

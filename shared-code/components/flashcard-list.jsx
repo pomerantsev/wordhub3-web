@@ -13,10 +13,22 @@ const FLASHCARDS_PER_PAGE = 25;
 
 class FlashcardList extends React.Component {
 
+  static contextTypes = {
+    router: React.PropTypes.object.isRequired
+  };
+
   constructor () {
     super();
     this.getDisplayedFlashcards = this.getDisplayedFlashcards.bind(this);
     this.onSearchStringChange = this.onSearchStringChange.bind(this);
+  }
+
+  componentWillReceiveProps (nextProps) {
+    const nextPage = parseInt(nextProps.location.query.page) || 1;
+    const nextTotalPages = Math.ceil(nextProps.flashcards.size / FLASHCARDS_PER_PAGE);
+    if (nextPage > 1 && nextPage > nextTotalPages) {
+      this.context.router.replace(helpers.getPaginatedLink(nextProps.location.pathname, nextTotalPages || 1));
+    }
   }
 
   onSearchStringChange (event) {
