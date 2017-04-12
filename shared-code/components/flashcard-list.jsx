@@ -21,6 +21,7 @@ class FlashcardList extends React.Component {
     super();
     this.getDisplayedFlashcards = this.getDisplayedFlashcards.bind(this);
     this.onSearchStringChange = this.onSearchStringChange.bind(this);
+    this.onClearSearchClick = this.onClearSearchClick.bind(this);
   }
 
   componentWillReceiveProps (nextProps) {
@@ -33,6 +34,11 @@ class FlashcardList extends React.Component {
 
   onSearchStringChange (event) {
     this.props.searchStringChange(event.target.value);
+  }
+
+  onClearSearchClick (event) {
+    event.preventDefault();
+    this.props.searchStringChange('');
   }
 
   getDisplayedFlashcards () {
@@ -53,6 +59,17 @@ class FlashcardList extends React.Component {
               onChange={this.onSearchStringChange}
           />
         </div>
+        {this.props.searchString ?
+          <div>
+            Searching for “{this.props.searchString}”
+            (<a
+                href
+                onClick={this.onClearSearchClick}>
+              clear
+            </a>)
+          </div> :
+          null
+        }
         <ul>
           {displayedFlashcards.map((flashcard, index) => {
             return (
