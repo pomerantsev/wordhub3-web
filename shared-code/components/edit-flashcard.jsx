@@ -57,7 +57,7 @@ class EditFlashcard extends React.Component {
   onSubmit (event) {
     event.preventDefault();
     this.props.updateFlashcard(this.props.params.uuid, this.state.frontText, this.state.backText);
-    this.context.router.push('/flashcards');
+    this.context.router.goBack();
   }
 
   getFlashcard (props) {
