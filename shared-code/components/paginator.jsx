@@ -23,7 +23,7 @@ export default class Paginator extends React.Component {
     const firstPage = Math.max(1, currentPage - PAGE_COUNT_AROUND_CURRENT);
     const lastPage = Math.min(currentPage + PAGE_COUNT_AROUND_CURRENT, totalPages);
     return (
-      totalPages === 0 ?
+      totalPages <= 1 ?
         null :
         <div>
           {firstPage === 1 ?
