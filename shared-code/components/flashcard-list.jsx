@@ -26,7 +26,7 @@ class FlashcardList extends React.Component {
   componentWillReceiveProps (nextProps) {
     const nextPage = parseInt(nextProps.location.query.page) || 1;
     const nextTotalPages = Math.ceil(nextProps.flashcards.size / FLASHCARDS_PER_PAGE);
-    if (nextPage > 1 && nextPage > nextTotalPages) {
+    if (nextPage > 1 && nextPage > nextTotalPages || nextPage < 1) {
       this.context.router.replace(helpers.getPaginatedLink(nextProps.location.pathname, nextTotalPages || 1));
     }
   }
