@@ -1,4 +1,4 @@
-import {fromJS, Map} from 'immutable';
+import {fromJS, Map, OrderedMap} from 'immutable';
 // import moment from 'moment';
 // import uuid from 'uuid';
 
@@ -15,6 +15,7 @@ const INITIAL_STATE = fromJS({
     user: [],
     flashcards: [],
     repetitions: [],
+    repetitionsIndexedByPlannedDay: OrderedMap(),
     lastSyncServerTime: 0,
     lastSyncClientTime: 0,
     lastSyncRequestClientTime: 0,

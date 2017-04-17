@@ -2,9 +2,8 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {Link} from 'react-router';
 import moment from 'moment';
-import escapeStringRegexp from 'escape-string-regexp';
 import * as helpers from '../utils/helpers';
-
+import * as getters from '../data/getters';
 import * as actionCreators from '../data/action-creators';
 
 import Paginator from './paginator.jsx';
@@ -102,26 +101,9 @@ class FlashcardList extends React.Component {
 
 }
 
-const getFlashcardsSorted = helpers.createDeepEqualSelector(
-  [
-    state => state.getIn(['userData', 'flashcards']),
-    state => state.getIn(['userData', 'searchString'])
-  ],
-  (flashcards, searchString) => {
-    const searchStringRegExp = new RegExp(escapeStringRegexp(searchString));
-    return flashcards
-      .filter(flashcard => searchString ?
-        searchStringRegExp.test(flashcard.get('frontText')) ||
-          searchStringRegExp.test(flashcard.get('backText')) :
-        true
-      )
-      .sort((flashcard1, flashcard2) => flashcard2.get('createdAt') - flashcard1.get('createdAt'));
-  }
-);
-
 export const FlashcardListContainer = connect(
   state => ({
-    flashcards: getFlashcardsSorted(state),
+    flashcards: getters.getFlashcardsSorted(state),
     searchString: state.getIn(['userData', 'searchString'])
   }),
   actionCreators

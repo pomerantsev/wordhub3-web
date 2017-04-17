@@ -1,4 +1,4 @@
-import {fromJS} from 'immutable';
+import {fromJS, List} from 'immutable';
 import moment from 'moment';
 
 import * as constants from '../data/constants';
@@ -54,6 +54,22 @@ function getUpdatedState (state, action) {
       )
       .update('repetitions',
         repetitions => repetitions.push(newRepetition)
+      )
+      .updateIn(
+        ['repetitionsIndexedByPlannedDay', newRepetition.get('plannedDay')],
+        List(),
+        repetitionsIndexForDay => {
+          const updatedRepetitions = repetitionsIndexForDay.get('repetitions').push(newRepetition);
+          return repetitionsIndexForDay
+            .set('repetitions', updatedRepetitions)
+            .set('completed', updatedRepetitions.every(repetition => !!repetition.get('actualDate')));
+        }
+      )
+      .update('repetitionsIndexedByPlannedDay', repetitionsIndexedByPlannedDay =>
+        repetitionsIndexedByPlannedDay.sortBy(
+          (value, key) => key,
+          (a, b) => a - b
+        )
       );
   }
 
@@ -93,7 +109,7 @@ function getUpdatedState (state, action) {
 
     // TODO: are we sure it's the same request?
     // Handle the case when request didn't go through.
-    return state
+    const updatedState = state
       .set('lastSyncClientTime', state.get('lastSyncRequestClientTime'))
       .set('lastSyncServerTime', result.get('updatedAt'))
       .update('flashcards', flashcards => flashcards
@@ -117,17 +133,48 @@ function getUpdatedState (state, action) {
           const repetitionFromServer = existingRepetitions
             .find(existingRepetition => repetitionsEqual(existingRepetition, repetition));
           return repetitionFromServer ?
-            repetition
-              .set('uuid', repetitionFromServer.get('uuid'))
-              .set('actualDate', repetitionFromServer.get('actualDate'))
-              .set('successful', repetitionFromServer.get('successful')) :
+            repetitionFromServer :
             repetition;
         })
-        .concat(newRepetitions.map(repetitionFromServer => repetitionFromServer.merge({
-          createdAt: repetitionFromServer.get('createdAt'),
-          updatedAt: repetitionFromServer.get('updatedAt')
-        })))
+        .concat(newRepetitions)
       );
+
+    let repetitionsIndexedByPlannedDay = updatedState.get('repetitionsIndexedByPlannedDay');
+
+    existingRepetitions.forEach(existingRepetition => {
+      const repetitionInState = updatedState.get('repetitions').find(repetition => repetitionsEqual(repetition, existingRepetition));
+      repetitionsIndexedByPlannedDay = repetitionsIndexedByPlannedDay
+        .updateIn([repetitionInState.get('plannedDay'), 'repetitions'], List(), repetitions =>
+          repetitions.splice(repetitions.findIndex(repetition => repetitionsEqual(repetition, existingRepetition)), 1)
+        )
+        .updateIn([existingRepetition.get('plannedDay'), 'repetitions'], List(), repetitions =>
+          repetitions.map(repetition =>
+            repetitionsEqual(repetition, existingRepetition) ?
+              existingRepetition :
+              repetition
+          )
+        );
+    });
+
+    newRepetitions.forEach(newRepetition => {
+      repetitionsIndexedByPlannedDay = repetitionsIndexedByPlannedDay
+        .updateIn([newRepetition.get('plannedDay'), 'repetitions'], List(), repetitions =>
+          repetitions.push(newRepetition)
+        );
+    });
+
+    const fullyUpdatedRepetitionsIndexByPlannedDay = repetitionsIndexedByPlannedDay
+      .sortBy(
+        (value, key) => key,
+        (a, b) => a - b
+      )
+      .filter(repetitionsIndexForDay => repetitionsIndexForDay.get('repetitions').size > 0)
+      .map(repetitionsIndexForDay => repetitionsIndexForDay
+        .set('completed', repetitionsIndexForDay.get('repetitions').every(repetition => !!repetition.get('actualDate')))
+      );
+
+    return updatedState
+      .set('repetitionsIndexedByPlannedDay', fullyUpdatedRepetitionsIndexByPlannedDay);
   }
   case 'SEARCH_STRING_CHANGE': {
     return state
