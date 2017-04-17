@@ -133,3 +133,7 @@ export function syncData () {
 export function searchStringChange (value) {
   return {type: 'SEARCH_STRING_CHANGE', value};
 }
+
+export function currentDateChange (value) {
+  return {type: 'CURRENT_DATE_CHANGE', value};
+}

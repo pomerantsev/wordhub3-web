@@ -26,7 +26,7 @@ export const getTodayRepetitions = helpers.createDeepEqualSelector(
   [
     state => state.getIn(['userData', 'repetitionsIndexedByPlannedDay']),
     state => state.getIn(['userData', 'flashcards']),
-    () => moment().format('YYYY-MM-DD')
+    state => state.getIn(['userData', 'currentDate'])
   ],
   (repetitionsIndexedByPlannedDay, flashcards, currentDate) => {
     const firstUncompletedDayRepetitionsKey = repetitionsIndexedByPlannedDay.findKey(

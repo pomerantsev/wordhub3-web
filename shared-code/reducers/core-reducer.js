@@ -1,5 +1,5 @@
 import {fromJS, Map, OrderedMap} from 'immutable';
-// import moment from 'moment';
+import moment from 'moment';
 // import uuid from 'uuid';
 
 // import * as constants from '../data/constants';
@@ -19,7 +19,8 @@ const INITIAL_STATE = fromJS({
     lastSyncServerTime: 0,
     lastSyncClientTime: 0,
     lastSyncRequestClientTime: 0,
-    searchString: ''
+    searchString: '',
+    currentDate: moment().format('YYYY-MM-DD')
   }
   // newFlashcardText: '',
   // flashcards: [],

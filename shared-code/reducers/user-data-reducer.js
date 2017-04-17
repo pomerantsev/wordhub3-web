@@ -180,6 +180,10 @@ function getUpdatedState (state, action) {
     return state
       .set('searchString', action.value);
   }
+  case 'CURRENT_DATE_CHANGE': {
+    return state
+      .set('currentDate', action.value);
+  }
   default:
     return state;
   }
