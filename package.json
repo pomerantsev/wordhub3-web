@@ -2,9 +2,11 @@
   "name": "wordhub3-web",
   "version": "1.0.0",
   "scripts": {
+    "aws-deploy": "./scripts/aws-deploy.sh",
+    "dev": "nodemon --watch server-code --watch shared-code --watch test --ext js,jsx app.js",
+    "lint": "./scripts/lint.sh",
     "start": "node app.js",
-    "dev": "nodemon --watch server-code --watch shared-code --ext js,jsx app.js",
-    "aws-deploy": "./scripts/aws-deploy.sh"
+    "test": "export BABEL_ENV=node; ./node_modules/.bin/mocha --compilers js:babel-register ./test/**/*.js"
   },
   "dependencies": {
     "babel-plugin-transform-async-to-generator": "^6.22.0",
@@ -44,6 +46,7 @@
     "babel-preset-es2015": "^6.1.18",
     "babelify": "^7.2.0",
     "browserify": "^13.1.1",
+    "chai": "^3.5.0",
     "del": "^2.2.0",
     "eslint": "^3.11.1",
     "eslint-plugin-react": "^6.7.1",
@@ -62,6 +65,7 @@
     "gulp-uglify": "^2.0.0",
     "gulp-watch": "^4.3.5",
     "livereload": "^0.6.0",
+    "mocha": "^3.2.0",
     "node-notifier": "^4.3.1",
     "nodemon": "^1.11.0",
     "run-sequence": "^1.1.5",
