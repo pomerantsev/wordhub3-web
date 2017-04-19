@@ -52,10 +52,19 @@ export const getTodayRepetitions = helpers.createDeepEqualSelector(
                   )
               };
             })();
-          const dateDifference = moment(currentDate).diff(previousDay.actualDate, 'days');
-          return dateDifference >= firstUncompletedDayRepetitionsKey - previousDay.plannedDay ?
-            repetitions :
-            List();
+          const repetitionsFromPreviousDayRunToday = keyIndex === 0 ?
+            List() :
+            repetitionsIndexedByPlannedDay
+              .getIn([previousDay.plannedDay, 'repetitions'])
+              .filter(repetition => repetition.get('actualDate') >= currentDate);
+          if (repetitionsFromPreviousDayRunToday.size > 0) {
+            return repetitionsFromPreviousDayRunToday;
+          } else {
+            const dateDifference = moment(currentDate).diff(previousDay.actualDate, 'days');
+            return dateDifference >= firstUncompletedDayRepetitionsKey - previousDay.plannedDay ?
+              repetitions :
+              List();
+          }
         } else {
           // Some repetitions have been run - we can return all repetitions that have not been run
           // or whose current date is greater or equals than current as today's
