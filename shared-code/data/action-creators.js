@@ -81,6 +81,15 @@ export function updateFlashcard (flashcardUuid, frontText, backText) {
   };
 }
 
+export function runRepetition (repetitionUuid, successful) {
+  const currentTime = Date.now();
+  const nextRepetitionUuid = uuid.v4();
+  return function (dispatch) {
+    dispatch(() => ({type: 'RUN_REPETITION', repetitionUuid, successful, currentTime, nextRepetitionUuid}));
+    dispatch(syncData());
+  };
+}
+
 // export function changeFlashcardFrontText (uuid, text) {
 //   return {type: 'CHANGE_FLASHCARD_FRONT_TEXT', uuid, text};
 // }
