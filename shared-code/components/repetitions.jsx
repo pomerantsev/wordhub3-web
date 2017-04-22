@@ -15,7 +15,6 @@ class Repetitions extends React.Component {
   }
 
   render () {
-    console.log(this.props.repetitions.toJS());
     return (
       <div>
         <ul>

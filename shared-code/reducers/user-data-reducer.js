@@ -88,7 +88,6 @@ function getUpdatedState (state, action) {
   case 'RUN_REPETITION': {
     const repetitionIndex = state.get('repetitions').findIndex(repetition =>
       repetition.get('uuid') === action.repetitionUuid);
-    console.log(state.get('currentDate'));
     const updatedRepetition = state.getIn(['repetitions', repetitionIndex])
       .set('actualDate', state.get('currentDate'))
       .set('successful', action.successful)
@@ -112,14 +111,16 @@ function getUpdatedState (state, action) {
         .sort((repetition1, repetition2) => repetition1.get('seq') - repetition2.get('seq'));
       const lastUnsuccessfulIndex = allRepetitionsForFlashcard.findLastIndex(repetition => !repetition.get('successful'));
       const successStreakLength = allRepetitionsForFlashcard.size - lastUnsuccessfulIndex - 1;
-      if (successStreakLength >= constants.MAX_REPETITION) {
+      if (successStreakLength >= constants.MAX_REPETITIONS) {
         return null;
       }
       // There can either be 1 or more repetitions, but never zero,
       // because we're running a repetition for the given flashcard now.
       const previousDay = allRepetitionsForFlashcard.size === 1 ?
         moment(
-          state.get('flashcards').find(flashcard => flashcard.get('uuid') === updatedRepetition.get('flashcardUuid'))
+          state.get('flashcards')
+            .find(flashcard => flashcard.get('uuid') === updatedRepetition.get('flashcardUuid'))
+            .get('createdAt')
         ).diff(constants.SEED_DATE, 'days') :
         allRepetitionsForFlashcard.getIn([allRepetitionsForFlashcard.size - 2, 'plannedDay']);
       // TODO: here's a random component, which is not ideal in a reducer,
@@ -135,7 +136,7 @@ function getUpdatedState (state, action) {
         uuid: action.nextRepetitionUuid,
         flashcardUuid: updatedRepetition.get('flashcardUuid'),
         seq: updatedRepetition.get('seq') + 1,
-        plannedDay: previousDay + diffDays,
+        plannedDay: updatedRepetition.get('plannedDay') + diffDays,
         createdAt: action.currentTime,
         updatedAt: action.currentTime
       });

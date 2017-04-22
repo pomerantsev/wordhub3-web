@@ -21,10 +21,10 @@ class AuthedRoot extends React.Component {
 
   getTodayRepetitionCounts () {
     const total = this.props.todayRepetitions.size;
-    const remaining = this.props.todayRepetitions.filter(
-      repetition => !repetition.get('actualDate')
+    const completed = this.props.todayRepetitions.filter(
+      repetition => repetition.get('actualDate')
     ).size;
-    return {total, remaining};
+    return {total, completed};
   }
 
   onCurrentDateChange (event) {
@@ -43,7 +43,7 @@ class AuthedRoot extends React.Component {
         <div>
           <Link
               to="/repetitions">
-            Repeat ({repetitionCounts.remaining} of {repetitionCounts.total})
+            Repeat ({repetitionCounts.completed} of {repetitionCounts.total})
           </Link>
           <br />
           <Link
