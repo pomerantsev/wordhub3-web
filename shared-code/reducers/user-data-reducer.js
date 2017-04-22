@@ -112,6 +112,9 @@ function getUpdatedState (state, action) {
         .sort((repetition1, repetition2) => repetition1.get('seq') - repetition2.get('seq'));
       const lastUnsuccessfulIndex = allRepetitionsForFlashcard.findLastIndex(repetition => !repetition.get('successful'));
       const successStreakLength = allRepetitionsForFlashcard.size - lastUnsuccessfulIndex - 1;
+      if (successStreakLength >= constants.MAX_REPETITION) {
+        return null;
+      }
       // There can either be 1 or more repetitions, but never zero,
       // because we're running a repetition for the given flashcard now.
       const previousDay = allRepetitionsForFlashcard.size === 1 ?
@@ -138,24 +141,28 @@ function getUpdatedState (state, action) {
       });
     })();
 
-    return stateWithUpdatedRepetition
-      .update('repetitions', repetitions => repetitions.push(nextRepetition))
-      .updateIn(
-        ['repetitionsIndexedByPlannedDay', nextRepetition.get('plannedDay')],
-        Map(),
-        repetitionsIndexForDay => {
-          const updatedRepetitions = repetitionsIndexForDay.get('repetitions', List()).push(nextRepetition);
-          return repetitionsIndexForDay
-            .set('repetitions', updatedRepetitions)
-            .set('completed', updatedRepetitions.every(repetition => !!repetition.get('actualDate')));
-        }
-      )
-      .update('repetitionsIndexedByPlannedDay', repetitionsIndexedByPlannedDay =>
-        repetitionsIndexedByPlannedDay.sortBy(
-          (value, key) => key,
-          (a, b) => a - b
+    if (nextRepetition) {
+      return stateWithUpdatedRepetition
+        .update('repetitions', repetitions => repetitions.push(nextRepetition))
+        .updateIn(
+          ['repetitionsIndexedByPlannedDay', nextRepetition.get('plannedDay')],
+          Map(),
+          repetitionsIndexForDay => {
+            const updatedRepetitions = repetitionsIndexForDay.get('repetitions', List()).push(nextRepetition);
+            return repetitionsIndexForDay
+              .set('repetitions', updatedRepetitions)
+              .set('completed', updatedRepetitions.every(repetition => !!repetition.get('actualDate')));
+          }
         )
-      );
+        .update('repetitionsIndexedByPlannedDay', repetitionsIndexedByPlannedDay =>
+          repetitionsIndexedByPlannedDay.sortBy(
+            (value, key) => key,
+            (a, b) => a - b
+          )
+        );
+    } else {
+      return stateWithUpdatedRepetition;
+    }
   }
 
   case 'SYNC_DATA_REQUEST': {
