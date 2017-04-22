@@ -29,16 +29,14 @@ export function storeCredentials (credentials, setCookieOnServer) {
 
 export function login (email, password) {
   return function (dispatch) {
-    return {
-      type: 'LOGIN',
-      promise: api.login(email, password)
-        .then(credentials => {
-          if (credentials.token) {
-            dispatch(storeCredentials(credentials));
-            dispatch(syncData());
-          }
-        })
-    };
+    // TODO: handle unsuccessful login
+    api.login(email, password)
+      .then(credentials => {
+        if (credentials.token) {
+          dispatch(storeCredentials(credentials));
+          dispatch(syncData());
+        }
+      });
   };
 }
 
@@ -46,6 +44,18 @@ export function logout (setCookieOnServer) {
   return function (dispatch) {
     storage.deleteCredentials(setCookieOnServer);
     dispatch(resetLoggedInState());
+  };
+}
+
+export function signup (email, password, name) {
+  return function (dispatch) {
+    // TODO: Handle unsuccessful signup
+    api.signup(email, password, name)
+      .then(credentials => {
+        if (credentials.token) {
+          dispatch(storeCredentials(credentials));
+        }
+      });
   };
 }
 

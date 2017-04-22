@@ -6,6 +6,7 @@ import * as constants from './data/constants';
 
 import {AppContainer} from './components/app.jsx';
 import {HomeContainer} from './components/home.jsx';
+import {SignupContainer} from './components/signup.jsx';
 import {AuthedRootContainer} from './components/authed-root.jsx';
 import {CreateFlashcardContainer} from './components/create-flashcard.jsx';
 import {EditFlashcardContainer} from './components/edit-flashcard.jsx';
@@ -33,6 +34,12 @@ function getRoutes (store) {
 
       <IndexRoute
           component={HomeContainer}
+          onEnter={onUnauthedEnter.bind(null, store)}
+      />
+
+      <Route
+          path="/signup"
+          component={SignupContainer}
           onEnter={onUnauthedEnter.bind(null, store)}
       />
 

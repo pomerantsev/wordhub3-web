@@ -3,13 +3,14 @@ import {connect} from 'react-redux';
 
 import * as actionCreators from '../data/action-creators';
 
-class Home extends React.Component {
+class Signup extends React.Component {
 
   constructor () {
     super();
     this.state = {
       email: '',
-      password: ''
+      password: '',
+      name: ''
     };
   }
 
@@ -25,16 +26,22 @@ class Home extends React.Component {
     });
   }
 
-  onLoginFormSubmit (event) {
+  onNameChange (event) {
+    this.setState({
+      name: event.target.value
+    });
+  }
+
+  onSignupFormSubmit (event) {
     event.preventDefault();
-    this.props.login(this.state.email, this.state.password);
+    this.props.signup(this.state.email, this.state.password, this.state.name);
   }
 
   render () {
     return (
       <div>
         <form
-            onSubmit={this.onLoginFormSubmit.bind(this)}>
+            onSubmit={this.onSignupFormSubmit.bind(this)}>
           <input
               type="email"
               onChange={this.onEmailChange.bind(this)}
@@ -46,8 +53,13 @@ class Home extends React.Component {
           />
           <br />
           <input
+              type="text"
+              onChange={this.onNameChange.bind(this)}
+          />
+          <br />
+          <input
               type="submit"
-              value="Login"
+              value="Sign up"
           />
         </form>
       </div>
@@ -56,7 +68,7 @@ class Home extends React.Component {
 
 }
 
-export const HomeContainer = connect(
+export const SignupContainer = connect(
   () => ({}),
   actionCreators
-)(Home);
+)(Signup);
