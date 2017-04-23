@@ -24,9 +24,9 @@ export const getFlashcardsSorted = helpers.createDeepEqualSelector(
 
 export const getTodayRepetitions = helpers.createDeepEqualSelector(
   [
-    state => state.getIn(['userData', 'repetitionsIndexedByPlannedDay']),
-    state => state.getIn(['userData', 'flashcards']),
-    state => state.getIn(['userData', 'currentDate'])
+    state => state.get('repetitionsIndexedByPlannedDay'),
+    state => state.get('flashcards'),
+    state => state.get('currentDate')
   ],
   (repetitionsIndexedByPlannedDay, flashcards, currentDate) => {
     const firstUncompletedDayRepetitionsKey = repetitionsIndexedByPlannedDay.findKey(
@@ -84,3 +84,23 @@ export const getTodayRepetitions = helpers.createDeepEqualSelector(
       .filter(repetition => !!repetition.get('flashcard'));
   }
 );
+
+export function getCurrentDay (state) {
+  const todayRepetitions = getTodayRepetitions(state);
+  if (todayRepetitions.size > 0) {
+    return todayRepetitions.getIn([0, 'plannedDay']);
+  } else {
+    const lastCompletedDay = state.get('repetitionsIndexedByPlannedDay')
+      .findLastKey(repetitionsIndexForDay => repetitionsIndexForDay.get('completed'));
+    const currentDateMoment = moment(state.get('currentDate'));
+    if (typeof lastCompletedDay === 'number') {
+      const latestDateFromLastCompletedDay = state.getIn(['repetitionsIndexedByPlannedDay', lastCompletedDay, 'repetitions'])
+        .reduce((latestDate, repetition) =>
+          repetition.get('actualDate') > latestDate ? repetition.get('actualDate') : latestDate, '');
+      const daysSinceLastCompleted = currentDateMoment.diff(latestDateFromLastCompletedDay, 'days');
+      return lastCompletedDay + daysSinceLastCompleted;
+    } else {
+      return currentDateMoment.diff(constants.SEED_DATE, 'days');
+    }
+  }
+}

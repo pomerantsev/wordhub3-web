@@ -51,7 +51,7 @@ class Repetitions extends React.Component {
 
 export const RepetitionsContainer = connect(
   state => ({
-    repetitions: getters.getTodayRepetitions(state)
+    repetitions: getters.getTodayRepetitions(state.get('userData'))
   }),
   actionCreators
 )(Repetitions);

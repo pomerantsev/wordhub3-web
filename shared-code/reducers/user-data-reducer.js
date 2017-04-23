@@ -2,6 +2,7 @@ import {fromJS, List, Map} from 'immutable';
 import moment from 'moment';
 
 import * as constants from '../data/constants';
+import * as getters from '../data/getters';
 
 export default function userDataReducer (state, action/*, credentials*/) {
   const updatedState = getUpdatedState(state, action);
@@ -32,7 +33,7 @@ function getUpdatedState (state, action) {
   switch (action.type) {
 
   case 'CREATE_FLASHCARD': {
-    const flashcardCreationDay = moment(state.get('currentDate')).diff(moment(constants.SEED_DATE), 'days');
+    const flashcardCreationDay = getters.getCurrentDay(state);
     const newFlashcard = fromJS({
       uuid: action.flashcardUuid,
       frontText: action.frontText,

@@ -109,6 +109,11 @@ export function runRepetition (repetitionUuid, successful) {
 // }
 
 export function syncData () {
+  // TODO: if sync request was unsuccessful (an error returned),
+  // make sure client doesn't go out of sync with server.
+  // For example, show that we're offline if request failed.
+  // If server returned a 400 response, prompt user to either
+  // delete new flashcards / repetitions or retry.
   return function (dispatch, getState) {
     const syncSince = getState().getIn(['userData', 'lastSyncClientTime']) || 0;
     const flashcards = getState().getIn(['userData', 'flashcards'])
