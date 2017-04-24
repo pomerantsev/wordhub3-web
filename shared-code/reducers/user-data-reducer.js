@@ -230,11 +230,7 @@ function getUpdatedState (state, action) {
           repetitions.splice(repetitions.findIndex(repetition => repetitionsEqual(repetition, existingRepetition)), 1)
         )
         .updateIn([existingRepetition.get('plannedDay'), 'repetitions'], List(), repetitions =>
-          repetitions.map(repetition =>
-            repetitionsEqual(repetition, existingRepetition) ?
-              existingRepetition :
-              repetition
-          )
+          repetitions.push(existingRepetition)
         );
     });
 
