@@ -122,7 +122,7 @@ export function syncData () {
   // delete new flashcards / repetitions or retry.
   return function (dispatch, getState) {
     const syncDataActionStart = Date.now();
-    const syncSince = getState().getIn(['userData', 'lastSyncClientTime']) || 0;
+    const syncSince = getState().getIn(['userData', 'lastSyncClientTime']);
     const flashcards = getState().getIn(['userData', 'flashcards'])
       .filter(flashcard => flashcard.get('updatedAt') > syncSince)
       .map(flashcard => ({
@@ -149,7 +149,7 @@ export function syncData () {
       type: 'SYNC_DATA',
       promise: api.syncData(
         getState().getIn(['credentials', 'token']),
-        getState().getIn(['userData', 'lastSyncServerTime']) || 0,
+        getState().getIn(['userData', 'lastSyncServerTime']),
         {
           flashcards,
           repetitions
