@@ -9,27 +9,22 @@ import userDataReducer from './user-data-reducer';
 
 const INITIAL_CREDENTIALS = Map({});
 
+const INITIAL_USER_DATA = fromJS({
+  user: [],
+  flashcards: [],
+  repetitions: [],
+  repetitionsIndexedByPlannedDay: OrderedMap(),
+  repetitionsForToday: [],
+  lastSyncServerTime: 0,
+  lastSyncClientTime: 0,
+  lastSyncRequestClientTime: 0,
+  searchString: '',
+  currentDate: moment().format('YYYY-MM-DD')
+});
+
 const INITIAL_STATE = fromJS({
   credentials: INITIAL_CREDENTIALS,
-  userData: {
-    user: [],
-    flashcards: [],
-    repetitions: [],
-    repetitionsIndexedByPlannedDay: OrderedMap(),
-    repetitionsForToday: [],
-    lastSyncServerTime: 0,
-    lastSyncClientTime: 0,
-    lastSyncRequestClientTime: 0,
-    searchString: '',
-    currentDate: moment().format('YYYY-MM-DD')
-  }
-  // newFlashcardText: '',
-  // flashcards: [],
-  // repetitions: [],
-  // date: moment().format('YYYY-MM-DD'),
-  // lastSyncServerTime: 0,
-  // lastSyncClientTime: 0,
-  // lastSyncRequestClientTime: 0
+  userData: INITIAL_USER_DATA
 });
 
 export default function reducer (state = INITIAL_STATE, action = {}) {
@@ -48,7 +43,8 @@ function getUpdatedState (state, action) {
         credentials => credentials.merge(action.credentials));
   case 'RESET_LOGGED_IN_STATE':
     return state
-      .set('credentials', INITIAL_CREDENTIALS);
+      .set('credentials', INITIAL_CREDENTIALS)
+      .set('userData', INITIAL_USER_DATA);
   // case 'CHANGE_DATE':
   //   return state
   //     .set('date', action.date);
