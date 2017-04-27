@@ -115,6 +115,7 @@ export function syncData () {
   // If server returned a 400 response, prompt user to either
   // delete new flashcards / repetitions or retry.
   return function (dispatch, getState) {
+    const syncDataActionStart = Date.now();
     const syncSince = getState().getIn(['userData', 'lastSyncClientTime']) || 0;
     const flashcards = getState().getIn(['userData', 'flashcards'])
       .filter(flashcard => flashcard.get('updatedAt') > syncSince)
@@ -134,6 +135,8 @@ export function syncData () {
         actualDate: repetition.get('actualDate'),
         successful: repetition.get('successful')
       }));
+
+    console.log('Sync data action took ' + (Date.now() - syncDataActionStart) + ' ms');
 
     // TODO: we have to ensure data is sorted before sending it.
     return {

@@ -29,6 +29,7 @@ export const getTodayRepetitions = helpers.createDeepEqualSelector(
     state => state.get('currentDate')
   ],
   (repetitionsIndexedByPlannedDay, flashcards, currentDate) => {
+    const startTime = Date.now();
     const firstUncompletedDayRepetitionsKey = repetitionsIndexedByPlannedDay.findKey(
       repetitionsIndexForDay => !repetitionsIndexForDay.get('completed')
     );
@@ -76,12 +77,14 @@ export const getTodayRepetitions = helpers.createDeepEqualSelector(
       }
     })();
 
-    return todayRepetitions
+    const returnValue = todayRepetitions
       .map(repetition => repetition.set('flashcard',
         flashcards.find(flashcard => flashcard.get('uuid') === repetition.get('flashcardUuid'))))
       // We shouldn't need to filter anything out, just making sure that even if overall data
       // is inconsistent, all of today's repetitions have flashcards
       .filter(repetition => !!repetition.get('flashcard'));
+    console.log('Getter took ' + (Date.now() - startTime) + ' ms');
+    return returnValue;
   }
 );
 

@@ -11,10 +11,15 @@ class Repetitions extends React.Component {
   }
 
   runRepetition (repetition, successful) {
+    this.startTime = Date.now();
     this.props.runRepetition(repetition.get('uuid'), successful);
   }
 
   render () {
+    if (this.startTime) {
+      console.log('Updating repetitions took ' + (Date.now() - this.startTime) + ' ms');
+      this.startTime = null;
+    }
     return (
       <div>
         <ul>

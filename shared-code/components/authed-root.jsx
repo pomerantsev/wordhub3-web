@@ -62,7 +62,7 @@ class AuthedRoot extends React.Component {
           </a>
         </div>
         {this.props.children}
-        <table>
+        {/*<table>
           <tbody>
             {this.props.repetitionsIndexedByPlannedDay.map((repetitionsByDay, plannedDay) => (
               <tr
@@ -73,7 +73,7 @@ class AuthedRoot extends React.Component {
               </tr>
             ))}
           </tbody>
-        </table>
+        </table>*/}
       </div>
     );
   }
