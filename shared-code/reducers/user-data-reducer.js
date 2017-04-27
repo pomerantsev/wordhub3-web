@@ -86,6 +86,20 @@ function getUpdatedState (state, action) {
       ));
   }
 
+  case 'UPDATE_REPETITIONS_FOR_TODAY':
+    return state
+      .set('repetitionsForToday', getters.getTodayRepetitionsFromMainState(state));
+
+  case 'RUN_REPETITION_UPDATE_TODAY':
+    return state
+      .update('repetitionsForToday', repetitions => repetitions.map(repetition =>
+        repetition.get('uuid') === action.repetitionUuid ?
+          repetition
+            .set('actualDate', state.get('currentDate'))
+            .set('successful', action.successful)
+            .set('updatedAt', action.currentTime) :
+          repetition));
+
   case 'RUN_REPETITION': {
     const startTime = Date.now();
     const returnValue = (() => {
@@ -259,8 +273,14 @@ function getUpdatedState (state, action) {
 
     console.log('Sync data reducer took ' + (Date.now() - syncDataStart) + ' ms');
 
-    return updatedState
-      .set('repetitionsIndexedByPlannedDay', fullyUpdatedRepetitionsIndexByPlannedDay);
+    const stateWithUpdatedRepetitionsIndexedByPlannedDay =
+      updatedState
+        .set('repetitionsIndexedByPlannedDay', fullyUpdatedRepetitionsIndexByPlannedDay);
+
+    const repetitionsForToday = getters.getTodayRepetitionsFromMainState(stateWithUpdatedRepetitionsIndexedByPlannedDay);
+
+    return stateWithUpdatedRepetitionsIndexedByPlannedDay
+      .set('repetitionsForToday', repetitionsForToday);
   }
   case 'SEARCH_STRING_CHANGE': {
     return state

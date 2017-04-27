@@ -87,7 +87,10 @@ export function updateFlashcard (flashcardUuid, frontText, backText) {
   const currentTime = Date.now();
   return function (dispatch) {
     dispatch(() => ({type: 'UPDATE_FLASHCARD', flashcardUuid, frontText, backText, currentTime}));
-    dispatch(syncData());
+    window.setTimeout(() => {
+      dispatch(() => ({type: 'UPDATE_REPETITIONS_FOR_TODAY'}));
+      dispatch(syncData());
+    });
   };
 }
 
@@ -95,8 +98,11 @@ export function runRepetition (repetitionUuid, successful) {
   const currentTime = Date.now();
   const nextRepetitionUuid = uuid.v4();
   return function (dispatch) {
-    dispatch(() => ({type: 'RUN_REPETITION', repetitionUuid, successful, currentTime, nextRepetitionUuid}));
-    dispatch(syncData());
+    dispatch(() => ({type: 'RUN_REPETITION_UPDATE_TODAY', repetitionUuid, successful, currentTime}));
+    window.setTimeout(() => {
+      dispatch(() => ({type: 'RUN_REPETITION', repetitionUuid, successful, currentTime, nextRepetitionUuid}));
+      dispatch(syncData());
+    }, 0);
   };
 }
 

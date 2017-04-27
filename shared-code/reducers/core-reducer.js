@@ -16,6 +16,7 @@ const INITIAL_STATE = fromJS({
     flashcards: [],
     repetitions: [],
     repetitionsIndexedByPlannedDay: OrderedMap(),
+    repetitionsForToday: [],
     lastSyncServerTime: 0,
     lastSyncClientTime: 0,
     lastSyncRequestClientTime: 0,

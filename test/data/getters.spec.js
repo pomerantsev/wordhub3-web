@@ -1,9 +1,9 @@
 import 'mocha';
 import {assert} from 'chai';
 import {fromJS, OrderedMap} from 'immutable';
-import {getTodayRepetitions} from '../../shared-code/data/getters';
+import {getTodayRepetitionsFromMainState} from '../../shared-code/data/getters';
 
-describe('getTodayRepetitions', () => {
+describe('getTodayRepetitionsFromMainState', () => {
   describe('when there are no repetitions', () => {
     it('returns an empty list', () => {
       const state = fromJS({
@@ -11,7 +11,7 @@ describe('getTodayRepetitions', () => {
         flashcards: [],
         repetitionsIndexedByPlannedDay: OrderedMap()
       });
-      assert.equal(0, getTodayRepetitions(state).size);
+      assert.equal(0, getTodayRepetitionsFromMainState(state).size);
     });
   })
 
@@ -54,7 +54,7 @@ describe('getTodayRepetitions', () => {
           }))
         });
 
-        const repetitions = getTodayRepetitions(state);
+        const repetitions = getTodayRepetitionsFromMainState(state);
         assert.deepEqual([3, 5, 6], repetitions.toJS().map(repetition => repetition.uuid));
       })
     })
@@ -98,7 +98,7 @@ describe('getTodayRepetitions', () => {
             }))
           });
 
-          const repetitions = getTodayRepetitions(state);
+          const repetitions = getTodayRepetitionsFromMainState(state);
           assert.deepEqual([5, 6], repetitions.toJS().map(repetition => repetition.uuid));
         });
       });

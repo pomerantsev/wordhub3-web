@@ -22,7 +22,7 @@ export const getFlashcardsSorted = helpers.createDeepEqualSelector(
   }
 );
 
-export const getTodayRepetitions = helpers.createDeepEqualSelector(
+export const getTodayRepetitionsFromMainState = helpers.createDeepEqualSelector(
   [
     state => state.get('repetitionsIndexedByPlannedDay'),
     state => state.get('flashcards'),
@@ -86,6 +86,14 @@ export const getTodayRepetitions = helpers.createDeepEqualSelector(
     console.log('Getter took ' + (Date.now() - startTime) + ' ms');
     return returnValue;
   }
+);
+
+// TODO: creating a deep equal selector might be overkill.
+export const getTodayRepetitions = helpers.createDeepEqualSelector(
+  [
+    state => state.get('repetitionsForToday')
+  ],
+  repetitionsForToday => repetitionsForToday
 );
 
 export function getCurrentDay (state) {
