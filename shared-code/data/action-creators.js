@@ -168,5 +168,8 @@ export function searchStringChange (value) {
 }
 
 export function currentDateChange (value) {
-  return {type: 'CURRENT_DATE_CHANGE', value};
+  return function (dispatch) {
+    dispatch(() => ({type: 'CURRENT_DATE_CHANGE', value}));
+    dispatch(() => ({type: 'UPDATE_REPETITIONS_FOR_TODAY'}));
+  };
 }
