@@ -4,6 +4,7 @@ import uuid from 'uuid';
 import * as constants from '../data/constants';
 import * as api from './api';
 import * as storage from './storage';
+import * as dbStorage from './db-storage';
 import * as authUtils from '../utils/auth-utils';
 
 export function rehydrateCredentials (credentialsFromRequest, setCookieOnServer) {
@@ -143,6 +144,8 @@ export function syncData () {
       }));
 
     console.log('Sync data action took ' + (Date.now() - syncDataActionStart) + ' ms');
+
+    dbStorage.writeData({flashcards, repetitions});
 
     // TODO: we have to ensure data is sorted before sending it.
     return {
