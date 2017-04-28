@@ -225,10 +225,7 @@ function getUpdatedState (state, action) {
               .set('deleted', flashcardFromServer.get('deleted')) :
             flashcard;
         })
-        .concat(newFlashcards.map(flashcardFromServer => flashcardFromServer.merge({
-          createdAt: flashcardFromServer.get('createdAt'),
-          updatedAt: flashcardFromServer.get('updatedAt')
-        })))
+        .concat(newFlashcards)
       )
       .update('repetitions', repetitions => repetitions
         .map(repetition => {
