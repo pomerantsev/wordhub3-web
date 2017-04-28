@@ -20,10 +20,12 @@ export function rehydrateCredentials (credentialsFromRequest, setCookieOnServer)
 
 export function storeCredentials (credentials, setCookieOnServer) {
   return function (dispatch, getState) {
-    storage.storeCredentials(
-      getState().get('credentials', Map()).merge(credentials),
-      setCookieOnServer
-    );
+    const updatedCredentials = getState().get('credentials', Map()).merge(credentials);
+    storage.storeCredentials(updatedCredentials, setCookieOnServer);
+    console.log('Before openLocalDb');
+    if (!setCookieOnServer) {
+      dispatch(openLocalDb(updatedCredentials.get('email')));
+    }
     return {type: 'STORE_CREDENTIALS', credentials};
   };
 }
@@ -33,11 +35,24 @@ export function login (email, password) {
     // TODO: handle unsuccessful login
     api.login(email, password)
       .then(credentials => {
-        if (credentials.token) {
-          dispatch(storeCredentials(credentials));
-          dispatch(syncData());
-        }
+        dispatch(loginSuccess(email, credentials));
       });
+  };
+}
+
+export function loginSuccess (email, credentials) {
+  return function (dispatch) {
+    if (credentials.token) {
+      dispatch(storeCredentials(Object.assign({}, credentials, {email})));
+      dispatch(syncData());
+    }
+  };
+}
+
+export function openLocalDb (email) {
+  return {
+    type: 'OPEN_LOCAL_DB',
+    promise: dbStorage.openDb(email)
   };
 }
 
@@ -53,9 +68,7 @@ export function signup (email, password, name) {
     // TODO: Handle unsuccessful signup
     api.signup(email, password, name)
       .then(credentials => {
-        if (credentials.token) {
-          dispatch(storeCredentials(credentials));
-        }
+        dispatch(loginSuccess(email, credentials));
       });
   };
 }
@@ -145,7 +158,7 @@ export function syncData () {
 
     console.log('Sync data action took ' + (Date.now() - syncDataActionStart) + ' ms');
 
-    dbStorage.writeData({flashcards, repetitions});
+    dbStorage.writeData(getState().get('openLocalDbPromise'), {flashcards, repetitions});
 
     // TODO: we have to ensure data is sorted before sending it.
     return {

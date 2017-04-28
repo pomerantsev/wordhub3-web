@@ -41,10 +41,14 @@ function getUpdatedState (state, action) {
     return state
       .update('credentials',
         credentials => credentials.merge(action.credentials));
+  case 'OPEN_LOCAL_DB_REQUEST':
+    return state
+      .set('openLocalDbPromise', action.promise);
   case 'RESET_LOGGED_IN_STATE':
     return state
       .set('credentials', INITIAL_CREDENTIALS)
-      .set('userData', INITIAL_USER_DATA);
+      .set('userData', INITIAL_USER_DATA)
+      .delete('openLocalDbPromise');
   // case 'CHANGE_DATE':
   //   return state
   //     .set('date', action.date);

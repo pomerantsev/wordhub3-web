@@ -30,7 +30,7 @@ export default function asyncMiddleware ({dispatch, getState}) {
     const REQUEST = type + '_REQUEST';
     const FAILURE = type + '_FAILURE';
 
-    next({...rest, type: REQUEST});
+    next({promise, ...rest, type: REQUEST});
 
     return promise
       .then(result => {
