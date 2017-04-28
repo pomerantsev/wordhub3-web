@@ -4,7 +4,6 @@ const indexedDB = typeof window !== 'undefined' && window.indexedDB;
 
 function putRecord (transaction, store, record) {
   return new Promise((resolve, reject) => {
-    console.log('Putting value:', record);
     const request = transaction.objectStore(store).put(record);
     request.addEventListener('success', resolve);
     request.addEventListener('error', event => {
@@ -46,14 +45,13 @@ export function openDb (email) {
     Promise.reject();
 }
 
-export function writeData (openDbPromise, {flashcards, repetitions}) {
-  console.log('Flashcards to write to DB:', flashcards);
+export function writeData (openDbPromise, {flashcards, repetitions, assortedValues}) {
   if (!openDbPromise) {
     return Promise.reject();
   }
   openDbPromise.then(db => {
     const startTime = Date.now();
-    const transaction = db.transaction(['flashcards', 'repetitions'], 'readwrite');
+    const transaction = db.transaction(['flashcards', 'repetitions', 'assortedValues'], 'readwrite');
 
     return new Promise((resolve, reject) => {
       let requestPromise = Promise.resolve();
@@ -63,6 +61,9 @@ export function writeData (openDbPromise, {flashcards, repetitions}) {
       }
       for (const repetition of repetitions) {
         requestPromise = requestPromise.then(() => putRecord(transaction, 'repetitions', repetition));
+      }
+      for (const key in assortedValues) {
+        requestPromise = requestPromise.then(() => putRecord(transaction, 'assortedValues', {key, value: assortedValues[key]}));
       }
 
       transaction.addEventListener('complete', () => {

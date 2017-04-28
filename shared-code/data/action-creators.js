@@ -170,7 +170,17 @@ export function syncData () {
           flashcards,
           repetitions
         }
-      )
+      ).then(result => {
+        dbStorage.writeData(getState().get('openLocalDbPromise'), {
+          flashcards: result.flashcards,
+          repetitions: result.repetitions,
+          assortedValues: {
+            lastSyncClientTime: getState().getIn(['userData', 'lastSyncRequestClientTime']),
+            lastSyncServerTime: result.updatedAt
+          }
+        });
+        return result;
+      })
     };
   };
 }
