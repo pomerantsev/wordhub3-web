@@ -29,6 +29,53 @@ export default function userDataReducer (state, action/*, credentials*/) {
   return updatedState;
 }
 
+const flashcardsEqual = (flashcard1, flashcard2) =>
+  flashcard1.get('uuid') === flashcard2.get('uuid');
+const repetitionsEqual = (repetition1, repetition2) =>
+  repetition1.get('flashcardUuid') === repetition2.get('flashcardUuid') &&
+    repetition1.get('seq') === repetition2.get('seq');
+
+function getStateWithUpdatedRepetitionIndices (state, existingRepetitions, newRepetitions) {
+  let repetitionsIndexedByPlannedDay = state.get('repetitionsIndexedByPlannedDay');
+
+  existingRepetitions.forEach(existingRepetition => {
+    const repetitionInState = state.get('repetitions').find(repetition => repetitionsEqual(repetition, existingRepetition));
+    repetitionsIndexedByPlannedDay = repetitionsIndexedByPlannedDay
+      .updateIn([repetitionInState.get('plannedDay'), 'repetitions'], List(), repetitions =>
+        repetitions.splice(repetitions.findIndex(repetition => repetitionsEqual(repetition, existingRepetition)), 1)
+      )
+      .updateIn([existingRepetition.get('plannedDay'), 'repetitions'], List(), repetitions =>
+        repetitions.push(existingRepetition)
+      );
+  });
+
+  newRepetitions.forEach(newRepetition => {
+    repetitionsIndexedByPlannedDay = repetitionsIndexedByPlannedDay
+      .updateIn([newRepetition.get('plannedDay'), 'repetitions'], List(), repetitions =>
+        repetitions.push(newRepetition)
+      );
+  });
+
+  const fullyUpdatedRepetitionsIndexByPlannedDay = repetitionsIndexedByPlannedDay
+    .sortBy(
+      (value, key) => key,
+      (a, b) => a - b
+    )
+    .filter(repetitionsIndexForDay => repetitionsIndexForDay.get('repetitions').size > 0)
+    .map(repetitionsIndexForDay => repetitionsIndexForDay
+      .set('completed', repetitionsIndexForDay.get('repetitions').every(repetition => !!repetition.get('actualDate')))
+    );
+
+  const stateWithUpdatedRepetitionsIndexedByPlannedDay =
+    state
+      .set('repetitionsIndexedByPlannedDay', fullyUpdatedRepetitionsIndexByPlannedDay);
+
+  const repetitionsForToday = getters.getTodayRepetitionsFromMainState(stateWithUpdatedRepetitionsIndexedByPlannedDay);
+
+  return stateWithUpdatedRepetitionsIndexedByPlannedDay
+    .set('repetitionsForToday', repetitionsForToday);
+}
+
 function getUpdatedState (state, action) {
   switch (action.type) {
 
@@ -186,19 +233,21 @@ function getUpdatedState (state, action) {
     return returnValue;
   }
 
+  case 'READ_DB': {
+    const updatedState = state
+      .set('flashcards', action.flashcards)
+      .set('repetitions', action.repetitions)
+      .set('lastSyncClientTime', action.lastSyncClientTime)
+      .set('lastSyncServerTime', action.lastSyncServerTime);
+    return getStateWithUpdatedRepetitionIndices(updatedState, List(), action.repetitions);
+  }
+
   case 'SYNC_DATA_REQUEST': {
     return state
       .set('lastSyncRequestClientTime', Date.now());
   }
 
   case 'SYNC_DATA': {
-    const syncDataStart = Date.now();
-    const flashcardsEqual = (flashcard1, flashcard2) =>
-      flashcard1.get('uuid') === flashcard2.get('uuid');
-    const repetitionsEqual = (repetition1, repetition2) =>
-      repetition1.get('flashcardUuid') === repetition2.get('flashcardUuid') &&
-        repetition1.get('seq') === repetition2.get('seq');
-
     const result = fromJS(action.result);
     const existingFlashcards = result.get('flashcards').filter(receivedFlashcard =>
         state.get('flashcards').find(flashcard => flashcardsEqual(flashcard, receivedFlashcard)));
@@ -238,46 +287,7 @@ function getUpdatedState (state, action) {
         .concat(newRepetitions)
       );
 
-    let repetitionsIndexedByPlannedDay = updatedState.get('repetitionsIndexedByPlannedDay');
-
-    existingRepetitions.forEach(existingRepetition => {
-      const repetitionInState = updatedState.get('repetitions').find(repetition => repetitionsEqual(repetition, existingRepetition));
-      repetitionsIndexedByPlannedDay = repetitionsIndexedByPlannedDay
-        .updateIn([repetitionInState.get('plannedDay'), 'repetitions'], List(), repetitions =>
-          repetitions.splice(repetitions.findIndex(repetition => repetitionsEqual(repetition, existingRepetition)), 1)
-        )
-        .updateIn([existingRepetition.get('plannedDay'), 'repetitions'], List(), repetitions =>
-          repetitions.push(existingRepetition)
-        );
-    });
-
-    newRepetitions.forEach(newRepetition => {
-      repetitionsIndexedByPlannedDay = repetitionsIndexedByPlannedDay
-        .updateIn([newRepetition.get('plannedDay'), 'repetitions'], List(), repetitions =>
-          repetitions.push(newRepetition)
-        );
-    });
-
-    const fullyUpdatedRepetitionsIndexByPlannedDay = repetitionsIndexedByPlannedDay
-      .sortBy(
-        (value, key) => key,
-        (a, b) => a - b
-      )
-      .filter(repetitionsIndexForDay => repetitionsIndexForDay.get('repetitions').size > 0)
-      .map(repetitionsIndexForDay => repetitionsIndexForDay
-        .set('completed', repetitionsIndexForDay.get('repetitions').every(repetition => !!repetition.get('actualDate')))
-      );
-
-    console.log('Sync data reducer took ' + (Date.now() - syncDataStart) + ' ms');
-
-    const stateWithUpdatedRepetitionsIndexedByPlannedDay =
-      updatedState
-        .set('repetitionsIndexedByPlannedDay', fullyUpdatedRepetitionsIndexByPlannedDay);
-
-    const repetitionsForToday = getters.getTodayRepetitionsFromMainState(stateWithUpdatedRepetitionsIndexedByPlannedDay);
-
-    return stateWithUpdatedRepetitionsIndexedByPlannedDay
-      .set('repetitionsForToday', repetitionsForToday);
+    return getStateWithUpdatedRepetitionIndices(updatedState, existingRepetitions, newRepetitions);
   }
   case 'SEARCH_STRING_CHANGE': {
     return state

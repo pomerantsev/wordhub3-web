@@ -1,4 +1,4 @@
-import {Map} from 'immutable';
+import {fromJS, Map} from 'immutable';
 import uuid from 'uuid';
 
 import * as constants from '../data/constants';
@@ -44,7 +44,7 @@ export function loginSuccess (email, credentials) {
   return function (dispatch) {
     if (credentials.token) {
       dispatch(storeCredentials(Object.assign({}, credentials, {email})));
-      dispatch(syncData());
+      dispatch(readDb());
     }
   };
 }
@@ -127,6 +127,22 @@ export function runRepetition (repetitionUuid, successful) {
 // export function memorizeRepetition (uuid) {
 //   return {type: 'MEMORIZE_REPETITION', uuid};
 // }
+
+export function readDb () {
+  return function (dispatch, getState) {
+    dbStorage.getData(getState().get('openLocalDbPromise'))
+      .then(({flashcards, repetitions, lastSyncClientTime, lastSyncServerTime}) => {
+        dispatch(() => ({
+          type: 'READ_DB',
+          flashcards: fromJS(flashcards),
+          repetitions: fromJS(repetitions),
+          lastSyncClientTime,
+          lastSyncServerTime
+        }));
+        dispatch(syncData());
+      });
+  };
+}
 
 export function syncData () {
   // TODO: if sync request was unsuccessful (an error returned),

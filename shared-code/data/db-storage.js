@@ -78,3 +78,62 @@ export function writeData (openDbPromise, {flashcards, repetitions, assortedValu
     });
   });
 }
+
+function getRecord (db, store, key) {
+  return new Promise((resolve, reject) => {
+    const request = db.transaction(store).objectStore(store).get(key);
+
+    request.addEventListener('success', event => {
+      resolve(event.target.result.value);
+    });
+
+    request.addEventListener('error', event => {
+      console.log('Read request error', event);
+      reject();
+    });
+  });
+}
+
+function getAllRecords (db, store) {
+  return new Promise((resolve, reject) => {
+    const request = db.transaction(store).objectStore(store).openCursor();
+    const result = [];
+
+    request.addEventListener('success', event => {
+      const cursor = event.target.result;
+      if (cursor) {
+        result.push(cursor.value);
+        cursor.continue();
+      } else {
+        resolve(result);
+      }
+    });
+
+    request.addEventListener('error', event => {
+      console.log('Read request error', event);
+      reject();
+    });
+  });
+}
+
+export function getData (openDbPromise) {
+  const startTime = Date.now();
+  return openDbPromise.then(db => {
+    return Promise.all([
+      getAllRecords(db, 'flashcards'),
+      getAllRecords(db, 'repetitions'),
+      getRecord(db, 'assortedValues', 'lastSyncClientTime'),
+      getRecord(db, 'assortedValues', 'lastSyncServerTime')
+    ]);
+  }).then(([flashcards, repetitions, lastSyncClientTime, lastSyncServerTime]) => {
+    // console.log('Flashcards from local db:', flashcards.length, flashcards[0]);
+    // console.log('Repetitions from local db:', repetitions.length, repetitions[0]);
+    console.log('Read transaction completed successfully, it took', (Date.now() - startTime), 'ms');
+    return {
+      flashcards,
+      repetitions,
+      lastSyncClientTime,
+      lastSyncServerTime
+    };
+  });
+}
