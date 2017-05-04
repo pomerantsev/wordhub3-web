@@ -6,6 +6,7 @@ import * as api from './api';
 import * as storage from './storage';
 import * as dbStorage from './db-storage';
 import * as authUtils from '../utils/auth-utils';
+import * as helpers from '../utils/helpers';
 
 export function rehydrateCredentials (credentialsFromRequest, setCookieOnServer) {
   const credentials = credentialsFromRequest || storage.getCredentials();
@@ -174,7 +175,11 @@ export function syncData () {
 
     console.log('Sync data action took ' + (Date.now() - syncDataActionStart) + ' ms');
 
-    dbStorage.writeData(getState().get('openLocalDbPromise'), {flashcards, repetitions});
+    dbStorage.writeData(getState().get('openLocalDbPromise'), {
+      flashcards: flashcards.toJS(),
+      repetitionUuidsToDelete: [],
+      newRepetitions: repetitions.toJS()
+    });
 
     // TODO: we have to ensure data is sorted before sending it.
     return {
@@ -189,7 +194,12 @@ export function syncData () {
       ).then(result => {
         dbStorage.writeData(getState().get('openLocalDbPromise'), {
           flashcards: result.flashcards,
-          repetitions: result.repetitions,
+          repetitionUuidsToDelete: getState()
+            .getIn(['userData', 'repetitions'])
+            .filter(repetition => fromJS(result.repetitions).find(repetitionFromServer => helpers.repetitionsEqual(repetition, repetitionFromServer)))
+            .map(repetition => repetition.get('uuid'))
+            .toJS(),
+          newRepetitions: result.repetitions,
           assortedValues: {
             lastSyncClientTime: getState().getIn(['userData', 'lastSyncRequestClientTime']),
             lastSyncServerTime: result.updatedAt

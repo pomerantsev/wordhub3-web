@@ -13,6 +13,17 @@ function putRecord (transaction, store, record) {
   });
 }
 
+function deleteRecord (transaction, store, key) {
+  return new Promise((resolve, reject) => {
+    const request = transaction.objectStore(store).delete(key);
+    request.addEventListener('success', resolve);
+    request.addEventListener('error', event => {
+      console.log('Request errored:', event);
+      reject(event.target.errorCode);
+    });
+  });
+}
+
 export function openDb (email) {
   return indexedDB ?
     new Promise((resolve, reject) => {
@@ -45,7 +56,9 @@ export function openDb (email) {
     Promise.reject();
 }
 
-export function writeData (openDbPromise, {flashcards, repetitions, assortedValues}) {
+export function writeData (openDbPromise, {flashcards, repetitionUuidsToDelete, newRepetitions, assortedValues}) {
+  console.log('To delete:', repetitionUuidsToDelete);
+  console.log('To create:', newRepetitions);
   if (!openDbPromise) {
     return Promise.reject();
   }
@@ -59,7 +72,10 @@ export function writeData (openDbPromise, {flashcards, repetitions, assortedValu
       for (const flashcard of flashcards) {
         requestPromise = requestPromise.then(() => putRecord(transaction, 'flashcards', flashcard));
       }
-      for (const repetition of repetitions) {
+      for (const uuid of repetitionUuidsToDelete) {
+        requestPromise = requestPromise.then(() => deleteRecord(transaction, 'repetitions', uuid));
+      }
+      for (const repetition of newRepetitions) {
         requestPromise = requestPromise.then(() => putRecord(transaction, 'repetitions', repetition));
       }
       for (const key in assortedValues) {

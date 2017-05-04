@@ -10,3 +10,12 @@ export function getPaginatedLink (pathname, page) {
     pathname :
     `${pathname}?page=${page}`;
 }
+
+export function flashcardsEqual (flashcard1, flashcard2) {
+  return flashcard1.get('uuid') === flashcard2.get('uuid');
+}
+
+export function repetitionsEqual (repetition1, repetition2) {
+  return repetition1.get('flashcardUuid') === repetition2.get('flashcardUuid') &&
+    repetition1.get('seq') === repetition2.get('seq');
+}

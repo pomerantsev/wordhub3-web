@@ -3,6 +3,7 @@ import moment from 'moment';
 
 import * as constants from '../data/constants';
 import * as getters from '../data/getters';
+import * as helpers from '../utils/helpers';
 
 export default function userDataReducer (state, action/*, credentials*/) {
   const updatedState = getUpdatedState(state, action);
@@ -29,20 +30,14 @@ export default function userDataReducer (state, action/*, credentials*/) {
   return updatedState;
 }
 
-const flashcardsEqual = (flashcard1, flashcard2) =>
-  flashcard1.get('uuid') === flashcard2.get('uuid');
-const repetitionsEqual = (repetition1, repetition2) =>
-  repetition1.get('flashcardUuid') === repetition2.get('flashcardUuid') &&
-    repetition1.get('seq') === repetition2.get('seq');
-
 function getStateWithUpdatedRepetitionIndices (state, existingRepetitions, newRepetitions) {
   let repetitionsIndexedByPlannedDay = state.get('repetitionsIndexedByPlannedDay');
 
   existingRepetitions.forEach(existingRepetition => {
-    const repetitionInState = state.get('repetitions').find(repetition => repetitionsEqual(repetition, existingRepetition));
+    const repetitionInState = state.get('repetitions').find(repetition => helpers.repetitionsEqual(repetition, existingRepetition));
     repetitionsIndexedByPlannedDay = repetitionsIndexedByPlannedDay
       .updateIn([repetitionInState.get('plannedDay'), 'repetitions'], List(), repetitions =>
-        repetitions.splice(repetitions.findIndex(repetition => repetitionsEqual(repetition, existingRepetition)), 1)
+        repetitions.splice(repetitions.findIndex(repetition => helpers.repetitionsEqual(repetition, existingRepetition)), 1)
       )
       .updateIn([existingRepetition.get('plannedDay'), 'repetitions'], List(), repetitions =>
         repetitions.push(existingRepetition)
@@ -250,13 +245,13 @@ function getUpdatedState (state, action) {
   case 'SYNC_DATA': {
     const result = fromJS(action.result);
     const existingFlashcards = result.get('flashcards').filter(receivedFlashcard =>
-        state.get('flashcards').find(flashcard => flashcardsEqual(flashcard, receivedFlashcard)));
+        state.get('flashcards').find(flashcard => helpers.flashcardsEqual(flashcard, receivedFlashcard)));
     const newFlashcards = result.get('flashcards').filter(receivedFlashcard =>
-        !state.get('flashcards').find(flashcard => flashcardsEqual(flashcard, receivedFlashcard)));
+        !state.get('flashcards').find(flashcard => helpers.flashcardsEqual(flashcard, receivedFlashcard)));
     const existingRepetitions = result.get('repetitions').filter(receivedRepetition =>
-        state.get('repetitions').find(repetition => repetitionsEqual(repetition, receivedRepetition)));
+        state.get('repetitions').find(repetition => helpers.repetitionsEqual(repetition, receivedRepetition)));
     const newRepetitions = result.get('repetitions').filter(receivedRepetition =>
-        !state.get('repetitions').find(repetition => repetitionsEqual(repetition, receivedRepetition)));
+        !state.get('repetitions').find(repetition => helpers.repetitionsEqual(repetition, receivedRepetition)));
 
     // TODO: are we sure it's the same request?
     // Handle the case when request didn't go through.
@@ -266,7 +261,7 @@ function getUpdatedState (state, action) {
       .update('flashcards', flashcards => flashcards
         .map(flashcard => {
           const flashcardFromServer = existingFlashcards
-            .find(existingFlashcard => flashcardsEqual(existingFlashcard, flashcard));
+            .find(existingFlashcard => helpers.flashcardsEqual(existingFlashcard, flashcard));
           return flashcardFromServer ?
             flashcard
               .set('frontText', flashcardFromServer.get('frontText'))
@@ -279,7 +274,7 @@ function getUpdatedState (state, action) {
       .update('repetitions', repetitions => repetitions
         .map(repetition => {
           const repetitionFromServer = existingRepetitions
-            .find(existingRepetition => repetitionsEqual(existingRepetition, repetition));
+            .find(existingRepetition => helpers.repetitionsEqual(existingRepetition, repetition));
           return repetitionFromServer ?
             repetitionFromServer :
             repetition;
