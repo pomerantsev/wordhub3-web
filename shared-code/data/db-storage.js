@@ -100,7 +100,7 @@ function getRecord (db, store, key) {
     const request = db.transaction(store).objectStore(store).get(key);
 
     request.addEventListener('success', event => {
-      resolve(event.target.result.value);
+      resolve(event.target.result && event.target.result.value);
     });
 
     request.addEventListener('error', event => {
