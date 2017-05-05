@@ -20,6 +20,8 @@ import asyncMiddleware from '../shared-code/data/async-middleware';
 import getRoutes from '../shared-code/routes.jsx';
 import * as constants from '../shared-code/data/constants';
 
+import NotFound from '../shared-code/components/not-found.jsx';
+
 const app = express();
 
 // https://blog.risingstack.com/node-js-security-checklist/
@@ -108,8 +110,10 @@ app.use((req, res) => {
       });
     }
 
+    const objectNotFound = renderProps.routes.find(route => route.component === NotFound);
+
     renderView()
-      .then(html => res.type('html').end(html))
+      .then(html => res.status(objectNotFound ? 404 : 200).type('html').end(html))
       .catch(err => {
         res.status(500).send(err.message);
       });
