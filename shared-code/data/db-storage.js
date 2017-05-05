@@ -1,6 +1,10 @@
 const dbNamePrefix = 'wordhub_';
 
-const indexedDB = typeof window !== 'undefined' && window.indexedDB;
+// Only enable indexedDB in Chrome for now - performance in Safari and Firefox
+// seems to be too low.
+const indexedDB = typeof window !== 'undefined' &&
+  /Chrome/.test(navigator.userAgent) &&
+  window.indexedDB;
 
 function putRecord (transaction, store, record) {
   return new Promise((resolve, reject) => {
@@ -92,6 +96,8 @@ export function writeData (openDbPromise, {flashcards, repetitionUuidsToDelete, 
         reject(event.target.errorCode);
       });
     });
+  }, () => {
+    // Fail silently - IndexedDB is not supported
   });
 }
 
@@ -140,16 +146,19 @@ export function getData (openDbPromise) {
       getAllRecords(db, 'repetitions'),
       getRecord(db, 'assortedValues', 'lastSyncClientTime'),
       getRecord(db, 'assortedValues', 'lastSyncServerTime')
-    ]);
-  }).then(([flashcards, repetitions, lastSyncClientTime, lastSyncServerTime]) => {
-    // console.log('Flashcards from local db:', flashcards.length, flashcards[0]);
-    // console.log('Repetitions from local db:', repetitions.length, repetitions[0]);
-    console.log('Read transaction completed successfully, it took', (Date.now() - startTime), 'ms');
-    return {
-      flashcards,
-      repetitions,
-      lastSyncClientTime,
-      lastSyncServerTime
-    };
-  });
+    ]).then(([flashcards, repetitions, lastSyncClientTime, lastSyncServerTime]) => {
+      // console.log('Flashcards from local db:', flashcards.length, flashcards[0]);
+      // console.log('Repetitions from local db:', repetitions.length, repetitions[0]);
+      console.log('Read transaction completed successfully, it took', (Date.now() - startTime), 'ms');
+      return {
+        flashcards,
+        repetitions,
+        lastSyncClientTime,
+        lastSyncServerTime
+      };
+    });
+  }, () => ({
+    flashcards: [],
+    repetitions: []
+  }));
 }
