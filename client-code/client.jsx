@@ -20,8 +20,15 @@ import transit from 'transit-immutable-js';
 import asyncMiddleware from '../shared-code/data/async-middleware';
 import reducer from '../shared-code/reducers/core-reducer';
 
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/service-worker.js');
+  });
+}
+
 const initialState = (() => {
   try {
+    console.log(transit.fromJSON(window.__SERIALIZED_INITIAL_STATE__).toJS());
     return transit.fromJSON(window.__SERIALIZED_INITIAL_STATE__);
   } catch (e) {
     return undefined;

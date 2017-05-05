@@ -23,10 +23,14 @@ const notify = error => {
 const basePaths = {
   assets: './assets/',
   clientCode: './client-code',
+  serviceWorker: './service-worker',
   sharedCode: './shared-code',
   serverCode: './server-code',
   dest: './dist/'
 };
+
+const mainClientFile = basePaths.clientCode + '/client.jsx';
+const serviceWorkerFile = basePaths.serviceWorker + '/service-worker.js';
 
 const folders = {
   scripts: 'scripts',
@@ -42,6 +46,7 @@ gulp.task('eslint', () => {
   return gulp.src([
     basePaths.serverCode + '/**/*.{js,jsx}',
     basePaths.clientCode + '/**/*.{js,jsx}',
+    basePaths.serviceWorker + '/**/*.js',
     basePaths.sharedCode + '/**/*.{js,jsx}'
   ])
     .pipe($.plumber(notify))
@@ -50,10 +55,10 @@ gulp.task('eslint', () => {
     .pipe($.eslint.failAfterError());
 });
 
-function getCommonScriptsTransform (opts) {
+function getCommonScriptsTransform (file, opts) {
   process.env.BABEL_ENV = 'browser';
   return browserify({
-    entries: [basePaths.clientCode + '/client.jsx'],
+    entries: [file],
     debug: opts.debug
   }).transform('babelify')
     .bundle();
@@ -61,7 +66,7 @@ function getCommonScriptsTransform (opts) {
 
 gulp.task('scripts:dev', ['eslint'], () => {
   process.env.NODE_ENV = 'development';
-  return getCommonScriptsTransform({debug: true})
+  return getCommonScriptsTransform(mainClientFile, {debug: true})
     .on('error', error => {
       notify(error);
       this.emit('end');
@@ -74,7 +79,7 @@ gulp.task('scripts:dev', ['eslint'], () => {
 
 gulp.task('scripts:prod', ['eslint'], () => {
   process.env.NODE_ENV = 'production';
-  return getCommonScriptsTransform({debug: false})
+  return getCommonScriptsTransform(mainClientFile, {debug: false})
     .pipe(source('app.js'))
     .pipe(buffer())
     .pipe($.envify(Object.assign({}, process.env, {
@@ -83,6 +88,34 @@ gulp.task('scripts:prod', ['eslint'], () => {
     })))
     .pipe($.uglify())
     .pipe(gulp.dest(basePaths.dest + folders.scripts));
+});
+
+
+
+gulp.task('service-worker:dev', ['eslint'], () => {
+  process.env.NODE_ENV = 'development';
+  return getCommonScriptsTransform(serviceWorkerFile, {debug: true})
+    .on('error', error => {
+      notify(error);
+      this.emit('end');
+    })
+    .pipe(source('service-worker.js'))
+    .pipe(buffer())
+    .pipe($.envify(process.env))
+    .pipe(gulp.dest(basePaths.dest));
+});
+
+gulp.task('service-worker:prod', ['eslint'], () => {
+  process.env.NODE_ENV = 'production';
+  return getCommonScriptsTransform(serviceWorkerFile, {debug: false})
+    .pipe(source('service-worker.js'))
+    .pipe(buffer())
+    .pipe($.envify(Object.assign({}, process.env, {
+      NODE_ENV: process.env.NODE_ENV_PROD,
+      API_SERVER: process.env.API_SERVER_PROD
+    })))
+    .pipe($.uglify())
+    .pipe(gulp.dest(basePaths.dest));
 });
 
 
@@ -156,6 +189,7 @@ gulp.task('gulpfile', () => {
 
 gulp.task('build:dev', [
   'scripts:dev',
+  'service-worker:dev',
   'styles:dev',
   'images:dev',
   'copy'
@@ -176,6 +210,10 @@ gulp.task('watch', ['connect:dev'], () => {
     basePaths.sharedCode + '/**/*.{js,jsx}'
   ], () => {
     gulp.start('scripts:dev');
+  });
+
+  $.watch(basePaths.serviceWorker + '/**/*.js', () => {
+    gulp.start('service-worker:dev');
   });
 
   $.watch(basePaths.assets + folders.styles + '/**/*.scss', () => {
@@ -210,6 +248,7 @@ gulp.task('build:prod', callback => {
     'clean:dist',
     [
       'scripts:prod',
+      'service-worker:prod',
       'styles:prod',
       'images:prod',
       'copy'
