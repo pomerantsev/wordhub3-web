@@ -38,7 +38,7 @@ export function openDb (email) {
       request.addEventListener('upgradeneeded', event => {
         console.log('Upgrading the database');
         db = event.target.result;
-        if (event.newVersion >= 1) {
+        if (event.newVersion >= 1 && event.oldVersion < 1) {
           db.createObjectStore('flashcards', {keyPath: 'uuid'});
           db.createObjectStore('repetitions', {keyPath: 'uuid'});
           db.createObjectStore('assortedValues', {keyPath: 'key'});
