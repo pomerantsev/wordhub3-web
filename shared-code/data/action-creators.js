@@ -192,6 +192,8 @@ export function syncData () {
           repetitions
         }
       ).then(result => {
+        // Writing data to DB happens asynchronously and independently from the
+        // in-memory representation of data.
         dbStorage.writeData(getState().get('openLocalDbPromise'), {
           flashcards: result.flashcards,
           repetitionUuidsToDelete: getState()
@@ -205,10 +207,22 @@ export function syncData () {
             lastSyncServerTime: result.updatedAt
           }
         });
+        dispatch(setOnline(true));
         return result;
+      }).catch(error => {
+        if (!error.status) {
+          // We're offline!
+          dispatch(setOnline(false));
+        }
+        // TODO: Handle a server error response - can we do something meaningful here?
+        throw error;
       })
     };
   };
+}
+
+export function setOnline (online) {
+  return {type: 'SET_ONLINE', online};
 }
 
 // export function resetSendDataTime () {

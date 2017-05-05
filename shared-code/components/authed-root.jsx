@@ -35,6 +35,13 @@ class AuthedRoot extends React.Component {
     const repetitionCounts = this.getTodayRepetitionCounts();
     return (
       <div>
+        {this.props.online ?
+          null :
+          <div
+              style={{color: 'red'}}>
+            Offline!
+          </div>
+        }
         <input
             type="date"
             value={this.props.currentDate}
@@ -84,7 +91,8 @@ export const AuthedRootContainer = connect(
   state => ({
     todayRepetitions: getters.getTodayRepetitions(state.get('userData')),
     currentDate: state.getIn(['userData', 'currentDate']),
-    repetitionsIndexedByPlannedDay: state.getIn(['userData', 'repetitionsIndexedByPlannedDay']).reverse()
+    repetitionsIndexedByPlannedDay: state.getIn(['userData', 'repetitionsIndexedByPlannedDay']).reverse(),
+    online: state.get('online')
   }),
   actionCreators
 )(AuthedRoot);

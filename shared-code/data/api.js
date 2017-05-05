@@ -10,7 +10,14 @@ export async function syncData (token, timestamp, data) {
     body: JSON.stringify(data)
   });
   const serverData = await res.json();
-  return serverData;
+  if (res.ok) {
+    return serverData;
+  } else {
+    throw {
+      status: res.status,
+      body: serverData
+    };
+  }
 }
 
 export async function login (email, password) {

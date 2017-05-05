@@ -24,7 +24,8 @@ const INITIAL_USER_DATA = fromJS({
 
 const INITIAL_STATE = fromJS({
   credentials: INITIAL_CREDENTIALS,
-  userData: INITIAL_USER_DATA
+  userData: INITIAL_USER_DATA,
+  online: true
 });
 
 export default function reducer (state = INITIAL_STATE, action = {}) {
@@ -174,6 +175,11 @@ function getUpdatedState (state, action) {
   //   return state
   //     .set('lastSyncClientTime', 0);
   // }
+
+  case 'SET_ONLINE': {
+    return state
+      .set('online', action.online);
+  }
 
   default:
     return state
