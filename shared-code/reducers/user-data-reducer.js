@@ -1,5 +1,4 @@
 import {fromJS, List, Map} from 'immutable';
-import moment from 'moment';
 
 import * as constants from '../data/constants';
 import * as getters from '../data/getters';
@@ -80,6 +79,7 @@ function getUpdatedState (state, action) {
       uuid: action.flashcardUuid,
       frontText: action.frontText,
       backText: action.backText,
+      creationDay: flashcardCreationDay,
       createdAt: action.currentTime,
       updatedAt: action.currentTime,
       // An aggregate property that's not used by the backend
@@ -177,11 +177,9 @@ function getUpdatedState (state, action) {
       // There can either be 1 or more repetitions, but never zero,
       // because we're running a repetition for the given flashcard now.
       const previousDay = allRepetitionsForFlashcard.size === 1 ?
-        moment(
-          state.get('flashcards')
-            .find(flashcard => flashcard.get('uuid') === updatedRepetition.get('flashcardUuid'))
-            .get('createdAt')
-        ).diff(constants.SEED_DATE, 'days') :
+        state.get('flashcards')
+          .find(flashcard => flashcard.get('uuid') === updatedRepetition.get('flashcardUuid'))
+          .get('creationDay') :
         allRepetitionsForFlashcard.getIn([allRepetitionsForFlashcard.size - 2, 'plannedDay']);
       // TODO: here's a random component, which is not ideal in a reducer,
       // but we'll stick with it for now.
