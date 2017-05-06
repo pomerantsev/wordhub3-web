@@ -81,7 +81,9 @@ function getUpdatedState (state, action) {
       frontText: action.frontText,
       backText: action.backText,
       createdAt: action.currentTime,
-      updatedAt: action.currentTime
+      updatedAt: action.currentTime,
+      // An aggregate property that's not used by the backend
+      learned: false
     });
     const newRepetition = fromJS({
       uuid: action.repetitionUuid,
@@ -144,86 +146,87 @@ function getUpdatedState (state, action) {
 
   case 'RUN_REPETITION': {
     const startTime = Date.now();
-    const returnValue = (() => {
-      const repetitionIndex = state.get('repetitions').findIndex(repetition =>
-        repetition.get('uuid') === action.repetitionUuid);
-      const updatedRepetition = state.getIn(['repetitions', repetitionIndex])
-        .set('actualDate', helpers.getCurrentDate(action.currentTime))
-        .set('successful', action.successful)
-        .set('updatedAt', action.currentTime);
+    const repetitionIndex = state.get('repetitions').findIndex(repetition =>
+      repetition.get('uuid') === action.repetitionUuid);
+    const updatedRepetition = state.getIn(['repetitions', repetitionIndex])
+      .set('actualDate', helpers.getCurrentDate(action.currentTime))
+      .set('successful', action.successful)
+      .set('updatedAt', action.currentTime);
 
-      const stateWithUpdatedRepetition = state
-        .setIn(['repetitions', repetitionIndex], updatedRepetition)
-        .updateIn(['repetitionsIndexedByPlannedDay', updatedRepetition.get('plannedDay')], repetitionsIndexForDay => {
-          const repetitionIndexWithUpdatedRepetitions = repetitionsIndexForDay
-            .update('repetitions', repetitions => repetitions.map(repetition =>
-              repetition.get('uuid') === action.repetitionUuid ?
-                updatedRepetition :
-                repetition
-            ));
-          return repetitionIndexWithUpdatedRepetitions
-            .set('completed', repetitionIndexWithUpdatedRepetitions.get('repetitions').every(repetition => !!repetition.get('actualDate')));
-        });
-      const nextRepetition = (() => {
-        const allRepetitionsForFlashcard = stateWithUpdatedRepetition.get('repetitions')
-          .filter(repetition => repetition.get('flashcardUuid') === stateWithUpdatedRepetition.getIn(['repetitions', repetitionIndex, 'flashcardUuid']))
-          .sort((repetition1, repetition2) => repetition1.get('seq') - repetition2.get('seq'));
-        const lastUnsuccessfulIndex = allRepetitionsForFlashcard.findLastIndex(repetition => !repetition.get('successful'));
-        const successStreakLength = allRepetitionsForFlashcard.size - lastUnsuccessfulIndex - 1;
-        if (successStreakLength >= constants.MAX_REPETITIONS) {
-          return null;
-        }
-        // There can either be 1 or more repetitions, but never zero,
-        // because we're running a repetition for the given flashcard now.
-        const previousDay = allRepetitionsForFlashcard.size === 1 ?
-          moment(
-            state.get('flashcards')
-              .find(flashcard => flashcard.get('uuid') === updatedRepetition.get('flashcardUuid'))
-              .get('createdAt')
-          ).diff(constants.SEED_DATE, 'days') :
-          allRepetitionsForFlashcard.getIn([allRepetitionsForFlashcard.size - 2, 'plannedDay']);
-        // TODO: here's a random component, which is not ideal in a reducer,
-        // but we'll stick with it for now.
-        const diffDays = successStreakLength === 0 ?
-          constants.MIN_DIFF_DAYS_FIRST_REPETITION +
-            Math.floor(Math.random() * (constants.MAX_DIFF_DAYS_FIRST_REPETITION - constants.MIN_DIFF_DAYS_FIRST_REPETITION + 1)) :
-          (() => {
-            const interval = updatedRepetition.get('plannedDay') - previousDay;
-            return interval * 2 + Math.floor(Math.random() * (interval + 1));
-          })();
-        return fromJS({
-          uuid: action.nextRepetitionUuid,
-          flashcardUuid: updatedRepetition.get('flashcardUuid'),
-          seq: updatedRepetition.get('seq') + 1,
-          plannedDay: updatedRepetition.get('plannedDay') + diffDays,
-          createdAt: action.currentTime,
-          updatedAt: action.currentTime
-        });
-      })();
-
-      if (nextRepetition) {
-        return stateWithUpdatedRepetition
-          .update('repetitions', repetitions => repetitions.push(nextRepetition))
-          .updateIn(
-            ['repetitionsIndexedByPlannedDay', nextRepetition.get('plannedDay')],
-            Map(),
-            repetitionsIndexForDay => {
-              const updatedRepetitions = repetitionsIndexForDay.get('repetitions', List()).push(nextRepetition);
-              return repetitionsIndexForDay
-                .set('repetitions', updatedRepetitions)
-                .set('completed', updatedRepetitions.every(repetition => !!repetition.get('actualDate')));
-            }
-          )
-          .update('repetitionsIndexedByPlannedDay', repetitionsIndexedByPlannedDay =>
-            repetitionsIndexedByPlannedDay.sortBy(
-              (value, key) => key,
-              (a, b) => a - b
-            )
-          );
-      } else {
-        return stateWithUpdatedRepetition;
+    const stateWithUpdatedRepetition = state
+      .setIn(['repetitions', repetitionIndex], updatedRepetition)
+      .updateIn(['repetitionsIndexedByPlannedDay', updatedRepetition.get('plannedDay')], repetitionsIndexForDay => {
+        const repetitionIndexWithUpdatedRepetitions = repetitionsIndexForDay
+          .update('repetitions', repetitions => repetitions.map(repetition =>
+            repetition.get('uuid') === action.repetitionUuid ?
+              updatedRepetition :
+              repetition
+          ));
+        return repetitionIndexWithUpdatedRepetitions
+          .set('completed', repetitionIndexWithUpdatedRepetitions.get('repetitions').every(repetition => !!repetition.get('actualDate')));
+      });
+    const nextRepetition = (() => {
+      const allRepetitionsForFlashcard = stateWithUpdatedRepetition.get('repetitions')
+        .filter(repetition => repetition.get('flashcardUuid') === stateWithUpdatedRepetition.getIn(['repetitions', repetitionIndex, 'flashcardUuid']))
+        .sort((repetition1, repetition2) => repetition1.get('seq') - repetition2.get('seq'));
+      const lastUnsuccessfulIndex = allRepetitionsForFlashcard.findLastIndex(repetition => !repetition.get('successful'));
+      const successStreakLength = allRepetitionsForFlashcard.size - lastUnsuccessfulIndex - 1;
+      if (successStreakLength >= constants.MAX_REPETITIONS) {
+        return null;
       }
+      // There can either be 1 or more repetitions, but never zero,
+      // because we're running a repetition for the given flashcard now.
+      const previousDay = allRepetitionsForFlashcard.size === 1 ?
+        moment(
+          state.get('flashcards')
+            .find(flashcard => flashcard.get('uuid') === updatedRepetition.get('flashcardUuid'))
+            .get('createdAt')
+        ).diff(constants.SEED_DATE, 'days') :
+        allRepetitionsForFlashcard.getIn([allRepetitionsForFlashcard.size - 2, 'plannedDay']);
+      // TODO: here's a random component, which is not ideal in a reducer,
+      // but we'll stick with it for now.
+      const diffDays = successStreakLength === 0 ?
+        constants.MIN_DIFF_DAYS_FIRST_REPETITION +
+          Math.floor(Math.random() * (constants.MAX_DIFF_DAYS_FIRST_REPETITION - constants.MIN_DIFF_DAYS_FIRST_REPETITION + 1)) :
+        (() => {
+          const interval = updatedRepetition.get('plannedDay') - previousDay;
+          return interval * 2 + Math.floor(Math.random() * (interval + 1));
+        })();
+      return fromJS({
+        uuid: action.nextRepetitionUuid,
+        flashcardUuid: updatedRepetition.get('flashcardUuid'),
+        seq: updatedRepetition.get('seq') + 1,
+        plannedDay: updatedRepetition.get('plannedDay') + diffDays,
+        createdAt: action.currentTime,
+        updatedAt: action.currentTime
+      });
     })();
+
+    const stateWithAddedNextRepetition = nextRepetition ?
+      stateWithUpdatedRepetition
+        .update('repetitions', repetitions => repetitions.push(nextRepetition))
+        .updateIn(
+          ['repetitionsIndexedByPlannedDay', nextRepetition.get('plannedDay')],
+          Map(),
+          repetitionsIndexForDay => {
+            const updatedRepetitions = repetitionsIndexForDay.get('repetitions', List()).push(nextRepetition);
+            return repetitionsIndexForDay
+              .set('repetitions', updatedRepetitions)
+              .set('completed', updatedRepetitions.every(repetition => !!repetition.get('actualDate')));
+          }
+        )
+        .update('repetitionsIndexedByPlannedDay', repetitionsIndexedByPlannedDay =>
+          repetitionsIndexedByPlannedDay.sortBy(
+            (value, key) => key,
+            (a, b) => a - b
+          )
+        ) :
+      stateWithUpdatedRepetition;
+    const returnValue = stateWithAddedNextRepetition
+      .updateIn(
+        ['flashcards', stateWithAddedNextRepetition.get('flashcards').findIndex(flashcard => flashcard.get('uuid') === updatedRepetition.get('flashcardUuid'))],
+        flashcard => flashcard.set('learned', !nextRepetition)
+      );
     console.log('Reducer took ' + (Date.now() - startTime) + ' ms');
     return returnValue;
   }
@@ -243,6 +246,7 @@ function getUpdatedState (state, action) {
   }
 
   case 'SYNC_DATA': {
+    const startTime = Date.now();
     const result = fromJS(action.result);
     const existingFlashcards = result.get('flashcards').filter(receivedFlashcard =>
         state.get('flashcards').find(flashcard => helpers.flashcardsEqual(flashcard, receivedFlashcard)));
@@ -282,7 +286,25 @@ function getUpdatedState (state, action) {
         .concat(newRepetitions)
       );
 
-    return getStateWithUpdatedRepetitionIndices(updatedState, existingRepetitions, newRepetitions);
+    // This is a temporary structure to speed up calculations of whether flashcards are learned.
+    let repetitionsGroupedByFlashcard = Map();
+    updatedState.get('repetitions').forEach(repetition => {
+      repetitionsGroupedByFlashcard = repetitionsGroupedByFlashcard
+        .update(repetition.get('flashcardUuid'), List(), repetitionsForFlashcard => repetitionsForFlashcard.push(repetition));
+    });
+    const lastRepetitionActualDates = repetitionsGroupedByFlashcard.map(repetitionsForFlashcard =>
+      repetitionsForFlashcard
+        .sort((rep1, rep2) => rep1.get('seq') - rep2.get('seq'))
+        .last()
+        .get('actualDate')
+    );
+    const stateWithUpdatedFlashcardLearned = updatedState
+      .update('flashcards', flashcards => flashcards.map(flashcard =>
+        flashcard.set('learned', !!lastRepetitionActualDates.get(flashcard.get('uuid')))));
+
+    const stateWithUpdatedRepetitionIndices = getStateWithUpdatedRepetitionIndices(stateWithUpdatedFlashcardLearned, existingRepetitions, newRepetitions);
+    console.log('SyncData reducer took ' + (Date.now() - startTime) + ' ms');
+    return stateWithUpdatedRepetitionIndices;
   }
   case 'SEARCH_STRING_CHANGE': {
     return state

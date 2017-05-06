@@ -79,12 +79,15 @@ class FlashcardList extends React.Component {
                   null
                 }
                 <li>
-                  <Link
-                      to={`/flashcards/${flashcard.get('uuid')}`}>
-                    <span>{flashcard.get('uuid')}</span>
-                    <span>&nbsp;</span>
-                    <span>{flashcard.get('frontText').match(/([^\n]*)(\n|$)/)[1]}</span>
-                  </Link>
+                  <span>
+                    <Link
+                        to={`/flashcards/${flashcard.get('uuid')}`}
+                        style={{color: flashcard.get('learned') ? 'green' : 'black'}}>
+                      <span>{flashcard.get('uuid')}</span>
+                      <span>&nbsp;</span>
+                      <span>{flashcard.get('frontText').match(/([^\n]*)(\n|$)/)[1]}</span>
+                    </Link>
+                  </span>
                 </li>
               </div>
             );
