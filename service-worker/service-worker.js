@@ -2,6 +2,12 @@ const CACHE_NAME = 'wordhub-cache';
 
 self.addEventListener('fetch', async function (event) {
 
+  if (event.request.mode === 'cors') {
+    // Requesting something from another domain - means that we're trying to access the API,
+    // no need to handle this request with the service worker.
+    return;
+  }
+
   event.respondWith((async function () {
 
     try {
