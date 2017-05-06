@@ -26,7 +26,7 @@ export const getTodayRepetitionsFromMainState = helpers.createDeepEqualSelector(
   [
     state => state.get('repetitionsIndexedByPlannedDay'),
     state => state.get('flashcards'),
-    state => state.get('currentDate')
+    () => helpers.getCurrentDate()
   ],
   (repetitionsIndexedByPlannedDay, flashcards, currentDate) => {
     const startTime = Date.now();
@@ -103,7 +103,7 @@ export function getCurrentDay (state) {
   } else {
     const lastCompletedDay = state.get('repetitionsIndexedByPlannedDay')
       .findLastKey(repetitionsIndexForDay => repetitionsIndexForDay.get('completed'));
-    const currentDateMoment = moment(state.get('currentDate'));
+    const currentDateMoment = moment(helpers.getCurrentDate());
     if (typeof lastCompletedDay === 'number') {
       const latestDateFromLastCompletedDay = state.getIn(['repetitionsIndexedByPlannedDay', lastCompletedDay, 'repetitions'])
         .reduce((latestDate, repetition) =>

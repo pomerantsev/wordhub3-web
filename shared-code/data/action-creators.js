@@ -1,5 +1,6 @@
 import {fromJS, Map} from 'immutable';
 import uuid from 'uuid';
+import moment from 'moment';
 
 import * as constants from '../data/constants';
 import * as api from './api';
@@ -45,8 +46,15 @@ export function loginSuccess (email, credentials) {
   return function (dispatch) {
     if (credentials.token) {
       dispatch(storeCredentials(Object.assign({}, credentials, {email})));
-      dispatch(readDb());
+      dispatch(startLoggedInState());
     }
+  };
+}
+
+export function startLoggedInState () {
+  return function (dispatch) {
+    dispatch(setLastCurrentDate(helpers.getCurrentDate()));
+    dispatch(readDb());
   };
 }
 
@@ -152,33 +160,26 @@ export function syncData () {
   // If server returned a 400 response, prompt user to either
   // delete new flashcards / repetitions or retry.
   return function (dispatch, getState) {
+    const newCurrentDate = moment().format('YYYY-MM-DD');
+    if (newCurrentDate !== getState().getIn(['userData', 'lastCurrentDate'])) {
+      dispatch(setLastCurrentDate(newCurrentDate));
+    }
+
     const syncDataActionStart = Date.now();
     const syncSince = getState().getIn(['userData', 'lastSyncClientTime']);
     const flashcards = getState().getIn(['userData', 'flashcards'])
       .filter(flashcard => flashcard.get('updatedAt') > syncSince)
-      .map(flashcard => ({
-        uuid: flashcard.get('uuid'),
-        frontText: flashcard.get('frontText'),
-        backText: flashcard.get('backText'),
-        deleted: flashcard.get('deleted')
-      }));
+      .toJS();
     const repetitions = getState().getIn(['userData', 'repetitions'])
       .filter(repetition => repetition.get('updatedAt') > syncSince)
-      .map(repetition => ({
-        uuid: repetition.get('uuid'),
-        flashcardUuid: repetition.get('flashcardUuid'),
-        seq: repetition.get('seq'),
-        plannedDay: repetition.get('plannedDay'),
-        actualDate: repetition.get('actualDate'),
-        successful: repetition.get('successful')
-      }));
+      .toJS();
 
     console.log('Sync data action took ' + (Date.now() - syncDataActionStart) + ' ms');
 
     dbStorage.writeData(getState().get('openLocalDbPromise'), {
-      flashcards: flashcards.toJS(),
+      flashcards: flashcards,
       repetitionUuidsToDelete: [],
-      newRepetitions: repetitions.toJS()
+      newRepetitions: repetitions
     });
 
     // TODO: we have to ensure data is sorted before sending it.
@@ -233,9 +234,9 @@ export function searchStringChange (value) {
   return {type: 'SEARCH_STRING_CHANGE', value};
 }
 
-export function currentDateChange (value) {
+export function setLastCurrentDate (value) {
   return function (dispatch) {
-    dispatch(() => ({type: 'CURRENT_DATE_CHANGE', value}));
+    dispatch(() => ({type: 'SET_LAST_CURRENT_DATE', value}));
     dispatch(() => ({type: 'UPDATE_REPETITIONS_FOR_TODAY'}));
   };
 }

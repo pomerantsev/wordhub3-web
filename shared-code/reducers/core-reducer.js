@@ -1,8 +1,5 @@
 import {fromJS, Map, OrderedMap} from 'immutable';
-import moment from 'moment';
-// import uuid from 'uuid';
 
-// import * as constants from '../data/constants';
 import * as authUtils from '../utils/auth-utils';
 
 import userDataReducer from './user-data-reducer';
@@ -19,7 +16,7 @@ const INITIAL_USER_DATA = fromJS({
   lastSyncClientTime: 0,
   lastSyncRequestClientTime: 0,
   searchString: '',
-  currentDate: moment().format('YYYY-MM-DD')
+  lastCurrentDate: ''
 });
 
 const INITIAL_STATE = fromJS({

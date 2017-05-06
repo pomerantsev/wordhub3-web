@@ -42,7 +42,7 @@ store.dispatch(actionCreators.rehydrateCredentials());
 let wasLoggedIn = authUtils.isLoggedIn(store.getState());
 
 if (wasLoggedIn) {
-  store.dispatch(actionCreators.readDb());
+  store.dispatch(actionCreators.startLoggedInState());
 }
 
 store.subscribe(() => {

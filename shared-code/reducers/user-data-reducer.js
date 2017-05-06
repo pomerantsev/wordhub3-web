@@ -137,7 +137,7 @@ function getUpdatedState (state, action) {
       .update('repetitionsForToday', repetitions => repetitions.map(repetition =>
         repetition.get('uuid') === action.repetitionUuid ?
           repetition
-            .set('actualDate', state.get('currentDate'))
+            .set('actualDate', helpers.getCurrentDate(action.currentTime))
             .set('successful', action.successful)
             .set('updatedAt', action.currentTime) :
           repetition));
@@ -148,7 +148,7 @@ function getUpdatedState (state, action) {
       const repetitionIndex = state.get('repetitions').findIndex(repetition =>
         repetition.get('uuid') === action.repetitionUuid);
       const updatedRepetition = state.getIn(['repetitions', repetitionIndex])
-        .set('actualDate', state.get('currentDate'))
+        .set('actualDate', helpers.getCurrentDate(action.currentTime))
         .set('successful', action.successful)
         .set('updatedAt', action.currentTime);
 
@@ -288,9 +288,9 @@ function getUpdatedState (state, action) {
     return state
       .set('searchString', action.value);
   }
-  case 'CURRENT_DATE_CHANGE': {
+  case 'SET_LAST_CURRENT_DATE': {
     return state
-      .set('currentDate', action.value);
+      .set('lastCurrentDate', action.value);
   }
   default:
     return state;

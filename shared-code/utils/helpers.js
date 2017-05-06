@@ -1,3 +1,4 @@
+import moment from 'moment';
 import {createSelectorCreator, defaultMemoize} from 'reselect';
 
 export const createDeepEqualSelector = createSelectorCreator(
@@ -18,4 +19,8 @@ export function flashcardsEqual (flashcard1, flashcard2) {
 export function repetitionsEqual (repetition1, repetition2) {
   return repetition1.get('flashcardUuid') === repetition2.get('flashcardUuid') &&
     repetition1.get('seq') === repetition2.get('seq');
+}
+
+export function getCurrentDate (timestamp = Date.now()) {
+  return moment(timestamp).format('YYYY-MM-DD');
 }
