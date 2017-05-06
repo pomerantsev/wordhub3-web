@@ -101,6 +101,7 @@ export function createFlashcard (frontText, backText) {
   const diffDays = constants.MIN_DIFF_DAYS_FIRST_REPETITION +
     Math.floor(Math.random() * (constants.MAX_DIFF_DAYS_FIRST_REPETITION - constants.MIN_DIFF_DAYS_FIRST_REPETITION + 1));
   return function (dispatch) {
+    dispatch(updateCurrentDate());
     dispatch(() => ({type: 'CREATE_FLASHCARD', frontText, backText, currentTime, flashcardUuid, repetitionUuid, diffDays}));
     dispatch(syncData());
   };
@@ -109,6 +110,7 @@ export function createFlashcard (frontText, backText) {
 export function updateFlashcard (flashcardUuid, frontText, backText) {
   const currentTime = Date.now();
   return function (dispatch) {
+    dispatch(updateCurrentDate());
     dispatch(() => ({type: 'UPDATE_FLASHCARD', flashcardUuid, frontText, backText, currentTime}));
     window.setTimeout(() => {
       dispatch(() => ({type: 'UPDATE_REPETITIONS_FOR_TODAY'}));
@@ -121,6 +123,7 @@ export function runRepetition (repetitionUuid, successful) {
   const currentTime = Date.now();
   const nextRepetitionUuid = uuid.v4();
   return function (dispatch) {
+    dispatch(updateCurrentDate());
     dispatch(() => ({type: 'RUN_REPETITION_UPDATE_TODAY', repetitionUuid, successful, currentTime}));
     window.setTimeout(() => {
       dispatch(() => ({type: 'RUN_REPETITION', repetitionUuid, successful, currentTime, nextRepetitionUuid}));
@@ -160,11 +163,7 @@ export function syncData () {
   // If server returned a 400 response, prompt user to either
   // delete new flashcards / repetitions or retry.
   return function (dispatch, getState) {
-    const newCurrentDate = moment().format('YYYY-MM-DD');
-    if (newCurrentDate !== getState().getIn(['userData', 'lastCurrentDate'])) {
-      dispatch(setLastCurrentDate(newCurrentDate));
-    }
-
+    dispatch(updateCurrentDate());
     const syncDataActionStart = Date.now();
     const syncSince = getState().getIn(['userData', 'lastSyncClientTime']);
     const flashcards = getState().getIn(['userData', 'flashcards'])
@@ -232,6 +231,15 @@ export function setOnline (online) {
 
 export function searchStringChange (value) {
   return {type: 'SEARCH_STRING_CHANGE', value};
+}
+
+export function updateCurrentDate () {
+  return function (dispatch, getState) {
+    const newCurrentDate = moment().format('YYYY-MM-DD');
+    if (newCurrentDate !== getState().getIn(['userData', 'lastCurrentDate'])) {
+      dispatch(setLastCurrentDate(newCurrentDate));
+    }
+  };
 }
 
 export function setLastCurrentDate (value) {
