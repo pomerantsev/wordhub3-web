@@ -4,6 +4,7 @@ import {IndexRoute, Route} from 'react-router';
 import * as authUtils from './utils/auth-utils';
 import * as constants from './data/constants';
 
+import {AppContainer} from './components/app.jsx';
 import {HomeContainer} from './components/home.jsx';
 import {SignupContainer} from './components/signup.jsx';
 import {AuthedRootContainer} from './components/authed-root.jsx';
@@ -28,7 +29,8 @@ function onUnauthedEnter (store, nextState, replace) {
 function getRoutes (store) {
   return (
     <Route
-        path="/">
+        path="/"
+        component={AppContainer}>
 
       <IndexRoute
           component={HomeContainer}

@@ -72,6 +72,8 @@ app.use((req, res) => {
 
   const store = applyMiddleware(asyncMiddleware)(createStore)(reducer);
 
+  store.dispatch(actionCreators.storeUserAgent(req.headers['user-agent']));
+
   try {
     const credentials = fromJS(JSON.parse(req.cookies[constants.credentialsKey]));
     store.dispatch(actionCreators.rehydrateCredentials(credentials, setCookieOnServer));

@@ -37,6 +37,8 @@ const initialState = (() => {
 
 const store = applyMiddleware(asyncMiddleware)(createStore)(reducer, initialState);
 
+store.dispatch(actionCreators.storeUserAgent(window.navigator.userAgent));
+
 store.dispatch(actionCreators.rehydrateCredentials());
 
 let wasLoggedIn = authUtils.isLoggedIn(store.getState());

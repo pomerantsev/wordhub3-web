@@ -16,7 +16,8 @@ const INITIAL_USER_DATA = fromJS({
   lastSyncClientTime: 0,
   lastSyncRequestClientTime: 0,
   searchString: '',
-  lastCurrentDate: ''
+  lastCurrentDate: '',
+  initialLoadingCompleted: false
 });
 
 const INITIAL_STATE = fromJS({
@@ -48,6 +49,11 @@ function getUpdatedState (state, action) {
   case 'SET_ONLINE': {
     return state
       .set('online', action.online);
+  }
+
+  case 'STORE_USER_AGENT': {
+    return state
+      .set('userAgent', action.userAgent);
   }
 
   default:

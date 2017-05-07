@@ -234,3 +234,7 @@ export function setLastCurrentDate (value) {
     dispatch(() => ({type: 'UPDATE_REPETITIONS_FOR_TODAY'}));
   };
 }
+
+export function storeUserAgent (userAgent) {
+  return {type: 'STORE_USER_AGENT', userAgent};
+}

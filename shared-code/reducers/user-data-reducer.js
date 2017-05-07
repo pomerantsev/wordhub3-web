@@ -228,6 +228,7 @@ export default function userDataReducer (state, action) {
     // TODO: are we sure it's the same request?
     // Handle the case when request didn't go through.
     const updatedState = state
+      .set('initialLoadingCompleted', true)
       .set('lastSyncClientTime', state.get('lastSyncRequestClientTime'))
       .set('lastSyncServerTime', result.get('updatedAt'))
       .update('flashcards', flashcards => flashcards
