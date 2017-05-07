@@ -147,8 +147,6 @@ export function getData (openDbPromise) {
       getRecord(db, 'assortedValues', 'lastSyncClientTime'),
       getRecord(db, 'assortedValues', 'lastSyncServerTime')
     ]).then(([flashcards, repetitions, lastSyncClientTime, lastSyncServerTime]) => {
-      // console.log('Flashcards from local db:', flashcards.length, flashcards[0]);
-      // console.log('Repetitions from local db:', repetitions.length, repetitions[0]);
       console.log('Read transaction completed successfully, it took', (Date.now() - startTime), 'ms');
       return {
         flashcards,

@@ -4,31 +4,6 @@ import * as constants from '../data/constants';
 import * as getters from '../data/getters';
 import * as helpers from '../utils/helpers';
 
-export default function userDataReducer (state, action/*, credentials*/) {
-  const updatedState = getUpdatedState(state, action);
-  // const userId = credentials.get('userId');
-  // const storedUserData = localStorage.getItem('userData');
-  // if (storedUserData) {
-  //   try {
-  //     const newUserData = JSON.stringify(Object.assign({}, JSON.parse(storedUserData), {
-  //       [userId]: updatedState.toJS()
-  //     }));
-  //     localStorage.setItem('userData', newUserData);
-  //   } catch (e) {
-  //     const newUserData = JSON.stringify({
-  //       [userId]: updatedState.toJS()
-  //     });
-  //     localStorage.setItem('userData', newUserData);
-  //   }
-  // } else {
-  //   const newUserData = JSON.stringify({
-  //     [userId]: updatedState.toJS()
-  //   });
-  //   localStorage.setItem('userData', newUserData);
-  // }
-  return updatedState;
-}
-
 function getStateWithUpdatedRepetitionIndices (state, existingRepetitions, newRepetitions) {
   let repetitionsIndexedByPlannedDay = state.get('repetitionsIndexedByPlannedDay');
 
@@ -70,7 +45,7 @@ function getStateWithUpdatedRepetitionIndices (state, existingRepetitions, newRe
     .set('repetitionsForToday', repetitionsForToday);
 }
 
-function getUpdatedState (state, action) {
+export default function userDataReducer (state, action) {
   switch (action.type) {
 
   case 'CREATE_FLASHCARD': {

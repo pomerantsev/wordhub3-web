@@ -59,18 +59,6 @@ class AuthedRoot extends React.Component {
           </a>
         </div>
         {this.props.children}
-        {/*<table>
-          <tbody>
-            {this.props.repetitionsIndexedByPlannedDay.map((repetitionsByDay, plannedDay) => (
-              <tr
-                  key={plannedDay}>
-                <td>{plannedDay}</td>
-                <td>{repetitionsByDay.get('completed') ? 'true' : 'false'}</td>
-                <td>{repetitionsByDay.get('repetitions').size}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>*/}
       </div>
     );
   }

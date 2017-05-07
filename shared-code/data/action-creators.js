@@ -86,14 +86,6 @@ export function resetLoggedInState () {
   return {type: 'RESET_LOGGED_IN_STATE'};
 }
 
-// export function changeDate (date) {
-//   return {type: 'CHANGE_DATE', date};
-// }
-
-// export function changeNewFlashcardText (text) {
-//   return {type: 'CHANGE_NEW_FLASHCARD_TEXT', text};
-// }
-
 export function createFlashcard (frontText, backText) {
   const currentTime = Date.now();
   const flashcardUuid = uuid.v4();
@@ -131,14 +123,6 @@ export function runRepetition (repetitionUuid, successful) {
     }, 0);
   };
 }
-
-// export function changeFlashcardFrontText (uuid, text) {
-//   return {type: 'CHANGE_FLASHCARD_FRONT_TEXT', uuid, text};
-// }
-
-// export function memorizeRepetition (uuid) {
-//   return {type: 'MEMORIZE_REPETITION', uuid};
-// }
 
 export function readDb () {
   return function (dispatch, getState) {
@@ -224,10 +208,6 @@ export function syncData () {
 export function setOnline (online) {
   return {type: 'SET_ONLINE', online};
 }
-
-// export function resetSendDataTime () {
-//   return {type: 'RESET_SEND_DATA_TIME'};
-// }
 
 export function searchStringChange (value) {
   return {type: 'SEARCH_STRING_CHANGE', value};
