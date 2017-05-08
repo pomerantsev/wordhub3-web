@@ -24,3 +24,18 @@ export function repetitionsEqual (repetition1, repetition2) {
 export function getCurrentDate (timestamp = Date.now()) {
   return moment(timestamp).format('YYYY-MM-DD');
 }
+
+export function memoizeOneArg (func) {
+  const memo = {};
+  return function (arg) {
+    if (!memo[arg]) {
+      memo[arg] = func(arg);
+    }
+    return memo[arg];
+  };
+}
+
+export function getRoundedPercentageString (value, precision = 0) {
+  const multiplier = Math.pow(10, precision);
+  return Math.round(value * multiplier * 100) / multiplier + '%';
+}

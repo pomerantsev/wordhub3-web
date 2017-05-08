@@ -137,9 +137,10 @@ export const getCurrentDay = helpers.createDeepEqualSelector(
 export const getNextDayData = helpers.createDeepEqualSelector(
   [
     state => getCurrentDay(state),
-    state => state.get('repetitionsIndexedByPlannedDay')
+    state => state.get('repetitionsIndexedByPlannedDay'),
+    () => helpers.getCurrentDate()
   ],
-  (currentDay, repetitionsIndexedByPlannedDay) => {
+  (currentDay, repetitionsIndexedByPlannedDay, currentDate) => {
     const nextDay = repetitionsIndexedByPlannedDay
       .keySeq()
       .sort((a, b) => a - b)
@@ -147,7 +148,7 @@ export const getNextDayData = helpers.createDeepEqualSelector(
     return nextDay ?
       Map({
         day: nextDay,
-        date: moment(helpers.getCurrentDate()).add(nextDay - currentDay, 'days').format('YYYY-MM-DD'),
+        date: moment(currentDate).add(nextDay - currentDay, 'days').format('YYYY-MM-DD'),
         repetitions: repetitionsIndexedByPlannedDay.getIn([nextDay, 'repetitions'])
       }) :
       null;
@@ -157,9 +158,10 @@ export const getNextDayData = helpers.createDeepEqualSelector(
 export const getLastDayData = helpers.createDeepEqualSelector(
   [
     state => getCurrentDay(state),
-    state => state.get('repetitionsIndexedByPlannedDay')
+    state => state.get('repetitionsIndexedByPlannedDay'),
+    () => helpers.getCurrentDate()
   ],
-  (currentDay, repetitionsIndexedByPlannedDay) => {
+  (currentDay, repetitionsIndexedByPlannedDay, currentDate) => {
     const lastDay = repetitionsIndexedByPlannedDay
       .keySeq()
       .sort((a, b) => a - b)
@@ -167,9 +169,28 @@ export const getLastDayData = helpers.createDeepEqualSelector(
     return lastDay ?
       Map({
         day: lastDay,
-        date: moment(helpers.getCurrentDate()).add(lastDay - currentDay, 'days').format('YYYY-MM-DD'),
+        date: moment(currentDate).add(lastDay - currentDay, 'days').format('YYYY-MM-DD'),
         repetitions: repetitionsIndexedByPlannedDay.getIn([lastDay, 'repetitions'])
       }) :
       null;
   }
 );
+
+export const getIntervalStats = helpers.memoizeOneArg(dayCount => {
+  return helpers.createDeepEqualSelector(
+    [
+      state => state.get('flashcards'),
+      state => state.get('repetitions'),
+      () => helpers.getCurrentDate()
+    ],
+    (flashcards, repetitions, currentDate) => {
+      const startTimestamp = moment(currentDate).startOf('day').subtract(dayCount - 1, 'days');
+      const allRepetitions = repetitions.filter(repetition => repetition.get('actualDate') >= helpers.getCurrentDate(startTimestamp));
+      return Map({
+        flashcardsCreated: flashcards.filter(flashcard => flashcard.get('createdAt') >= startTimestamp),
+        allRepetitions,
+        successfulRepetitions: allRepetitions.filter(repetition => repetition.get('successful'))
+      });
+    }
+  );
+});
