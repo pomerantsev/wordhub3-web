@@ -131,7 +131,7 @@ export function readDb () {
         dispatch(() => ({
           type: 'READ_DB',
           flashcards: Map(flashcards.map(flashcard => [flashcard.uuid, fromJS(flashcard)])),
-          repetitions: fromJS(repetitions),
+          repetitions: Map(repetitions.map(repetition => [repetition.uuid, fromJS(repetition)])),
           lastSyncClientTime,
           lastSyncServerTime
         }));
@@ -158,6 +158,8 @@ export function syncData () {
       .toJS();
     const repetitions = getState().getIn(['userData', 'repetitions'])
       .filter(repetition => repetition.get('updatedAt') > syncSince)
+      .valueSeq()
+      .toList()
       .toJS();
 
     console.log('Sync data action took ' + (Date.now() - syncDataActionStart) + ' ms');
@@ -185,6 +187,7 @@ export function syncData () {
           flashcards: result.flashcards,
           repetitionUuidsToDelete: getState()
             .getIn(['userData', 'repetitions'])
+            .toList()
             .filter(repetition => fromJS(result.repetitions).find(repetitionFromServer => helpers.repetitionsEqual(repetition, repetitionFromServer)))
             .map(repetition => repetition.get('uuid'))
             .toJS(),

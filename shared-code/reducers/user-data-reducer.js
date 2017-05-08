@@ -73,7 +73,7 @@ export default function userDataReducer (state, action) {
         flashcards => flashcards.set(action.flashcardUuid, newFlashcard)
       )
       .update('repetitions',
-        repetitions => repetitions.push(newRepetition)
+        repetitions => repetitions.set(action.repetitionUuid, newRepetition)
       )
       .updateIn(
         ['repetitionsIndexedByPlannedDay', newRepetition.get('plannedDay')],
@@ -119,15 +119,13 @@ export default function userDataReducer (state, action) {
 
   case 'RUN_REPETITION': {
     const startTime = Date.now();
-    const repetitionIndex = state.get('repetitions').findIndex(repetition =>
-      repetition.get('uuid') === action.repetitionUuid);
-    const updatedRepetition = state.getIn(['repetitions', repetitionIndex])
+    const updatedRepetition = state.getIn(['repetitions', action.repetitionUuid])
       .set('actualDate', helpers.getCurrentDate(action.currentTime))
       .set('successful', action.successful)
       .set('updatedAt', action.currentTime);
 
     const stateWithUpdatedRepetition = state
-      .setIn(['repetitions', repetitionIndex], updatedRepetition)
+      .setIn(['repetitions', action.repetitionUuid], updatedRepetition)
       .updateIn(['repetitionsIndexedByPlannedDay', updatedRepetition.get('plannedDay')], repetitionsIndexForDay => {
         const repetitionIndexWithUpdatedRepetitions = repetitionsIndexForDay
           .update('repetitions', repetitions => repetitions.map(repetition =>
@@ -140,7 +138,8 @@ export default function userDataReducer (state, action) {
       });
     const nextRepetition = (() => {
       const allRepetitionsForFlashcard = stateWithUpdatedRepetition.get('repetitions')
-        .filter(repetition => repetition.get('flashcardUuid') === stateWithUpdatedRepetition.getIn(['repetitions', repetitionIndex, 'flashcardUuid']))
+        .filter(repetition => repetition.get('flashcardUuid') === stateWithUpdatedRepetition.getIn(['repetitions', action.repetitionUuid, 'flashcardUuid']))
+        .toList()
         .sort((repetition1, repetition2) => repetition1.get('seq') - repetition2.get('seq'));
       const lastUnsuccessfulIndex = allRepetitionsForFlashcard.findLastIndex(repetition => !repetition.get('successful'));
       const successStreakLength = allRepetitionsForFlashcard.size - lastUnsuccessfulIndex - 1;
@@ -173,7 +172,7 @@ export default function userDataReducer (state, action) {
 
     const stateWithAddedNextRepetition = nextRepetition ?
       stateWithUpdatedRepetition
-        .update('repetitions', repetitions => repetitions.push(nextRepetition))
+        .update('repetitions', repetitions => repetitions.set(action.nextRepetitionUuid, nextRepetition))
         .updateIn(
           ['repetitionsIndexedByPlannedDay', nextRepetition.get('plannedDay')],
           Map(),
@@ -252,7 +251,7 @@ export default function userDataReducer (state, action) {
             repetitionFromServer :
             repetition;
         })
-        .concat(newRepetitions)
+        .merge(Map(newRepetitions.map(repetition => [repetition.get('uuid'), repetition])))
       );
 
     // This is a temporary structure to speed up calculations of whether flashcards are learned.

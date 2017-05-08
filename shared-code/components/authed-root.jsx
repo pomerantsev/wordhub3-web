@@ -68,7 +68,6 @@ class AuthedRoot extends React.Component {
 export const AuthedRootContainer = connect(
   state => ({
     todayRepetitions: getters.getTodayRepetitions(state.get('userData')),
-    repetitionsIndexedByPlannedDay: state.getIn(['userData', 'repetitionsIndexedByPlannedDay']).reverse(),
     online: state.get('online')
   }),
   actionCreators

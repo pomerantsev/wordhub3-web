@@ -9,7 +9,7 @@ const INITIAL_CREDENTIALS = Map({});
 const INITIAL_USER_DATA = fromJS({
   user: [],
   flashcards: {},
-  repetitions: [],
+  repetitions: {},
   repetitionsIndexedByPlannedDay: OrderedMap(),
   repetitionsForToday: [],
   lastSyncServerTime: 0,
