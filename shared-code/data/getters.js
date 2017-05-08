@@ -18,6 +18,8 @@ export const getFlashcardsSorted = helpers.createDeepEqualSelector(
           searchStringRegExp.test(flashcard.get('backText')) :
         true
       )
+      .valueSeq()
+      .toList()
       .sort((flashcard1, flashcard2) => flashcard2.get('createdAt') - flashcard1.get('createdAt'));
   }
 );
@@ -79,7 +81,7 @@ export const getTodayRepetitionsFromMainState = helpers.createDeepEqualSelector(
 
     const returnValue = todayRepetitions
       .map(repetition => repetition.set('flashcard',
-        flashcards.find(flashcard => flashcard.get('uuid') === repetition.get('flashcardUuid'))))
+        flashcards.get(repetition.get('flashcardUuid'))))
       // We shouldn't need to filter anything out, just making sure that even if overall data
       // is inconsistent, all of today's repetitions have flashcards
       .filter(repetition => !!repetition.get('flashcard'));

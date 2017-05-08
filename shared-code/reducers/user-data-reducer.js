@@ -70,7 +70,7 @@ export default function userDataReducer (state, action) {
     });
     return state
       .update('flashcards',
-        flashcards => flashcards.push(newFlashcard)
+        flashcards => flashcards.set(action.flashcardUuid, newFlashcard)
       )
       .update('repetitions',
         repetitions => repetitions.push(newRepetition)
@@ -95,14 +95,12 @@ export default function userDataReducer (state, action) {
 
   case 'UPDATE_FLASHCARD': {
     return state
-      .update('flashcards', flashcards => flashcards.map(flashcard =>
-        flashcard.get('uuid') === action.flashcardUuid ?
-          flashcard
-            .set('frontText', action.frontText)
-            .set('backText', action.backText)
-            .set('updatedAt', action.currentTime) :
-          flashcard
-      ));
+      .updateIn(['flashcards', action.flashcardUuid], flashcard =>
+        flashcard
+          .set('frontText', action.frontText)
+          .set('backText', action.backText)
+          .set('updatedAt', action.currentTime)
+      );
   }
 
   case 'UPDATE_REPETITIONS_FOR_TODAY':
@@ -152,9 +150,7 @@ export default function userDataReducer (state, action) {
       // There can either be 1 or more repetitions, but never zero,
       // because we're running a repetition for the given flashcard now.
       const previousDay = allRepetitionsForFlashcard.size === 1 ?
-        state.get('flashcards')
-          .find(flashcard => flashcard.get('uuid') === updatedRepetition.get('flashcardUuid'))
-          .get('creationDay') :
+        state.getIn(['flashcards', updatedRepetition.get('flashcardUuid'), 'creationDay']) :
         allRepetitionsForFlashcard.getIn([allRepetitionsForFlashcard.size - 2, 'plannedDay']);
       // TODO: here's a random component, which is not ideal in a reducer,
       // but we'll stick with it for now.
@@ -197,7 +193,7 @@ export default function userDataReducer (state, action) {
       stateWithUpdatedRepetition;
     const returnValue = stateWithAddedNextRepetition
       .updateIn(
-        ['flashcards', stateWithAddedNextRepetition.get('flashcards').findIndex(flashcard => flashcard.get('uuid') === updatedRepetition.get('flashcardUuid'))],
+        ['flashcards', updatedRepetition.get('flashcardUuid')],
         flashcard => flashcard.set('learned', !nextRepetition)
       );
     console.log('Reducer took ' + (Date.now() - startTime) + ' ms');
@@ -246,7 +242,7 @@ export default function userDataReducer (state, action) {
               .set('deleted', flashcardFromServer.get('deleted')) :
             flashcard;
         })
-        .concat(newFlashcards)
+        .merge(Map(newFlashcards.map(flashcard => [flashcard.get('uuid'), flashcard])))
       )
       .update('repetitions', repetitions => repetitions
         .map(repetition => {

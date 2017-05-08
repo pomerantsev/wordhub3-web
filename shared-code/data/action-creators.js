@@ -130,7 +130,7 @@ export function readDb () {
       .then(({flashcards, repetitions, lastSyncClientTime, lastSyncServerTime}) => {
         dispatch(() => ({
           type: 'READ_DB',
-          flashcards: fromJS(flashcards),
+          flashcards: Map(flashcards.map(flashcard => [flashcard.uuid, fromJS(flashcard)])),
           repetitions: fromJS(repetitions),
           lastSyncClientTime,
           lastSyncServerTime
@@ -150,8 +150,11 @@ export function syncData () {
     dispatch(updateCurrentDate());
     const syncDataActionStart = Date.now();
     const syncSince = getState().getIn(['userData', 'lastSyncClientTime']);
+    console.log('Flashcards:', getState().getIn(['userData', 'flashcards']));
     const flashcards = getState().getIn(['userData', 'flashcards'])
       .filter(flashcard => flashcard.get('updatedAt') > syncSince)
+      .valueSeq()
+      .toList()
       .toJS();
     const repetitions = getState().getIn(['userData', 'repetitions'])
       .filter(repetition => repetition.get('updatedAt') > syncSince)

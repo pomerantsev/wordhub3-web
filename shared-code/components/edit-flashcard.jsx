@@ -61,7 +61,7 @@ class EditFlashcard extends React.Component {
   }
 
   getFlashcard (props) {
-    return props.flashcards.find(flashcard => flashcard.get('uuid') === props.params.uuid);
+    return props.flashcards.get(props.params.uuid);
   }
 
   render () {

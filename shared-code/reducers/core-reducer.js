@@ -8,7 +8,7 @@ const INITIAL_CREDENTIALS = Map({});
 
 const INITIAL_USER_DATA = fromJS({
   user: [],
-  flashcards: [],
+  flashcards: {},
   repetitions: [],
   repetitionsIndexedByPlannedDay: OrderedMap(),
   repetitionsForToday: [],
@@ -54,7 +54,7 @@ function getUpdatedState (state, action) {
     return state
       .update('userData', userData =>
         authUtils.isLoggedIn(state) ?
-          userDataReducer(userData, action/*, state.get('credentials')*/) :
+          userDataReducer(userData, action) :
           userData
       );
   }
