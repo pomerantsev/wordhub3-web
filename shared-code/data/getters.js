@@ -1,6 +1,7 @@
 import moment from 'moment';
-import {List} from 'immutable';
+import {List, Map} from 'immutable';
 import escapeStringRegexp from 'escape-string-regexp';
+import {createSelector} from 'reselect';
 
 import * as constants from '../data/constants';
 import * as helpers from '../utils/helpers';
@@ -22,6 +23,16 @@ export const getFlashcardsSorted = helpers.createDeepEqualSelector(
       .toList()
       .sort((flashcard1, flashcard2) => flashcard2.get('createdAt') - flashcard1.get('createdAt'));
   }
+);
+
+export const getLearnedFlashcards = createSelector(
+  [state => state.get('flashcards')],
+  flashcards => flashcards.filter(flashcard => flashcard.get('learned'))
+);
+
+export const getPlannedRepetitions = createSelector(
+  [state => state.get('repetitions')],
+  repetitions => repetitions.filter(repetition => !repetition.get('actualDate'))
 );
 
 export const getTodayRepetitionsFromMainState = helpers.createDeepEqualSelector(
@@ -98,22 +109,67 @@ export const getTodayRepetitions = helpers.createDeepEqualSelector(
   repetitionsForToday => repetitionsForToday
 );
 
-export function getCurrentDay (state) {
-  const todayRepetitions = getTodayRepetitions(state);
-  if (todayRepetitions.size > 0) {
-    return todayRepetitions.getIn([0, 'plannedDay']);
-  } else {
-    const lastCompletedDay = state.get('repetitionsIndexedByPlannedDay')
-      .findLastKey(repetitionsIndexForDay => repetitionsIndexForDay.get('completed'));
-    const currentDateMoment = moment(helpers.getCurrentDate());
-    if (typeof lastCompletedDay === 'number') {
-      const latestDateFromLastCompletedDay = state.getIn(['repetitionsIndexedByPlannedDay', lastCompletedDay, 'repetitions'])
-        .reduce((latestDate, repetition) =>
-          repetition.get('actualDate') > latestDate ? repetition.get('actualDate') : latestDate, '');
-      const daysSinceLastCompleted = currentDateMoment.diff(latestDateFromLastCompletedDay, 'days');
-      return lastCompletedDay + daysSinceLastCompleted;
+export const getCurrentDay = helpers.createDeepEqualSelector(
+  [
+    state => getTodayRepetitions(state),
+    state => state.get('repetitionsIndexedByPlannedDay')
+  ],
+  (todayRepetitions, repetitionsIndexedByPlannedDay) => {
+    if (todayRepetitions.size > 0) {
+      return todayRepetitions.getIn([0, 'plannedDay']);
     } else {
-      return currentDateMoment.diff(constants.SEED_DATE, 'days');
+      const lastCompletedDay = repetitionsIndexedByPlannedDay
+        .findLastKey(repetitionsIndexForDay => repetitionsIndexForDay.get('completed'));
+      const currentDateMoment = moment(helpers.getCurrentDate());
+      if (typeof lastCompletedDay === 'number') {
+        const latestDateFromLastCompletedDay = repetitionsIndexedByPlannedDay.getIn([lastCompletedDay, 'repetitions'])
+          .reduce((latestDate, repetition) =>
+            repetition.get('actualDate') > latestDate ? repetition.get('actualDate') : latestDate, '');
+        const daysSinceLastCompleted = currentDateMoment.diff(latestDateFromLastCompletedDay, 'days');
+        return lastCompletedDay + daysSinceLastCompleted;
+      } else {
+        return currentDateMoment.diff(constants.SEED_DATE, 'days');
+      }
     }
   }
-}
+);
+
+export const getNextDayData = helpers.createDeepEqualSelector(
+  [
+    state => getCurrentDay(state),
+    state => state.get('repetitionsIndexedByPlannedDay')
+  ],
+  (currentDay, repetitionsIndexedByPlannedDay) => {
+    const nextDay = repetitionsIndexedByPlannedDay
+      .keySeq()
+      .sort((a, b) => a - b)
+      .find(day => day > currentDay);
+    return nextDay ?
+      Map({
+        day: nextDay,
+        date: moment(helpers.getCurrentDate()).add(nextDay - currentDay, 'days').format('YYYY-MM-DD'),
+        repetitions: repetitionsIndexedByPlannedDay.getIn([nextDay, 'repetitions'])
+      }) :
+      null;
+  }
+);
+
+export const getLastDayData = helpers.createDeepEqualSelector(
+  [
+    state => getCurrentDay(state),
+    state => state.get('repetitionsIndexedByPlannedDay')
+  ],
+  (currentDay, repetitionsIndexedByPlannedDay) => {
+    const lastDay = repetitionsIndexedByPlannedDay
+      .keySeq()
+      .sort((a, b) => a - b)
+      .last();
+    return lastDay ?
+      Map({
+        day: lastDay,
+        date: moment(helpers.getCurrentDate()).add(lastDay - currentDay, 'days').format('YYYY-MM-DD'),
+        repetitions: repetitionsIndexedByPlannedDay.getIn([lastDay, 'repetitions'])
+      }) :
+      null;
+  }
+);

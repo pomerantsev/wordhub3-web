@@ -42,6 +42,11 @@ class AuthedRoot extends React.Component {
             }
             <div>
               <Link
+                  to="/stats">
+                Stats
+              </Link>
+              <br />
+              <Link
                   to="/repetitions">
                 Repeat ({repetitionCounts.completed} of {repetitionCounts.total})
               </Link>
