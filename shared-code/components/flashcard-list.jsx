@@ -21,6 +21,12 @@ class FlashcardList extends React.Component {
     this.getDisplayedFlashcards = this.getDisplayedFlashcards.bind(this);
     this.onSearchStringChange = this.onSearchStringChange.bind(this);
     this.onClearSearchClick = this.onClearSearchClick.bind(this);
+
+    this.searchStringRef = this.searchStringRef.bind(this);
+  }
+
+  componentDidMount () {
+    this.searchStringElement.focus();
   }
 
   componentWillReceiveProps (nextProps) {
@@ -29,6 +35,10 @@ class FlashcardList extends React.Component {
     if (nextPage > 1 && nextPage > nextTotalPages || nextPage < 1) {
       this.context.router.replace(helpers.getPaginatedLink(nextProps.location.pathname, nextTotalPages || 1));
     }
+  }
+
+  searchStringRef (element) {
+    this.searchStringElement = element;
   }
 
   onSearchStringChange (event) {
@@ -53,6 +63,7 @@ class FlashcardList extends React.Component {
       <div>
         <div>
           <input
+              ref={this.searchStringRef}
               type="text"
               value={this.props.searchString}
               onChange={this.onSearchStringChange}

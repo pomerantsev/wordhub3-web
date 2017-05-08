@@ -20,6 +20,8 @@ class EditFlashcard extends React.Component {
     this.onFrontTextChange = this.onFrontTextChange.bind(this);
     this.onBackTextChange = this.onBackTextChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
+
+    this.frontTextRef = this.frontTextRef.bind(this);
   }
 
   componentWillMount () {
@@ -32,6 +34,10 @@ class EditFlashcard extends React.Component {
     }
   }
 
+  componentDidMount () {
+    this.frontTextElement.focus();
+  }
+
   componentWillReceiveProps (nextProps) {
     const nextFlashcard = this.getFlashcard(nextProps);
     if (nextFlashcard && !nextFlashcard.equals(this.getFlashcard(this.props))) {
@@ -40,6 +46,10 @@ class EditFlashcard extends React.Component {
         backText: nextFlashcard.get('backText')
       });
     }
+  }
+
+  frontTextRef (element) {
+    this.frontTextElement = element;
   }
 
   onFrontTextChange (event) {
@@ -70,6 +80,7 @@ class EditFlashcard extends React.Component {
         <form
             onSubmit={this.onSubmit}>
           <textarea
+              ref={this.frontTextRef}
               rows={6}
               required
               value={this.state.frontText}

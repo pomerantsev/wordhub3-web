@@ -16,6 +16,16 @@ class CreateFlashcard extends React.Component {
     this.onFrontTextChange = this.onFrontTextChange.bind(this);
     this.onBackTextChange = this.onBackTextChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
+
+    this.frontTextRef = this.frontTextRef.bind(this);
+  }
+
+  componentDidMount () {
+    this.frontTextElement.focus();
+  }
+
+  frontTextRef (element) {
+    this.frontTextElement = element;
   }
 
   onFrontTextChange (event) {
@@ -37,6 +47,7 @@ class CreateFlashcard extends React.Component {
       frontText: '',
       backText: ''
     });
+    this.frontTextElement.focus();
   }
 
   render () {
@@ -45,6 +56,7 @@ class CreateFlashcard extends React.Component {
         <form
             onSubmit={this.onSubmit}>
           <textarea
+              ref={this.frontTextRef}
               rows={6}
               required
               value={this.state.frontText}
