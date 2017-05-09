@@ -39,33 +39,36 @@ class AuthedRoot extends React.Component {
               null :
               <div
                   style={{color: 'red'}}>
-                Offline!
+                {getI18n().t('notifications.offline')}
               </div>
             }
             <div>
               <Link
                   to="/stats">
-                {getI18n().t('stats')}
+                {getI18n().t('menu.stats')}
               </Link>
               <br />
               <Link
                   to="/repetitions">
-                Repeat ({repetitionCounts.completed} of {repetitionCounts.total})
+                {getI18n().t('menu.repeat', {
+                  completed: repetitionCounts.completed,
+                  total: repetitionCounts.total
+                })}
               </Link>
               <br />
               <Link
                   to="/flashcards">
-                All Flashcards
+                {getI18n().t('menu.allFlashcards')}
               </Link>
               <br />
               <Link
                   to="/flashcards/new">
-                Create
+                {getI18n().t('menu.create')}
               </Link>
               <br />
               <a
                   onClick={this.logout}>
-                Logout
+                {getI18n().t('menu.logout')}
               </a>
             </div>
             {this.props.children}
