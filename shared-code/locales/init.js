@@ -17,6 +17,7 @@ i18next
       lookupQuerystring: 'lng'
     }))
   .init({
+    fallbackLng: 'en',
     resources: {
       en: {
         translation: enTranslation
