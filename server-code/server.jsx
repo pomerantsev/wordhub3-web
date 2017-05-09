@@ -1,6 +1,11 @@
 import dotenv from 'dotenv';
 dotenv.config({silent: true});
 
+import '../shared-code/locales/init';
+import i18next from 'i18next';
+import {handle} from 'i18next-express-middleware';
+import {setI18n} from '../shared-code/locales/i18n';
+
 import express from 'express';
 import httpsRedirect from 'express-https-redirect';
 import helmet from 'helmet';
@@ -56,6 +61,13 @@ app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 
 app.use(cookieParser());
+
+app.use(handle(i18next));
+
+app.use((req, res, next) => {
+  setI18n(req);
+  next();
+});
 
 app.use((req, res) => {
   function setCookieOnServer (key, jsValue) {

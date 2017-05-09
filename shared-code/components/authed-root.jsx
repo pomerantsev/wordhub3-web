@@ -1,3 +1,5 @@
+import {getI18n} from '../locales/i18n';
+
 import React from 'react';
 import {connect} from 'react-redux';
 import {Link} from 'react-router';
@@ -43,7 +45,7 @@ class AuthedRoot extends React.Component {
             <div>
               <Link
                   to="/stats">
-                Stats
+                {getI18n().t('stats')}
               </Link>
               <br />
               <Link

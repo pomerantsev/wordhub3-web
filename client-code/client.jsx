@@ -1,6 +1,8 @@
 import 'babel-polyfill';
 import 'whatwg-fetch';
 
+import '../shared-code/locales/init';
+
 import React from 'react';
 import ReactDOM from 'react-dom';
 
