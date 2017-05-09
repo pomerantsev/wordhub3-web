@@ -4,7 +4,7 @@ dotenv.config({silent: true});
 import '../shared-code/locales/init';
 import i18next from 'i18next';
 import {handle} from 'i18next-express-middleware';
-import {setI18n} from '../shared-code/locales/i18n';
+import {setI18n, getI18n} from '../shared-code/locales/i18n';
 
 import express from 'express';
 import httpsRedirect from 'express-https-redirect';
@@ -18,6 +18,7 @@ import {Provider} from 'react-redux';
 import {match, RouterContext} from 'react-router';
 import {fromJS} from 'immutable';
 import transit from 'transit-immutable-js';
+import moment from 'moment';
 
 import * as actionCreators from '../shared-code/data/action-creators';
 import reducer from '../shared-code/reducers/core-reducer';
@@ -92,6 +93,7 @@ app.use((req, res) => {
   } catch (e) {}
 
   match({routes: getRoutes(store, setCookieOnServer), location: req.url}, (error, redirectLocation, renderProps) => {
+    moment.locale(getI18n().language);
     if (error) {
       // This is probably an error that happens during async route resolution
       return res.status(500).send(error.message);

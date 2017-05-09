@@ -4,6 +4,8 @@ import {LanguageDetector} from 'i18next-express-middleware';
 import enTranslation from './en';
 import ruTranslation from './ru';
 
+import 'moment/locale/ru';
+
 i18next
   .use(typeof window === 'undefined' ?
     // Server-side language detection

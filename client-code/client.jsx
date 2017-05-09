@@ -2,6 +2,9 @@ import 'babel-polyfill';
 import 'whatwg-fetch';
 
 import '../shared-code/locales/init';
+import {getI18n} from '../shared-code/locales/i18n';
+import moment from 'moment';
+moment.locale(getI18n().language);
 
 import React from 'react';
 import ReactDOM from 'react-dom';
