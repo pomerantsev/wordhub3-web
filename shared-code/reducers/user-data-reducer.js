@@ -255,18 +255,11 @@ export default function userDataReducer (state, action) {
         .merge(Map(newRepetitions.map(repetition => [repetition.get('uuid'), repetition])))
       );
 
-    // This is a temporary structure to speed up calculations of whether flashcards are learned.
-    let repetitionsGroupedByFlashcard = Map();
-    updatedState.get('repetitions').forEach(repetition => {
-      repetitionsGroupedByFlashcard = repetitionsGroupedByFlashcard
-        .update(repetition.get('flashcardUuid'), List(), repetitionsForFlashcard => repetitionsForFlashcard.push(repetition));
-    });
-    const lastRepetitionActualDates = repetitionsGroupedByFlashcard.map(repetitionsForFlashcard =>
-      repetitionsForFlashcard
-        .sort((rep1, rep2) => rep1.get('seq') - rep2.get('seq'))
+    const lastRepetitionActualDates = getters.getRepetitionsGroupedByFlashcard(updatedState)
+      .map(repetitionsForFlashcard => repetitionsForFlashcard
         .last()
         .get('actualDate')
-    );
+      );
     const stateWithUpdatedFlashcardLearned = updatedState
       .update('flashcards', flashcards => flashcards.map(flashcard =>
         flashcard.set('learned', !!lastRepetitionActualDates.get(flashcard.get('uuid')))));

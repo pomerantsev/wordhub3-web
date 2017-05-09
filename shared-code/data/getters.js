@@ -181,16 +181,40 @@ export const getIntervalStats = helpers.memoizeOneArg(dayCount => {
     [
       state => state.get('flashcards'),
       state => state.get('repetitions'),
+      state => getRepetitionsGroupedByFlashcard(state),
       () => helpers.getCurrentDate()
     ],
-    (flashcards, repetitions, currentDate) => {
+    (flashcards, repetitions, repetitionsGroupedByFlashcard, currentDate) => {
       const startTimestamp = moment(currentDate).startOf('day').subtract(dayCount - 1, 'days');
-      const allRepetitions = repetitions.filter(repetition => repetition.get('actualDate') >= helpers.getCurrentDate(startTimestamp));
+      const startDate = helpers.getCurrentDate(startTimestamp);
+      const allRepetitions = repetitions.filter(repetition => repetition.get('actualDate') >= startDate);
       return Map({
         flashcardsCreated: flashcards.filter(flashcard => flashcard.get('createdAt') >= startTimestamp),
+        flashcardsLearnedCount: repetitionsGroupedByFlashcard
+          .filter(repetitionsForFlashcard =>
+            repetitionsForFlashcard.last().get('actualDate') >= startDate
+          )
+          .size,
         allRepetitions,
         successfulRepetitions: allRepetitions.filter(repetition => repetition.get('successful'))
       });
     }
   );
 });
+
+export const getRepetitionsGroupedByFlashcard = helpers.createDeepEqualSelector(
+  [
+    state => state.get('repetitions')
+  ],
+  (repetitions) => {
+    let repetitionsGroupedByFlashcard = Map();
+    repetitions.forEach(repetition => {
+      repetitionsGroupedByFlashcard = repetitionsGroupedByFlashcard
+        .update(repetition.get('flashcardUuid'), List(), repetitionsForFlashcard => repetitionsForFlashcard.push(repetition));
+    });
+    return repetitionsGroupedByFlashcard.map(repetitionsForFlashcard =>
+      repetitionsForFlashcard
+        .sort((rep1, rep2) => rep1.get('seq') - rep2.get('seq'))
+    );
+  }
+);

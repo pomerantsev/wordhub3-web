@@ -36,6 +36,9 @@ export function memoizeOneArg (func) {
 }
 
 export function getRoundedPercentageString (value, precision = 0) {
+  if (isNaN(value)) {
+    return '0%';
+  }
   const multiplier = Math.pow(10, precision);
   return Math.round(value * multiplier * 100) / multiplier + '%';
 }
