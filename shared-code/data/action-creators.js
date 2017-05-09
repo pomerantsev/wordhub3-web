@@ -1,3 +1,5 @@
+import {getI18n} from '../locales/i18n';
+
 import {fromJS, Map} from 'immutable';
 import uuid from 'uuid';
 import moment from 'moment';
@@ -75,7 +77,12 @@ export function logout (setCookieOnServer) {
 export function signup (email, password, name) {
   return function (dispatch) {
     // TODO: Handle unsuccessful signup
-    api.signup(email, password, name)
+    api.signup({
+      email,
+      password,
+      name,
+      language: getI18n().language
+    })
       .then(credentials => {
         dispatch(loginSuccess(email, credentials));
       });
