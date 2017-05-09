@@ -79,14 +79,16 @@ gulp.task('scripts:dev', ['eslint'], () => {
 
 gulp.task('scripts:prod', ['eslint'], () => {
   process.env.NODE_ENV = 'production';
-  return getCommonScriptsTransform(mainClientFile, {debug: false})
+  return getCommonScriptsTransform(mainClientFile, {debug: true})
     .pipe(source('app.js'))
     .pipe(buffer())
+    .pipe($.sourcemaps.init({loadMaps: true}))
     .pipe($.envify(Object.assign({}, process.env, {
       NODE_ENV: process.env.NODE_ENV_PROD,
       API_SERVER: process.env.API_SERVER_PROD
     })))
     .pipe($.uglify())
+    .pipe($.sourcemaps.write('./maps'))
     .pipe(gulp.dest(basePaths.dest + folders.scripts));
 });
 
@@ -107,14 +109,16 @@ gulp.task('service-worker:dev', ['eslint'], () => {
 
 gulp.task('service-worker:prod', ['eslint'], () => {
   process.env.NODE_ENV = 'production';
-  return getCommonScriptsTransform(serviceWorkerFile, {debug: false})
+  return getCommonScriptsTransform(serviceWorkerFile, {debug: true})
     .pipe(source('service-worker.js'))
     .pipe(buffer())
+    .pipe($.sourcemaps.init({loadMaps: true}))
     .pipe($.envify(Object.assign({}, process.env, {
       NODE_ENV: process.env.NODE_ENV_PROD,
       API_SERVER: process.env.API_SERVER_PROD
     })))
     .pipe($.uglify())
+    .pipe($.sourcemaps.write('./maps'))
     .pipe(gulp.dest(basePaths.dest));
 });
 
