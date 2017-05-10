@@ -1,3 +1,5 @@
+import {getI18n} from '../locales/i18n';
+
 import React from 'react';
 import {connect} from 'react-redux';
 import {Link} from 'react-router';
@@ -71,11 +73,12 @@ class FlashcardList extends React.Component {
         </div>
         {this.props.searchString ?
           <div>
-            Searching for “{this.props.searchString}”
+            {getI18n().t('flashcardList.searchingFor', {searchString: this.props.searchString})}
+            {' '}
             (<a
                 href
                 onClick={this.onClearSearchClick}>
-              clear
+              {getI18n().t('flashcardList.clear')}
             </a>)
           </div> :
           null

@@ -1,3 +1,5 @@
+import {getI18n} from '../locales/i18n';
+
 import React from 'react';
 import {connect} from 'react-redux';
 
@@ -36,12 +38,12 @@ class Repetitions extends React.Component {
                   &nbsp;
                   <button
                       onClick={this.runRepetition.bind(this, repetition, true)}>
-                    Remember
+                    {getI18n().t('repetitions.remember')}
                   </button>
                   &nbsp;
                   <button
                       onClick={this.runRepetition.bind(this, repetition, false)}>
-                    Don’t remember
+                    {getI18n().t('repetitions.dontRemember')}
                   </button>
                 </span>
               }

@@ -1,3 +1,5 @@
+import {getI18n} from '../locales/i18n';
+
 import React from 'react';
 import {connect} from 'react-redux';
 
@@ -72,7 +74,7 @@ class CreateFlashcard extends React.Component {
           <br />
           <input
               type="submit"
-              value="Create"
+              value={getI18n().t('createFlashcard.create')}
           />
         </form>
       </div>

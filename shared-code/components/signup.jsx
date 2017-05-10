@@ -1,3 +1,5 @@
+import {getI18n} from '../locales/i18n';
+
 import React from 'react';
 import {connect} from 'react-redux';
 
@@ -59,7 +61,7 @@ class Signup extends React.Component {
           <br />
           <input
               type="submit"
-              value="Sign up"
+              value={getI18n().t('signup.signUp')}
           />
         </form>
       </div>

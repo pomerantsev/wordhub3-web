@@ -49,7 +49,7 @@ class Home extends React.Component {
           <br />
           <input
               type="submit"
-              value={getI18n().t('login')}
+              value={getI18n().t('home.login')}
           />
         </form>
       </div>

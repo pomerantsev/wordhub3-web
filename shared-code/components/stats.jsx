@@ -1,3 +1,5 @@
+import {getI18n} from '../locales/i18n';
+
 import React from 'react';
 import {connect} from 'react-redux';
 import moment from 'moment';
@@ -10,41 +12,41 @@ class Stats extends React.Component {
   render () {
     return (
       <div>
-        <h1>General</h1>
-        <p>Total flashcards: {this.props.flashcards.size}</p>
-        <p>Learned flashcards: {this.props.learnedFlashcards.size}</p>
-        <p>Total repetitions planned: {this.props.plannedRepetitions.size}</p>
+        <h1>{getI18n().t('stats.general')}</h1>
+        <p>{getI18n().t('stats.flashcardsCreated')}: {this.props.flashcards.size}</p>
+        <p>{getI18n().t('stats.flashcardsLearned')}: {this.props.learnedFlashcards.size}</p>
+        <p>{getI18n().t('stats.totalRepetitionsPlanned')}: {this.props.plannedRepetitions.size}</p>
         <p>
-          Upcoming repetitions:
+          {getI18n().t('stats.upcomingRepetitions')}:
           {' '}
           {this.props.nextDayData ?
             `${this.props.nextDayData.get('repetitions').size} (${moment(this.props.nextDayData.get('date')).format('D MMM YYYY')})` :
-            'none'
+            getI18n().t('stats.none')
           }
         </p>
         <p>
-          Repetitions planned until:
+          {getI18n().t('stats.repetitionsPlannedUntil')}:
           {' '}
           {this.props.lastDayData ?
             `${moment(this.props.lastDayData.get('date')).format('D MMM YYYY')}` :
-            'none'
+            getI18n().t('stats.none')
           }
         </p>
-        <h1>Last 30 days</h1>
-        <p>Flashcards created: {this.props.monthStats.get('flashcardsCreated').size}</p>
-        <p>Flashcards learned: {this.props.monthStats.get('flashcardsLearnedCount')}</p>
-        <p>Total repetitions: {this.props.monthStats.get('allRepetitions').size}</p>
+        <h1>{getI18n().t('stats.last30Days')}</h1>
+        <p>{getI18n().t('stats.flashcardsCreated')}: {this.props.monthStats.get('flashcardsCreated').size}</p>
+        <p>{getI18n().t('stats.flashcardsLearned')}: {this.props.monthStats.get('flashcardsLearnedCount')}</p>
+        <p>{getI18n().t('stats.totalRepetitions')}: {this.props.monthStats.get('allRepetitions').size}</p>
         <p>
-          Successful repetitions: {this.props.monthStats.get('successfulRepetitions').size}
+          {getI18n().t('stats.successfulRepetitions')}: {this.props.monthStats.get('successfulRepetitions').size}
           {' '}
           ({helpers.getRoundedPercentageString(this.props.monthStats.get('successfulRepetitions').size / this.props.monthStats.get('allRepetitions').size)})
         </p>
-        <h1>Today</h1>
-        <p>Flashcards created: {this.props.dayStats.get('flashcardsCreated').size}</p>
-        <p>Flashcards learned: {this.props.dayStats.get('flashcardsLearnedCount')}</p>
-        <p>Total repetitions: {this.props.dayStats.get('allRepetitions').size}</p>
+        <h1>{getI18n().t('stats.today')}</h1>
+        <p>{getI18n().t('stats.flashcardsCreated')}: {this.props.dayStats.get('flashcardsCreated').size}</p>
+        <p>{getI18n().t('stats.flashcardsLearned')}: {this.props.dayStats.get('flashcardsLearnedCount')}</p>
+        <p>{getI18n().t('stats.totalRepetitions')}: {this.props.dayStats.get('allRepetitions').size}</p>
         <p>
-          Successful repetitions: {this.props.dayStats.get('successfulRepetitions').size}
+          {getI18n().t('stats.successfulRepetitions')}: {this.props.dayStats.get('successfulRepetitions').size}
           {' '}
           ({helpers.getRoundedPercentageString(this.props.dayStats.get('successfulRepetitions').size / this.props.dayStats.get('allRepetitions').size)})
         </p>
