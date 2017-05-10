@@ -16,7 +16,8 @@ const enTranslation = {
     allFlashcards: 'All flashcards',
     create: 'Create',
     logout: 'Logout',
-    repeat: 'Repeat ({{completed}} of {{total}})',
+    repeat: 'Repeat',
+    completedOfTotal: '{{completed}} of {{total}}',
     stats: 'Stats'
   },
   notFound: {
@@ -33,6 +34,7 @@ const enTranslation = {
     signUp: 'Sign up'
   },
   stats: {
+    title: 'Stats',
     general: 'General',
     flashcardsCreated: 'Flashcards created',
     flashcardsLearned: 'Flashcards learned',

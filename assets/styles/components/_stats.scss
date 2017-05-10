@@ -1,0 +1,11 @@
+.stats__container {
+  @extend .row;
+}
+
+.stats__column {
+  @extend .col-md-4;
+}
+
+.stats__column__table {
+  @extend .table;
+}

@@ -16,7 +16,8 @@ const ruTranslation = {
     allFlashcards: 'Все карточки',
     create: 'Создать',
     logout: 'Выйти',
-    repeat: 'Повторить ({{completed}} из {{total}})',
+    repeat: 'Повторить',
+    completedOfTotal: '{{completed}} из {{total}}',
     stats: 'Статистика'
   },
   notFound: {
@@ -33,6 +34,7 @@ const ruTranslation = {
     signUp: 'Зарегистрироваться'
   },
   stats: {
+    title: 'Статистика',
     general: 'Общая',
     flashcardsCreated: 'Создано карточек',
     flashcardsLearned: 'Выучено карточек',

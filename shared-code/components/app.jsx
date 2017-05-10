@@ -8,7 +8,10 @@ class App extends React.Component {
   render () {
     return (
       <MuiThemeProvider muiTheme={getMuiTheme({userAgent: this.props.userAgent})}>
-        {this.props.children}
+        <div
+            className="app__container">
+          {this.props.children}
+        </div>
       </MuiThemeProvider>
     );
   }

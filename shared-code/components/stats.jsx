@@ -7,49 +7,104 @@ import moment from 'moment';
 import * as getters from '../data/getters';
 import * as helpers from '../utils/helpers';
 
+import StatsItem from './stats-item.jsx';
+
 class Stats extends React.Component {
 
   render () {
     return (
       <div>
-        <h1>{getI18n().t('stats.general')}</h1>
-        <p>{getI18n().t('stats.flashcardsCreated')}: {this.props.flashcards.size}</p>
-        <p>{getI18n().t('stats.flashcardsLearned')}: {this.props.learnedFlashcards.size}</p>
-        <p>{getI18n().t('stats.totalRepetitionsPlanned')}: {this.props.plannedRepetitions.size}</p>
-        <p>
-          {getI18n().t('stats.upcomingRepetitions')}:
-          {' '}
-          {this.props.nextDayData ?
-            `${this.props.nextDayData.get('repetitions').size} (${moment(this.props.nextDayData.get('date')).format('D MMM YYYY')})` :
-            getI18n().t('stats.none')
-          }
-        </p>
-        <p>
-          {getI18n().t('stats.repetitionsPlannedUntil')}:
-          {' '}
-          {this.props.lastDayData ?
-            `${moment(this.props.lastDayData.get('date')).format('D MMM YYYY')}` :
-            getI18n().t('stats.none')
-          }
-        </p>
-        <h1>{getI18n().t('stats.last30Days')}</h1>
-        <p>{getI18n().t('stats.flashcardsCreated')}: {this.props.monthStats.get('flashcardsCreated').size}</p>
-        <p>{getI18n().t('stats.flashcardsLearned')}: {this.props.monthStats.get('flashcardsLearnedCount')}</p>
-        <p>{getI18n().t('stats.totalRepetitions')}: {this.props.monthStats.get('allRepetitions').size}</p>
-        <p>
-          {getI18n().t('stats.successfulRepetitions')}: {this.props.monthStats.get('successfulRepetitions').size}
-          {' '}
-          ({helpers.getRoundedPercentageString(this.props.monthStats.get('successfulRepetitions').size / this.props.monthStats.get('allRepetitions').size)})
-        </p>
-        <h1>{getI18n().t('stats.today')}</h1>
-        <p>{getI18n().t('stats.flashcardsCreated')}: {this.props.dayStats.get('flashcardsCreated').size}</p>
-        <p>{getI18n().t('stats.flashcardsLearned')}: {this.props.dayStats.get('flashcardsLearnedCount')}</p>
-        <p>{getI18n().t('stats.totalRepetitions')}: {this.props.dayStats.get('allRepetitions').size}</p>
-        <p>
-          {getI18n().t('stats.successfulRepetitions')}: {this.props.dayStats.get('successfulRepetitions').size}
-          {' '}
-          ({helpers.getRoundedPercentageString(this.props.dayStats.get('successfulRepetitions').size / this.props.dayStats.get('allRepetitions').size)})
-        </p>
+        <h2>{getI18n().t('stats.title')}</h2>
+        <div
+            className="stats__container">
+          <div
+              className="stats__column">
+            <h3>{getI18n().t('stats.general')}</h3>
+            <table
+                className="stats__column__table">
+              <tbody>
+                <StatsItem
+                    title={getI18n().t('stats.flashcardsCreated')}
+                    value={this.props.flashcards.size}
+                />
+                <StatsItem
+                    title={getI18n().t('stats.flashcardsLearned')}
+                    value={this.props.learnedFlashcards.size}
+                />
+                <StatsItem
+                    title={getI18n().t('stats.totalRepetitionsPlanned')}
+                    value={this.props.plannedRepetitions.size}
+                />
+                <StatsItem
+                    title={getI18n().t('stats.upcomingRepetitions')}
+                    value={this.props.nextDayData ?
+                      `${this.props.nextDayData.get('repetitions').size} (${moment(this.props.nextDayData.get('date')).format('D MMM YYYY')})` :
+                      getI18n().t('stats.none')
+                    }
+                />
+                <StatsItem
+                    title={getI18n().t('stats.repetitionsPlannedUntil')}
+                    value={this.props.lastDayData ?
+                      `${moment(this.props.lastDayData.get('date')).format('D MMM YYYY')}` :
+                      getI18n().t('stats.none')
+                    }
+                />
+              </tbody>
+            </table>
+          </div>
+
+          <div
+              className="stats__column">
+            <h3>{getI18n().t('stats.last30Days')}</h3>
+            <table
+                className="stats__column__table">
+              <tbody>
+                <StatsItem
+                    title={getI18n().t('stats.flashcardsCreated')}
+                    value={this.props.monthStats.get('flashcardsCreated').size}
+                />
+                <StatsItem
+                    title={getI18n().t('stats.flashcardsLearned')}
+                    value={this.props.monthStats.get('flashcardsLearnedCount')}
+                />
+                <StatsItem
+                    title={getI18n().t('stats.totalRepetitions')}
+                    value={this.props.monthStats.get('allRepetitions').size}
+                />
+                <StatsItem
+                    title={getI18n().t('stats.successfulRepetitions')}
+                    value={`${this.props.monthStats.get('successfulRepetitions').size} (${helpers.getRoundedPercentageString(this.props.monthStats.get('successfulRepetitions').size / this.props.monthStats.get('allRepetitions').size)})`}
+                />
+              </tbody>
+            </table>
+          </div>
+
+          <div
+              className="stats__column">
+            <h3>{getI18n().t('stats.today')}</h3>
+            <table
+                className="stats__column__table">
+              <tbody>
+                <StatsItem
+                    title={getI18n().t('stats.flashcardsCreated')}
+                    value={this.props.dayStats.get('flashcardsCreated').size}
+                />
+                <StatsItem
+                    title={getI18n().t('stats.flashcardsLearned')}
+                    value={this.props.dayStats.get('flashcardsLearnedCount')}
+                />
+                <StatsItem
+                    title={getI18n().t('stats.totalRepetitions')}
+                    value={this.props.dayStats.get('allRepetitions').size}
+                />
+                <StatsItem
+                    title={getI18n().t('stats.successfulRepetitions')}
+                    value={`${this.props.dayStats.get('successfulRepetitions').size} (${helpers.getRoundedPercentageString(this.props.dayStats.get('successfulRepetitions').size / this.props.dayStats.get('allRepetitions').size)})`}
+                />
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
     );
   }

@@ -1,0 +1,16 @@
+.authed-menu {
+  @extend .navbar, .navbar-default;
+}
+
+.authed-menu__primary-link {
+  color: $navbar-default-brand-color;
+  float: left;
+  font-size: 14px;
+  line-height: 20px;
+  padding: 10px 15px;
+
+  &:hover {
+    color: $navbar-default-brand-color;
+    text-decoration: none;
+  }
+}

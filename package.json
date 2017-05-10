@@ -19,6 +19,7 @@
     "babel-polyfill": "^6.2.0",
     "babel-preset-react": "^6.1.18",
     "babel-register": "^6.18.0",
+    "bootstrap-sass": "^3.3.7",
     "cookie-parser": "^1.4.3",
     "dotenv": "^2.0.0",
     "ejs": "^2.5.6",
