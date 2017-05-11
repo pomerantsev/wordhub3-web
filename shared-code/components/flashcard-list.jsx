@@ -1,6 +1,7 @@
 import {getI18n} from '../locales/i18n';
 
 import React from 'react';
+import classNames from 'classnames';
 import {connect} from 'react-redux';
 import {Link} from 'react-router';
 import moment from 'moment';
@@ -83,30 +84,35 @@ class FlashcardList extends React.Component {
           </div> :
           null
         }
-        <ul>
-          {displayedFlashcards.map((flashcard, index) => {
-            return (
-              <div
-                  key={flashcard.get('uuid')}>
-                {index === 0 || flashcard.get('date') !== displayedFlashcards.getIn([index - 1, 'date']) ?
-                  <p>{flashcard.get('date')}</p> :
-                  null
-                }
-                <li>
-                  <span>
-                    <Link
-                        to={`/flashcards/${flashcard.get('uuid')}`}
-                        style={{color: flashcard.get('learned') ? 'green' : 'black'}}>
-                      <span>{flashcard.get('uuid')}</span>
-                      <span>&nbsp;</span>
-                      <span>{flashcard.get('frontText').match(/([^\n]*)(\n|$)/)[1]}</span>
-                    </Link>
-                  </span>
-                </li>
-              </div>
-            );
-          })}
-        </ul>
+        {displayedFlashcards.map((flashcard, index) => {
+          return (
+            <div
+                key={flashcard.get('uuid')}>
+              {index === 0 || flashcard.get('date') !== displayedFlashcards.getIn([index - 1, 'date']) ?
+                <p
+                    className="flashcard-list__date">
+                  {flashcard.get('date')}
+                </p> :
+                null
+              }
+              <Link
+                  to={`/flashcards/${flashcard.get('uuid')}`}
+                  className={classNames(
+                    'flashcard-list__flashcard',
+                    flashcard.get('learned') ? 'flashcard-list__flashcard--learned' : 'flashcard-list__flashcard--not-learned'
+                  )}>
+                <div
+                    className="flashcard-list__flashcard__side">{
+                    `${flashcard.get('frontText')}`
+                }</div>
+                <div
+                    className="flashcard-list__flashcard__side">{
+                    `${flashcard.get('backText')}`
+                }</div>
+              </Link>
+            </div>
+          );
+        })}
         <Paginator
             itemCount={this.props.flashcards.size}
             itemsPerPage={FLASHCARDS_PER_PAGE}

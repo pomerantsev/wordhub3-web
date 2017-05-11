@@ -1,0 +1,110 @@
+.flashcard-list__date {
+  @extend .lead;
+  margin: 0;
+}
+
+.flashcard-list__flashcard {
+  @extend .jumbotron;
+  display: block;
+  text-decoration: none;
+  margin-bottom: $margin-standard;
+  margin-top: $margin-standard;
+  white-space: pre;
+  white-space: pre-wrap;
+
+  @media (min-width: 0) and (max-width: $breakpoint700 - 1px) {
+    padding: 15px 22px !important;
+    font-size: 14px !important;
+    line-height: 23px;
+    font-weight: normal;
+    min-height: 100px;
+  }
+
+  @media (min-width: $breakpoint700) {
+    padding: 30px !important;
+    font-size: 18px !important;
+    font-weight: 200;
+    min-height: 120px;
+  }
+
+  &:hover {
+    text-decoration: none;
+    color: $gray-dark;
+  }
+
+  &.flashcard-list__flashcard--learned {
+    color: $universal-green;
+    background-color: $background-green;
+  }
+  // &.flashcard-rows {
+  //   .flashcard-side {
+  //     position: relative;
+
+  //     &:not(:first-child) {
+  //       margin-top: 40px;
+  //       &:before {
+  //         content: "";
+  //         position: absolute;
+  //         top: -20px;
+  //         left: 0;
+  //         right: 0;
+  //         height: 1px;
+  //         background-color: white;
+  //       }
+  //     }
+  //   }
+  // }
+
+  // &.flashcard-columns {
+  //   position: relative;
+
+  //   content: "";
+  //   display: table;
+  //   clear: both;
+  //   width: 100%;
+
+  //   .flashcard-side {
+  //     float: left;
+  //     width: 50%;
+  //     height: 100%;
+
+  //     &:first-child {
+  //       padding-right: 20px;
+  //     }
+
+  //     &:not(:first-child) {
+  //       padding-left: 20px;
+
+  //       &:before {
+  //         content: "";
+  //         position: absolute;
+  //         left: 50%;
+  //         width: 1px;
+  //         top: 0;
+  //         bottom: 0;
+  //         background-color: white;
+  //       }
+  //     }
+  //   }
+
+
+  // }
+
+}
+
+.flashcard-list__flashcard__side {
+  position: relative;
+
+  &:not(:first-child) {
+    margin-top: 40px;
+    &:before {
+      content: "";
+      position: absolute;
+      top: -20px;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background-color: white;
+    }
+  }
+}
