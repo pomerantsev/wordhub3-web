@@ -5,7 +5,6 @@ import {connect} from 'react-redux';
 import {Link} from 'react-router';
 
 import * as actionCreators from '../data/action-creators';
-import * as getters from '../data/getters';
 
 class AuthedMenu extends React.Component {
 
@@ -80,7 +79,7 @@ class AuthedMenu extends React.Component {
 
 export const AuthedMenuContainer = connect(
   state => ({
-    todayRepetitions: getters.getTodayRepetitions(state.get('userData')),
+    todayRepetitions: state.getIn(['userData', 'repetitionsForToday']),
     repetitions: state.getIn(['userData', 'repetitions']),
     online: state.get('online')
   }),

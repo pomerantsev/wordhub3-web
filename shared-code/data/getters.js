@@ -106,17 +106,9 @@ export const getTodayRepetitionsFromMainState = helpers.createDeepEqualSelector(
   }
 );
 
-// TODO: creating a deep equal selector might be overkill.
-export const getTodayRepetitions = helpers.createDeepEqualSelector(
-  [
-    state => state.get('repetitionsForToday')
-  ],
-  repetitionsForToday => repetitionsForToday
-);
-
 export const getCurrentDay = helpers.createDeepEqualSelector(
   [
-    state => getTodayRepetitions(state),
+    state => state.get('repetitionsForToday'),
     state => state.get('repetitions'),
     state => state.get('repetitionsIndexedByPlannedDay')
   ],

@@ -4,6 +4,22 @@ import * as constants from '../data/constants';
 import * as getters from '../data/getters';
 import * as helpers from '../utils/helpers';
 
+function getStateWithCurrentRepetition (state) {
+  const currentRepetition = state.get('currentRepetition');
+  const remainingRepetitionsForToday = state.get('repetitionsForToday')
+    .filter(repetitionUuid => !state.getIn(['repetitions', repetitionUuid, 'actualDate']));
+  if (remainingRepetitionsForToday.indexOf(currentRepetition) > -1) {
+    return state;
+  } else if (remainingRepetitionsForToday.size > 0) {
+    // TODO: can we do without this randomness?
+    return state
+      .set('currentRepetition', remainingRepetitionsForToday.get(Math.floor(Math.random() * remainingRepetitionsForToday.size)));
+  } else {
+    return state
+      .set('currentRepetition', null);
+  }
+}
+
 function getStateWithUpdatedRepetitionIndices (state, existingRepetitions, newRepetitions) {
   let repetitionsIndexedByPlannedDay = state.get('repetitionsIndexedByPlannedDay');
 
@@ -41,8 +57,10 @@ function getStateWithUpdatedRepetitionIndices (state, existingRepetitions, newRe
 
   const repetitionsForToday = getters.getTodayRepetitionsFromMainState(stateWithUpdatedRepetitionsIndexedByPlannedDay);
 
-  return stateWithUpdatedRepetitionsIndexedByPlannedDay
+  const stateWithUpdatedRepetitionsForToday = stateWithUpdatedRepetitionsIndexedByPlannedDay
     .set('repetitionsForToday', repetitionsForToday);
+
+  return getStateWithCurrentRepetition(stateWithUpdatedRepetitionsForToday);
 }
 
 export default function userDataReducer (state, action) {
@@ -105,9 +123,11 @@ export default function userDataReducer (state, action) {
       );
   }
 
-  case 'UPDATE_REPETITIONS_FOR_TODAY':
-    return state
+  case 'UPDATE_REPETITIONS_FOR_TODAY': {
+    const stateWithUpdatedRepetitionsForToday = state
       .set('repetitionsForToday', getters.getTodayRepetitionsFromMainState(state));
+    return getStateWithCurrentRepetition(stateWithUpdatedRepetitionsForToday);
+  }
 
   case 'RUN_REPETITION': {
     const startTime = Date.now();

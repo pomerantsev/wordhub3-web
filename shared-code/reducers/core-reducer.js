@@ -12,6 +12,7 @@ const INITIAL_USER_DATA = fromJS({
   repetitions: {},
   repetitionsIndexedByPlannedDay: OrderedMap(),
   repetitionsForToday: [],
+  currentRepetition: null,
   lastSyncServerTime: 0,
   lastSyncClientTime: 0,
   lastSyncRequestClientTime: 0,
