@@ -7,8 +7,26 @@ import * as actionCreators from '../data/action-creators';
 
 class Repetitions extends React.Component {
 
+  static contextTypes = {
+    router: React.PropTypes.object.isRequired
+  }
+
   constructor () {
     super();
+  }
+
+  componentWillMount () {
+    this.checkCurrentRepetition(this.props);
+  }
+
+  componentWillReceiveProps (nextProps) {
+    this.checkCurrentRepetition(nextProps);
+  }
+
+  checkCurrentRepetition (props) {
+    if (!props.currentRepetition) {
+      props.router.replace('/stats');
+    }
   }
 
   runRepetition (repetition, successful) {
@@ -20,6 +38,9 @@ class Repetitions extends React.Component {
     if (this.startTime) {
       console.log('Updating repetitions took ' + (Date.now() - this.startTime) + ' ms');
       this.startTime = null;
+    }
+    if (!this.props.currentRepetition) {
+      return null;
     }
     const repetition = this.props.repetitions.get(this.props.currentRepetition);
     const flashcard = this.props.flashcards.get(repetition.get('flashcardUuid'));
