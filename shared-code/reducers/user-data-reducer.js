@@ -10,18 +10,18 @@ function getStateWithUpdatedRepetitionIndices (state, existingRepetitions, newRe
   existingRepetitions.forEach(existingRepetition => {
     const repetitionInState = state.get('repetitions').find(repetition => helpers.repetitionsEqual(repetition, existingRepetition));
     repetitionsIndexedByPlannedDay = repetitionsIndexedByPlannedDay
-      .updateIn([repetitionInState.get('plannedDay'), 'repetitions'], List(), repetitions =>
-        repetitions.splice(repetitions.findIndex(repetition => helpers.repetitionsEqual(repetition, existingRepetition)), 1)
+      .updateIn([repetitionInState.get('plannedDay'), 'repetitions'], List(), repetitionUuids =>
+        repetitionUuids.splice(repetitionUuids.findIndex(repetitionUuid => helpers.repetitionsEqual(state.getIn(['repetitions', repetitionUuid]), existingRepetition)), 1)
       )
-      .updateIn([existingRepetition.get('plannedDay'), 'repetitions'], List(), repetitions =>
-        repetitions.push(existingRepetition)
+      .updateIn([existingRepetition.get('plannedDay'), 'repetitions'], List(), repetitionUuids =>
+        repetitionUuids.push(existingRepetition.get('uuid'))
       );
   });
 
   newRepetitions.forEach(newRepetition => {
     repetitionsIndexedByPlannedDay = repetitionsIndexedByPlannedDay
-      .updateIn([newRepetition.get('plannedDay'), 'repetitions'], List(), repetitions =>
-        repetitions.push(newRepetition)
+      .updateIn([newRepetition.get('plannedDay'), 'repetitions'], List(), repetitionUuids =>
+        repetitionUuids.push(newRepetition.get('uuid'))
       );
   });
 
@@ -32,7 +32,7 @@ function getStateWithUpdatedRepetitionIndices (state, existingRepetitions, newRe
     )
     .filter(repetitionsIndexForDay => repetitionsIndexForDay.get('repetitions').size > 0)
     .map(repetitionsIndexForDay => repetitionsIndexForDay
-      .set('completed', repetitionsIndexForDay.get('repetitions').every(repetition => !!repetition.get('actualDate')))
+      .set('completed', repetitionsIndexForDay.get('repetitions').every(repetitionUuid => !!state.getIn(['repetitions', repetitionUuid, 'actualDate'])))
     );
 
   const stateWithUpdatedRepetitionsIndexedByPlannedDay =
@@ -68,21 +68,23 @@ export default function userDataReducer (state, action) {
       createdAt: action.currentTime,
       updatedAt: action.currentTime
     });
-    return state
+    const updatedState = state
       .update('flashcards',
         flashcards => flashcards.set(action.flashcardUuid, newFlashcard)
       )
       .update('repetitions',
         repetitions => repetitions.set(action.repetitionUuid, newRepetition)
-      )
+      );
+
+    return updatedState
       .updateIn(
         ['repetitionsIndexedByPlannedDay', newRepetition.get('plannedDay')],
         Map(),
         repetitionsIndexForDay => {
-          const updatedRepetitions = repetitionsIndexForDay.get('repetitions', List()).push(newRepetition);
+          const updatedRepetitions = repetitionsIndexForDay.get('repetitions', List()).push(newRepetition.get('uuid'));
           return repetitionsIndexForDay
             .set('repetitions', updatedRepetitions)
-            .set('completed', updatedRepetitions.every(repetition => !!repetition.get('actualDate')));
+            .set('completed', updatedRepetitions.every(repetitionUuid => !!updatedState.getIn(['repetitions', repetitionUuid, 'actualDate'])));
         }
       )
       .update('repetitionsIndexedByPlannedDay', repetitionsIndexedByPlannedDay =>
@@ -115,20 +117,16 @@ export default function userDataReducer (state, action) {
       .set('updatedAt', action.currentTime);
 
     const stateWithUpdatedRepetition = state
-      .setIn(['repetitions', action.repetitionUuid], updatedRepetition)
+      .setIn(['repetitions', action.repetitionUuid], updatedRepetition);
+
+    const stateWithUpdatedRepetitionAndIndex = stateWithUpdatedRepetition
       .updateIn(['repetitionsIndexedByPlannedDay', updatedRepetition.get('plannedDay')], repetitionsIndexForDay => {
-        const repetitionIndexWithUpdatedRepetitions = repetitionsIndexForDay
-          .update('repetitions', repetitions => repetitions.map(repetition =>
-            repetition.get('uuid') === action.repetitionUuid ?
-              updatedRepetition :
-              repetition
-          ));
-        return repetitionIndexWithUpdatedRepetitions
-          .set('completed', repetitionIndexWithUpdatedRepetitions.get('repetitions').every(repetition => !!repetition.get('actualDate')));
+        return repetitionsIndexForDay
+          .set('completed', repetitionsIndexForDay.get('repetitions').every(repetitionUuid => !!stateWithUpdatedRepetition.getIn(['repetitions', repetitionUuid, 'actualDate'])));
       });
     const nextRepetition = (() => {
-      const allRepetitionsForFlashcard = stateWithUpdatedRepetition.get('repetitions')
-        .filter(repetition => repetition.get('flashcardUuid') === stateWithUpdatedRepetition.getIn(['repetitions', action.repetitionUuid, 'flashcardUuid']))
+      const allRepetitionsForFlashcard = stateWithUpdatedRepetitionAndIndex.get('repetitions')
+        .filter(repetition => repetition.get('flashcardUuid') === stateWithUpdatedRepetitionAndIndex.getIn(['repetitions', action.repetitionUuid, 'flashcardUuid']))
         .toList()
         .sort((repetition1, repetition2) => repetition1.get('seq') - repetition2.get('seq'));
       const lastUnsuccessfulIndex = allRepetitionsForFlashcard.findLastIndex(repetition => !repetition.get('successful'));
@@ -161,25 +159,29 @@ export default function userDataReducer (state, action) {
     })();
 
     const stateWithAddedNextRepetition = nextRepetition ?
-      stateWithUpdatedRepetition
-        .update('repetitions', repetitions => repetitions.set(action.nextRepetitionUuid, nextRepetition))
-        .updateIn(
-          ['repetitionsIndexedByPlannedDay', nextRepetition.get('plannedDay')],
-          Map(),
-          repetitionsIndexForDay => {
-            const updatedRepetitions = repetitionsIndexForDay.get('repetitions', List()).push(nextRepetition);
-            return repetitionsIndexForDay
-              .set('repetitions', updatedRepetitions)
-              .set('completed', updatedRepetitions.every(repetition => !!repetition.get('actualDate')));
-          }
-        )
-        .update('repetitionsIndexedByPlannedDay', repetitionsIndexedByPlannedDay =>
-          repetitionsIndexedByPlannedDay.sortBy(
-            (value, key) => key,
-            (a, b) => a - b
+      (() => {
+        const stateWithAddedRepetition =
+          stateWithUpdatedRepetitionAndIndex
+            .update('repetitions', repetitions => repetitions.set(action.nextRepetitionUuid, nextRepetition));
+        return stateWithAddedRepetition
+          .updateIn(
+            ['repetitionsIndexedByPlannedDay', nextRepetition.get('plannedDay')],
+            Map(),
+            repetitionsIndexForDay => {
+              const updatedRepetitions = repetitionsIndexForDay.get('repetitions', List()).push(nextRepetition.get('uuid'));
+              return repetitionsIndexForDay
+                .set('repetitions', updatedRepetitions)
+                .set('completed', updatedRepetitions.every(repetitionUuid => !!stateWithAddedRepetition.getIn(['repetitions', repetitionUuid, 'actualDate'])));
+            }
           )
-        ) :
-      stateWithUpdatedRepetition;
+          .update('repetitionsIndexedByPlannedDay', repetitionsIndexedByPlannedDay =>
+            repetitionsIndexedByPlannedDay.sortBy(
+              (value, key) => key,
+              (a, b) => a - b
+            )
+          );
+      })() :
+      stateWithUpdatedRepetitionAndIndex;
     const returnValue = stateWithAddedNextRepetition
       .updateIn(
         ['flashcards', updatedRepetition.get('flashcardUuid')],

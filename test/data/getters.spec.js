@@ -15,7 +15,8 @@ describe('getTodayRepetitionsFromMainState', () => {
   describe('when there are no repetitions', () => {
     it('returns an empty list', () => {
       const state = fromJS({
-        flashcards: [],
+        flashcards: {},
+        repetitions: {},
         repetitionsIndexedByPlannedDay: OrderedMap()
       });
       assert.equal(0, getTodayRepetitionsFromMainState(state).size);
@@ -27,41 +28,40 @@ describe('getTodayRepetitionsFromMainState', () => {
     describe('when there is a plannedDay for which some but not all repetitions are run', () => {
       it('returns all reps for that plannedDay which have no actualDate or an actualDate >= currentDate', () => {
         const state = fromJS({
-          flashcards: [
-            {uuid: 1},
-            {uuid: 2},
-            {uuid: 3},
-            {uuid: 4}
-          ],
+          flashcards: {
+            1: {uuid: '1'},
+            2: {uuid: '2'},
+            3: {uuid: '3'},
+            4: {uuid: '4'}
+          },
+          repetitions: {
+            1: {uuid: '1', actualDate: twoDaysAgo, flashcardUuid: '1'},
+            2: {uuid: '2', actualDate: twoDaysAgo, flashcardUuid: '2'},
+            3: {uuid: '3', actualDate: null, flashcardUuid: '3'},
+            4: {uuid: '4', actualDate: yesterday, flashcardUuid: '4'},
+            5: {uuid: '5', actualDate: today, flashcardUuid: '1'},
+            6: {uuid: '6', actualDate: tomorrow, flashcardUuid: '2'},
+            7: {uuid: '7', actualDate: null, flashcardUuid: '1'},
+            8: {uuid: '8', actualDate: null, flashcardUuid: '2'}
+          },
           repetitionsIndexedByPlannedDay: OrderedMap(fromJS({
             1: {
               completed: true,
-              repetitions: [
-                {uuid: 1, actualDate: twoDaysAgo, flashcardUuid: 1},
-                {uuid: 2, actualDate: twoDaysAgo, flashcardUuid: 2}
-              ]
+              repetitions: ['1', '2']
             },
             2: {
               completed: false,
-              repetitions: [
-                {uuid: 3, actualDate: null, flashcardUuid: 3},
-                {uuid: 4, actualDate: yesterday, flashcardUuid: 4},
-                {uuid: 5, actualDate: today, flashcardUuid: 1},
-                {uuid: 6, actualDate: tomorrow, flashcardUuid: 2}
-              ]
+              repetitions: ['3', '4', '5', '6']
             },
             4: {
               completed: false,
-              repetitions: [
-                {uuid: 7, actualDate: null, flashcardUuid: 1},
-                {uuid: 8, actualDate: null, flashcardUuid: 2}
-              ]
+              repetitions: ['7', '8']
             }
           }))
         });
 
         const repetitions = getTodayRepetitionsFromMainState(state);
-        assert.deepEqual([3, 5, 6], repetitions.toJS().map(repetition => repetition.uuid));
+        assert.deepEqual(['3', '5', '6'], repetitions.toJS());
       })
     })
 
@@ -70,41 +70,40 @@ describe('getTodayRepetitionsFromMainState', () => {
       describe('when latest completed plannedDay has among actualDate values >= currentDate', () => {
         it('returns repetitions with actualDate >= currentDate', () => {
           const state = fromJS({
-            flashcards: [
-              {uuid: 1},
-              {uuid: 2},
-              {uuid: 3},
-              {uuid: 4}
-            ],
+            flashcards: {
+              1: {uuid: '1'},
+              2: {uuid: '2'},
+              3: {uuid: '3'},
+              4: {uuid: '4'}
+            },
+            repetitions: {
+              1: {uuid: '1', actualDate: twoDaysAgo, flashcardUuid: '1'},
+              2: {uuid: '2', actualDate: twoDaysAgo, flashcardUuid: '2'},
+              3: {uuid: '3', actualDate: yesterday, flashcardUuid: '3'},
+              4: {uuid: '4', actualDate: yesterday, flashcardUuid: '4'},
+              5: {uuid: '5', actualDate: today, flashcardUuid: '1'},
+              6: {uuid: '6', actualDate: tomorrow, flashcardUuid: '2'},
+              7: {uuid: '7', actualDate: null, flashcardUuid: '1'},
+              8: {uuid: '8', actualDate: null, flashcardUuid: '2'}
+            },
             repetitionsIndexedByPlannedDay: OrderedMap(fromJS({
               1: {
                 completed: true,
-                repetitions: [
-                  {uuid: 1, actualDate: twoDaysAgo, flashcardUuid: 1},
-                  {uuid: 2, actualDate: twoDaysAgo, flashcardUuid: 2}
-                ]
+                repetitions: ['1', '2']
               },
               2: {
                 completed: true,
-                repetitions: [
-                  {uuid: 3, actualDate: yesterday, flashcardUuid: 3},
-                  {uuid: 4, actualDate: yesterday, flashcardUuid: 4},
-                  {uuid: 5, actualDate: today, flashcardUuid: 1},
-                  {uuid: 6, actualDate: tomorrow, flashcardUuid: 2}
-                ]
+                repetitions: ['3', '4', '5', '6']
               },
               4: {
                 completed: false,
-                repetitions: [
-                  {uuid: 7, actualDate: null, flashcardUuid: 1},
-                  {uuid: 8, actualDate: null, flashcardUuid: 2}
-                ]
+                repetitions: ['7', '8']
               }
             }))
           });
 
           const repetitions = getTodayRepetitionsFromMainState(state);
-          assert.deepEqual([5, 6], repetitions.toJS().map(repetition => repetition.uuid));
+          assert.deepEqual(['5', '6'], repetitions.toJS());
         });
       });
 

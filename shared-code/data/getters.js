@@ -51,7 +51,7 @@ export const getTodayRepetitionsFromMainState = helpers.createDeepEqualSelector(
       if (firstUncompletedDayRepetitionsKey >= 0) {
         const plannedDay = repetitionsIndexedByPlannedDay.get(firstUncompletedDayRepetitionsKey);
         const repetitions = plannedDay.get('repetitions');
-        if (repetitions.every(repetition => !repetition.get('actualDate'))) {
+        if (repetitions.every(repetitionUuid => !allRepetitions.getIn([repetitionUuid, 'actualDate']))) {
           // No repetitions for this day have been run
           const keyIndex = repetitionsIndexedByPlannedDay.keySeq().findIndex(key => key === firstUncompletedDayRepetitionsKey);
           const previousDay = keyIndex === 0 ?
@@ -62,7 +62,10 @@ export const getTodayRepetitionsFromMainState = helpers.createDeepEqualSelector(
                 plannedDay: previousPlannedDay,
                 actualDate: repetitionsIndexedByPlannedDay.getIn([previousPlannedDay, 'repetitions'])
                   .reduce(
-                    (maxDate, repetition) => repetition.get('actualDate') > maxDate ? repetition.get('actualDate') : maxDate,
+                    (maxDate, repetitionUuid) => {
+                      const repetition = allRepetitions.get(repetitionUuid);
+                      return repetition.get('actualDate') > maxDate ? repetition.get('actualDate') : maxDate;
+                    },
                     constants.SEED_DATE
                   )
               };
@@ -71,22 +74,23 @@ export const getTodayRepetitionsFromMainState = helpers.createDeepEqualSelector(
             List() :
             repetitionsIndexedByPlannedDay
               .getIn([previousDay.plannedDay, 'repetitions'])
-              .filter(repetition => repetition.get('actualDate') >= currentDate);
+              .filter(repetitionUuid => allRepetitions.getIn([repetitionUuid, 'actualDate']) >= currentDate);
           if (repetitionsFromPreviousDayRunToday.size > 0) {
-            return repetitionsFromPreviousDayRunToday.map(repetition => repetition.get('uuid'));
+            return repetitionsFromPreviousDayRunToday;
           } else {
             const dateDifference = moment(currentDate).diff(previousDay.actualDate, 'days');
             return dateDifference >= firstUncompletedDayRepetitionsKey - previousDay.plannedDay ?
-              repetitions.map(repetition => repetition.get('uuid')) :
+              repetitions :
               List();
           }
         } else {
           // Some repetitions have been run - we can return all repetitions that have not been run
           // or whose current date is greater or equals than current as today's
           return repetitions
-            .filter(repetition =>
-              !repetition.get('actualDate') || repetition.get('actualDate') >= currentDate)
-            .map(repetition => repetition.get('uuid'));
+            .filter(repetitionUuid => {
+              const repetition = allRepetitions.get(repetitionUuid);
+              return !repetition.get('actualDate') || repetition.get('actualDate') >= currentDate;
+            });
         }
       } else {
         return List();
