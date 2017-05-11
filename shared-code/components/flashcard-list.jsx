@@ -84,6 +84,11 @@ class FlashcardList extends React.Component {
           </div> :
           null
         }
+        <Paginator
+            itemCount={this.props.flashcards.size}
+            itemsPerPage={FLASHCARDS_PER_PAGE}
+            location={this.props.location}
+        />
         {displayedFlashcards.map((flashcard, index) => {
           return (
             <div

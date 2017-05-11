@@ -1,4 +1,5 @@
 import React from 'react';
+import classNames from 'classnames';
 import {Link} from 'react-router';
 
 import * as helpers from '../utils/helpers';
@@ -25,41 +26,47 @@ export default class Paginator extends React.Component {
     return (
       totalPages <= 1 ?
         null :
-        <div>
+        <ul
+            className="pagination">
           {firstPage === 1 ?
             null :
-            <span>
+            <li
+                className="first">
               <Link
                   to={this.getLink(1)}>
-                &lt;&lt;
+                ««
               </Link>
-              &nbsp;
-            </span>
+            </li>
           }
           {currentPage < firstPage || currentPage > lastPage ?
             null :
             [...Array(lastPage - firstPage + 1).keys()].map(index => index + firstPage).map(page => (
-              <span
-                  key={page}>
+              <li
+                  key={page}
+                  className={classNames({
+                    'page': true,
+                    'active': page === currentPage
+                  })}>
                 <Link
                     to={this.getLink(page)}>
                   {page}
                 </Link>
                 &nbsp;
-              </span>
+              </li>
             ))
           }
           {lastPage === totalPages ?
             null :
-            <span>
+            <li
+                className="last">
               <Link
                   to={this.getLink(totalPages)}>
-                &gt;&gt;
+                »»
               </Link>
               &nbsp;
-            </span>
+            </li>
           }
-        </div>
+        </ul>
     );
   }
 
