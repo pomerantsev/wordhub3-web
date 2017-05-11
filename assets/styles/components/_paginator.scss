@@ -1,0 +1,7 @@
+.paginator__container {
+  @extend .pagination;
+}
+
+.paginator__page--active {
+  @extend .active;
+}

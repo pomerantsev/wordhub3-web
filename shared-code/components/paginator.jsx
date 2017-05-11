@@ -27,11 +27,10 @@ export default class Paginator extends React.Component {
       totalPages <= 1 ?
         null :
         <ul
-            className="pagination">
+            className="paginator__container">
           {firstPage === 1 ?
             null :
-            <li
-                className="first">
+            <li>
               <Link
                   to={this.getLink(1)}>
                 ««
@@ -44,26 +43,22 @@ export default class Paginator extends React.Component {
               <li
                   key={page}
                   className={classNames({
-                    'page': true,
-                    'active': page === currentPage
+                    'paginator__page--active': page === currentPage
                   })}>
                 <Link
                     to={this.getLink(page)}>
                   {page}
                 </Link>
-                &nbsp;
               </li>
             ))
           }
           {lastPage === totalPages ?
             null :
-            <li
-                className="last">
+            <li>
               <Link
                   to={this.getLink(totalPages)}>
                 »»
               </Link>
-              &nbsp;
             </li>
           }
         </ul>
