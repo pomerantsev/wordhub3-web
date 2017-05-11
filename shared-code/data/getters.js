@@ -38,10 +38,11 @@ export const getPlannedRepetitions = createSelector(
 export const getTodayRepetitionsFromMainState = helpers.createDeepEqualSelector(
   [
     state => state.get('repetitionsIndexedByPlannedDay'),
+    state => state.get('repetitions'),
     state => state.get('flashcards'),
     () => helpers.getCurrentDate()
   ],
-  (repetitionsIndexedByPlannedDay, flashcards, currentDate) => {
+  (repetitionsIndexedByPlannedDay, allRepetitions, flashcards, currentDate) => {
     const startTime = Date.now();
     const firstUncompletedDayRepetitionsKey = repetitionsIndexedByPlannedDay.findKey(
       repetitionsIndexForDay => !repetitionsIndexForDay.get('completed')
@@ -72,18 +73,20 @@ export const getTodayRepetitionsFromMainState = helpers.createDeepEqualSelector(
               .getIn([previousDay.plannedDay, 'repetitions'])
               .filter(repetition => repetition.get('actualDate') >= currentDate);
           if (repetitionsFromPreviousDayRunToday.size > 0) {
-            return repetitionsFromPreviousDayRunToday;
+            return repetitionsFromPreviousDayRunToday.map(repetition => repetition.get('uuid'));
           } else {
             const dateDifference = moment(currentDate).diff(previousDay.actualDate, 'days');
             return dateDifference >= firstUncompletedDayRepetitionsKey - previousDay.plannedDay ?
-              repetitions :
+              repetitions.map(repetition => repetition.get('uuid')) :
               List();
           }
         } else {
           // Some repetitions have been run - we can return all repetitions that have not been run
           // or whose current date is greater or equals than current as today's
-          return repetitions.filter(repetition =>
-            !repetition.get('actualDate') || repetition.get('actualDate') >= currentDate);
+          return repetitions
+            .filter(repetition =>
+              !repetition.get('actualDate') || repetition.get('actualDate') >= currentDate)
+            .map(repetition => repetition.get('uuid'));
         }
       } else {
         return List();
@@ -91,11 +94,9 @@ export const getTodayRepetitionsFromMainState = helpers.createDeepEqualSelector(
     })();
 
     const returnValue = todayRepetitions
-      .map(repetition => repetition.set('flashcard',
-        flashcards.get(repetition.get('flashcardUuid'))))
       // We shouldn't need to filter anything out, just making sure that even if overall data
       // is inconsistent, all of today's repetitions have flashcards
-      .filter(repetition => !!repetition.get('flashcard'));
+      .filter(repetitionUuid => !!flashcards.get(allRepetitions.getIn([repetitionUuid, 'flashcardUuid'])));
     console.log('Getter took ' + (Date.now() - startTime) + ' ms');
     return returnValue;
   }
@@ -112,11 +113,12 @@ export const getTodayRepetitions = helpers.createDeepEqualSelector(
 export const getCurrentDay = helpers.createDeepEqualSelector(
   [
     state => getTodayRepetitions(state),
+    state => state.get('repetitions'),
     state => state.get('repetitionsIndexedByPlannedDay')
   ],
-  (todayRepetitions, repetitionsIndexedByPlannedDay) => {
+  (todayRepetitions, repetitions, repetitionsIndexedByPlannedDay) => {
     if (todayRepetitions.size > 0) {
-      return todayRepetitions.getIn([0, 'plannedDay']);
+      return repetitions.getIn([todayRepetitions.get(0), 'plannedDay']);
     } else {
       const lastCompletedDay = repetitionsIndexedByPlannedDay
         .findLastKey(repetitionsIndexForDay => repetitionsIndexForDay.get('completed'));

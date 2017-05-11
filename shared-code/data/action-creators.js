@@ -123,11 +123,8 @@ export function runRepetition (repetitionUuid, successful) {
   const nextRepetitionUuid = uuid.v4();
   return function (dispatch) {
     dispatch(updateCurrentDate());
-    dispatch(() => ({type: 'RUN_REPETITION_UPDATE_TODAY', repetitionUuid, successful, currentTime}));
-    window.setTimeout(() => {
-      dispatch(() => ({type: 'RUN_REPETITION', repetitionUuid, successful, currentTime, nextRepetitionUuid}));
-      dispatch(syncData());
-    }, 0);
+    dispatch(() => ({type: 'RUN_REPETITION', repetitionUuid, successful, currentTime, nextRepetitionUuid}));
+    dispatch(syncData());
   };
 }
 

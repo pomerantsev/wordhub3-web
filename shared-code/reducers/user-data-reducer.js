@@ -107,16 +107,6 @@ export default function userDataReducer (state, action) {
     return state
       .set('repetitionsForToday', getters.getTodayRepetitionsFromMainState(state));
 
-  case 'RUN_REPETITION_UPDATE_TODAY':
-    return state
-      .update('repetitionsForToday', repetitions => repetitions.map(repetition =>
-        repetition.get('uuid') === action.repetitionUuid ?
-          repetition
-            .set('actualDate', helpers.getCurrentDate(action.currentTime))
-            .set('successful', action.successful)
-            .set('updatedAt', action.currentTime) :
-          repetition));
-
   case 'RUN_REPETITION': {
     const startTime = Date.now();
     const updatedRepetition = state.getIn(['repetitions', action.repetitionUuid])

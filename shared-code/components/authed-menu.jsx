@@ -23,7 +23,7 @@ class AuthedMenu extends React.Component {
   getTodayRepetitionCounts () {
     const total = this.props.todayRepetitions.size;
     const completed = this.props.todayRepetitions.filter(
-      repetition => repetition.get('actualDate')
+      repetitionUuid => this.props.repetitions.getIn([repetitionUuid, 'actualDate'])
     ).size;
     return {total, completed};
   }
@@ -81,6 +81,7 @@ class AuthedMenu extends React.Component {
 export const AuthedMenuContainer = connect(
   state => ({
     todayRepetitions: getters.getTodayRepetitions(state.get('userData')),
+    repetitions: state.getIn(['userData', 'repetitions']),
     online: state.get('online')
   }),
   actionCreators
