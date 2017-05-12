@@ -225,6 +225,13 @@ export default function userDataReducer (state, action) {
       .set('lastSyncRequestClientTime', Date.now());
   }
 
+  case 'SYNC_DATA_FAILURE': {
+    // Make sure that even if initial request fails
+    // (we're offline), we still display the UI.
+    return state
+      .set('initialLoadingCompleted', true);
+  }
+
   case 'SYNC_DATA': {
     const startTime = Date.now();
     const result = fromJS(action.result);
