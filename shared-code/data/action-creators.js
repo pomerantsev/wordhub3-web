@@ -133,6 +133,7 @@ export function runRepetition (repetitionUuid, successful) {
   const nextRepetitionUuid = uuid.v4();
   return function (dispatch) {
     dispatch(() => ({type: 'RUN_REPETITION', repetitionUuid, successful, currentTime, nextRepetitionUuid}));
+    dispatch(() => ({type: 'UPDATE_REPETITIONS_FOR_TODAY'}));
     dispatch(syncData());
   };
 }
