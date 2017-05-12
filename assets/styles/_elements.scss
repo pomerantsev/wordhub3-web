@@ -7,6 +7,8 @@
   white-space: pre;
   white-space: pre-wrap;
 
+  cursor: pointer;
+
   @media (min-width: 0) and (max-width: $breakpoint700 - 1px) {
     padding: 15px 22px !important;
     font-size: 14px !important;
