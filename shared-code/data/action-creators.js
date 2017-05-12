@@ -2,7 +2,6 @@ import {getI18n} from '../locales/i18n';
 
 import {fromJS, Map} from 'immutable';
 import uuid from 'uuid';
-import moment from 'moment';
 
 import * as constants from '../data/constants';
 import * as api from './api';
@@ -55,9 +54,21 @@ export function loginSuccess (email, credentials) {
 
 export function startLoggedInState () {
   return function (dispatch) {
-    dispatch(setLastCurrentDate(helpers.getCurrentDate()));
+    dispatch(updateCurrentDate());
+
+    if (typeof window !== 'undefined') {
+      // Check current date every second and update if necessary.
+      const dateUpdateIntervalId =
+        window.setInterval(() => dispatch(updateCurrentDate()), 1000);
+      dispatch(setDateUpdateIntervalId(dateUpdateIntervalId));
+    }
+
     dispatch(readDb());
   };
+}
+
+export function setDateUpdateIntervalId (intervalId) {
+  return {type: 'SET_DATE_UPDATE_INTERVAL_ID', intervalId};
 }
 
 export function openLocalDb (email) {
@@ -68,8 +79,9 @@ export function openLocalDb (email) {
 }
 
 export function logout (setCookieOnServer) {
-  return function (dispatch) {
+  return function (dispatch, getState) {
     storage.deleteCredentials(setCookieOnServer);
+    window.clearInterval(getState().getIn(['userData', 'dateUpdateIntervalId']));
     dispatch(resetLoggedInState());
   };
 }
@@ -100,7 +112,6 @@ export function createFlashcard (frontText, backText) {
   const diffDays = constants.MIN_DIFF_DAYS_FIRST_REPETITION +
     Math.floor(Math.random() * (constants.MAX_DIFF_DAYS_FIRST_REPETITION - constants.MIN_DIFF_DAYS_FIRST_REPETITION + 1));
   return function (dispatch) {
-    dispatch(updateCurrentDate());
     dispatch(() => ({type: 'CREATE_FLASHCARD', frontText, backText, currentTime, flashcardUuid, repetitionUuid, diffDays}));
     dispatch(syncData());
   };
@@ -109,7 +120,6 @@ export function createFlashcard (frontText, backText) {
 export function updateFlashcard (flashcardUuid, frontText, backText) {
   const currentTime = Date.now();
   return function (dispatch) {
-    dispatch(updateCurrentDate());
     dispatch(() => ({type: 'UPDATE_FLASHCARD', flashcardUuid, frontText, backText, currentTime}));
     window.setTimeout(() => {
       dispatch(() => ({type: 'UPDATE_REPETITIONS_FOR_TODAY'}));
@@ -122,7 +132,6 @@ export function runRepetition (repetitionUuid, successful) {
   const currentTime = Date.now();
   const nextRepetitionUuid = uuid.v4();
   return function (dispatch) {
-    dispatch(updateCurrentDate());
     dispatch(() => ({type: 'RUN_REPETITION', repetitionUuid, successful, currentTime, nextRepetitionUuid}));
     dispatch(syncData());
   };
@@ -151,7 +160,6 @@ export function syncData () {
   // If server returned a 400 response, prompt user to either
   // delete new flashcards / repetitions or retry.
   return function (dispatch, getState) {
-    dispatch(updateCurrentDate());
     const syncDataActionStart = Date.now();
     const syncSince = getState().getIn(['userData', 'lastSyncClientTime']);
     console.log('Flashcards:', getState().getIn(['userData', 'flashcards']));
@@ -225,17 +233,11 @@ export function searchStringChange (value) {
 
 export function updateCurrentDate () {
   return function (dispatch, getState) {
-    const newCurrentDate = moment().format('YYYY-MM-DD');
+    const newCurrentDate = helpers.getCurrentDate();
     if (newCurrentDate !== getState().getIn(['userData', 'lastCurrentDate'])) {
-      dispatch(setLastCurrentDate(newCurrentDate));
+      dispatch(() => ({type: 'SET_LAST_CURRENT_DATE', value: newCurrentDate}));
+      dispatch(() => ({type: 'UPDATE_REPETITIONS_FOR_TODAY'}));
     }
-  };
-}
-
-export function setLastCurrentDate (value) {
-  return function (dispatch) {
-    dispatch(() => ({type: 'SET_LAST_CURRENT_DATE', value}));
-    dispatch(() => ({type: 'UPDATE_REPETITIONS_FOR_TODAY'}));
   };
 }
 

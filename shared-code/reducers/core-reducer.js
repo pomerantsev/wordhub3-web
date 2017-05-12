@@ -18,7 +18,8 @@ const INITIAL_USER_DATA = fromJS({
   lastSyncRequestClientTime: 0,
   searchString: '',
   lastCurrentDate: '',
-  initialLoadingCompleted: false
+  initialLoadingCompleted: false,
+  dateUpdateIntervalId: null
 });
 
 const INITIAL_STATE = fromJS({

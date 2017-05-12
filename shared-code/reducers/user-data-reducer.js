@@ -288,6 +288,10 @@ export default function userDataReducer (state, action) {
     return state
       .set('lastCurrentDate', action.value);
   }
+  case 'SET_DATE_UPDATE_INTERVAL_ID': {
+    return state
+      .set('dateUpdateIntervalId', action.intervalId);
+  }
   default:
     return state;
   }
