@@ -121,8 +121,10 @@ export const getCurrentDay = helpers.createDeepEqualSelector(
       const currentDateMoment = moment(helpers.getCurrentDate());
       if (typeof lastCompletedDay === 'number') {
         const latestDateFromLastCompletedDay = repetitionsIndexedByPlannedDay.getIn([lastCompletedDay, 'repetitions'])
-          .reduce((latestDate, repetition) =>
-            repetition.get('actualDate') > latestDate ? repetition.get('actualDate') : latestDate, '');
+          .reduce((latestDate, repetitionUuid) => {
+            const actualDate = repetitions.getIn([repetitionUuid, 'actualDate']);
+            return actualDate > latestDate ? actualDate : latestDate;
+          }, '');
         const daysSinceLastCompleted = currentDateMoment.diff(latestDateFromLastCompletedDay, 'days');
         return lastCompletedDay + daysSinceLastCompleted;
       } else {
