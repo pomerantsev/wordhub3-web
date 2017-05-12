@@ -7,7 +7,9 @@ export function storeCredentials (credentials, setCookieOnServer) {
   if (setCookieOnServer) {
     setCookieOnServer(constants.credentialsKey, credentials.toJS());
   } else {
-    Cookies.set(constants.credentialsKey, credentials.toJS());
+    Cookies.set(constants.credentialsKey, credentials.toJS(), {
+      expires: constants.COOKIE_EXPIRATION_DAYS
+    });
   }
 }
 
