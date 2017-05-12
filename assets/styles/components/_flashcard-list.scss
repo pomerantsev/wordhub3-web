@@ -4,33 +4,7 @@
 }
 
 .flashcard-list__flashcard {
-  @extend .jumbotron;
-  display: block;
-  text-decoration: none;
-  margin-bottom: $margin-standard;
-  margin-top: $margin-standard;
-  white-space: pre;
-  white-space: pre-wrap;
-
-  @media (min-width: 0) and (max-width: $breakpoint700 - 1px) {
-    padding: 15px 22px !important;
-    font-size: 14px !important;
-    line-height: 23px;
-    font-weight: normal;
-    min-height: 100px;
-  }
-
-  @media (min-width: $breakpoint700) {
-    padding: 30px !important;
-    font-size: 18px !important;
-    font-weight: 200;
-    min-height: 120px;
-  }
-
-  &:hover {
-    text-decoration: none;
-    color: $gray-dark;
-  }
+  @include elements__flashcard;
 
   &.flashcard-list__flashcard--learned {
     color: $universal-green;

@@ -216,3 +216,12 @@ export const getRepetitionsGroupedByFlashcard = helpers.createDeepEqualSelector(
     );
   }
 );
+
+export const getRemainingRepetitionsForToday = helpers.createDeepEqualSelector(
+  [
+    state => state.get('repetitionsForToday'),
+    state => state.get('repetitions')
+  ],
+  (repetitionsForToday, allRepetitions) => repetitionsForToday
+    .filter(repetitionUuid => !allRepetitions.getIn([repetitionUuid, 'actualDate']))
+);

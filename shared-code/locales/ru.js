@@ -28,7 +28,8 @@ const ruTranslation = {
   },
   repetitions: {
     remember: 'Помню',
-    dontRemember: 'Не помню'
+    dontRemember: 'Не помню',
+    turnOver: 'Перевернуть'
   },
   signup: {
     signUp: 'Зарегистрироваться'

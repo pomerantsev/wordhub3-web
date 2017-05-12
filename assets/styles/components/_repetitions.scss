@@ -1,0 +1,74 @@
+.repetitions__flashcard {
+  @include elements__flashcard;
+}
+
+.repetitions__progress {
+  @extend .progress;
+}
+
+.repetitions__progress__bar {
+  @extend .progress-bar;
+  width: 100%;
+  transform-origin: 0;
+  transition: 0.3s ease-in-out transform;
+}
+
+.repetitions__responses-container {
+  background-color: $gray-lighter;
+  border-bottom: 20px solid white;
+  position: relative;
+}
+
+%repetitions__response {
+  @media (min-width: 0) and (max-width: $breakpoint700 - 1px) {
+    padding: 10px;
+  }
+  @media (min-width: $breakpoint700) {
+    padding: 20px;
+  }
+}
+
+.repetitions__response--left {
+  @extend %repetitions__response;
+  float: left;
+}
+
+.repetitions__response--right {
+  @extend %repetitions__response;
+  float: right;
+}
+
+.repetitions__button {
+  @extend .btn-link;
+}
+
+.repetitions__responses-hotkey {
+  text-align: center;
+  font-size: 10px;
+
+  @media (min-width: 0) and (max-width: $breakpoint700 - 1px) {
+    display: none;
+  }
+
+  @media (min-width: $breakpoint700) {
+    display: block;
+  }
+}
+
+.repetitions__responses-hotkey-center {
+  font-size: 10px;
+
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+
+  @media (min-width: 0) and (max-width: $breakpoint700 - 1px) {
+    display: none;
+  }
+
+  @media (min-width: $breakpoint700) {
+    display: block;
+  }
+}

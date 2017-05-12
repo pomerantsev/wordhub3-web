@@ -28,7 +28,8 @@ const enTranslation = {
   },
   repetitions: {
     remember: 'Remember',
-    dontRemember: 'Don’t remember'
+    dontRemember: 'Don’t remember',
+    turnOver: 'Turn over'
   },
   signup: {
     signUp: 'Sign up'
