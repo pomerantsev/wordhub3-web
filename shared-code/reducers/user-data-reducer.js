@@ -11,7 +11,6 @@ function getStateWithCurrentRepetition (state) {
   if (remainingRepetitionsForToday.indexOf(currentRepetition) > -1) {
     return state;
   } else if (remainingRepetitionsForToday.size > 0) {
-    // TODO: can we do without this randomness?
     return state
       .set('currentRepetition', remainingRepetitionsForToday.get(Math.floor(Math.random() * remainingRepetitionsForToday.size)));
   } else {
@@ -159,8 +158,6 @@ export default function userDataReducer (state, action) {
       const previousDay = allRepetitionsForFlashcard.size === 1 ?
         state.getIn(['flashcards', updatedRepetition.get('flashcardUuid'), 'creationDay']) :
         allRepetitionsForFlashcard.getIn([allRepetitionsForFlashcard.size - 2, 'plannedDay']);
-      // TODO: here's a random component, which is not ideal in a reducer,
-      // but we'll stick with it for now.
       const diffDays = successStreakLength === 0 ?
         constants.MIN_DIFF_DAYS_FIRST_REPETITION +
           Math.floor(Math.random() * (constants.MAX_DIFF_DAYS_FIRST_REPETITION - constants.MIN_DIFF_DAYS_FIRST_REPETITION + 1)) :
@@ -244,9 +241,8 @@ export default function userDataReducer (state, action) {
     const newRepetitions = result.get('repetitions').filter(receivedRepetition =>
         !state.get('repetitions').find(repetition => helpers.repetitionsEqual(repetition, receivedRepetition)));
 
-    // TODO: are we sure it's the same request?
-    // Handle the case when request didn't go through.
     const updatedState = state
+      .set('syncError', null)
       .set('initialLoadingCompleted', true)
       .set('lastSyncClientTime', state.get('lastSyncRequestClientTime'))
       .set('lastSyncServerTime', result.get('updatedAt'))
@@ -286,6 +282,10 @@ export default function userDataReducer (state, action) {
     const stateWithUpdatedRepetitionIndices = getStateWithUpdatedRepetitionIndices(stateWithUpdatedFlashcardLearned, existingRepetitions, newRepetitions);
     console.log('SyncData reducer took ' + (Date.now() - startTime) + ' ms');
     return stateWithUpdatedRepetitionIndices;
+  }
+  case 'SET_SYNC_ERROR': {
+    return state
+      .set('syncError', action.errorCode);
   }
   case 'SEARCH_STRING_CHANGE': {
     return state

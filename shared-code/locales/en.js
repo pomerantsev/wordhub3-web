@@ -9,6 +9,11 @@ const enTranslation = {
   editFlashcard: {
     save: 'Save'
   },
+  errors: {
+    sync: {
+      0: 'Unfortunately, sychronization with server failed, please try running another repetition or creating another flashcard.'
+    }
+  },
   home: {
     login: 'Login'
   },

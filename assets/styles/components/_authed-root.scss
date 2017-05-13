@@ -1,0 +1,4 @@
+.authed-root__alert {
+  @extend .alert;
+  @extend .alert-danger;
+}

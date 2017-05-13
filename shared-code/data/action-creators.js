@@ -35,7 +35,6 @@ export function storeCredentials (credentials, setCookieOnServer) {
 
 export function login (email, password) {
   return function (dispatch) {
-    // TODO: handle unsuccessful login
     api.login(email, password)
       .then(credentials => {
         dispatch(loginSuccess(email, credentials));
@@ -88,7 +87,6 @@ export function logout (setCookieOnServer) {
 
 export function signup (email, password, name) {
   return function (dispatch) {
-    // TODO: Handle unsuccessful signup
     api.signup({
       email,
       password,
@@ -155,11 +153,6 @@ export function readDb () {
 }
 
 export function syncData () {
-  // TODO: if sync request was unsuccessful (an error returned),
-  // make sure client doesn't go out of sync with server.
-  // For example, show that we're offline if request failed.
-  // If server returned a 400 response, prompt user to either
-  // delete new flashcards / repetitions or retry.
   return function (dispatch, getState) {
     const syncDataActionStart = Date.now();
     const syncSince = getState().getIn(['userData', 'lastSyncClientTime']);
@@ -183,7 +176,6 @@ export function syncData () {
       newRepetitions: repetitions
     });
 
-    // TODO: we have to ensure data is sorted before sending it.
     return {
       type: 'SYNC_DATA',
       promise: api.syncData(
@@ -213,11 +205,14 @@ export function syncData () {
         dispatch(setOnline(true));
         return result;
       }).catch(error => {
-        if (!error.status) {
+        if (error.status) {
+          console.log('Sync error:', error.body.message);
+          // An actual error happened, indicate to user
+          dispatch(setSyncError(error.body.errorCode));
+        } else {
           // We're offline!
           dispatch(setOnline(false));
         }
-        // TODO: Handle a server error response - can we do something meaningful here?
         throw error;
       })
     };
@@ -226,6 +221,10 @@ export function syncData () {
 
 export function setOnline (online) {
   return {type: 'SET_ONLINE', online};
+}
+
+export function setSyncError (errorCode) {
+  return {type: 'SET_SYNC_ERROR', errorCode};
 }
 
 export function searchStringChange (value) {

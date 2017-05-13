@@ -1,3 +1,5 @@
+import {getI18n} from '../locales/i18n';
+
 import React from 'react';
 import {connect} from 'react-redux';
 import CircularProgress from 'material-ui/CircularProgress';
@@ -15,6 +17,13 @@ class AuthedRoot extends React.Component {
           <div>
             <AuthedMenuContainer
             />
+            {typeof this.props.syncError === 'number' ?
+              <div
+                  className="authed-root__alert">
+                {getI18n().t(`errors.sync.${this.props.syncError}`)}
+              </div> :
+              null
+            }
             {this.props.children}
           </div> :
           <div>
@@ -31,7 +40,8 @@ class AuthedRoot extends React.Component {
 
 export const AuthedRootContainer = connect(
   state => ({
-    initialLoadingCompleted: state.getIn(['userData', 'initialLoadingCompleted'])
+    initialLoadingCompleted: state.getIn(['userData', 'initialLoadingCompleted']),
+    syncError: state.getIn(['userData', 'syncError'])
   }),
   actionCreators
 )(AuthedRoot);

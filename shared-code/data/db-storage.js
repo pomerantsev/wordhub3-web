@@ -53,7 +53,6 @@ export function openDb (email) {
 
       request.addEventListener('error', event => {
         console.log('IndexedDB error:', event);
-        // TODO: Display in the UI that IndexedDB is not working.
         reject();
       });
     }) :
