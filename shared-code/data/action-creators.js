@@ -176,6 +176,14 @@ export function syncData () {
       newRepetitions: repetitions
     });
 
+    if (getState().getIn(['userData', 'lastSyncRequestClientTime'])) {
+      // This means that a sync request is in progress,
+      // so we just skip this one.
+      // Ideally, we would probably like to chain sync requests,
+      // but it currently seems overkill to me.
+      return;
+    }
+
     return {
       type: 'SYNC_DATA',
       promise: api.syncData(

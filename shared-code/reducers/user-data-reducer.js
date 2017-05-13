@@ -226,6 +226,7 @@ export default function userDataReducer (state, action) {
     // Make sure that even if initial request fails
     // (we're offline), we still display the UI.
     return state
+      .set('lastSyncRequestClientTime', null)
       .set('initialLoadingCompleted', true);
   }
 
@@ -245,6 +246,7 @@ export default function userDataReducer (state, action) {
       .set('syncError', null)
       .set('initialLoadingCompleted', true)
       .set('lastSyncClientTime', state.get('lastSyncRequestClientTime'))
+      .set('lastSyncRequestClientTime', null)
       .set('lastSyncServerTime', result.get('updatedAt'))
       .update('flashcards', flashcards => flashcards
         .map(flashcard => {

@@ -15,7 +15,7 @@ const INITIAL_USER_DATA = fromJS({
   currentRepetition: null,
   lastSyncServerTime: 0,
   lastSyncClientTime: 0,
-  lastSyncRequestClientTime: 0,
+  lastSyncRequestClientTime: null,
   searchString: '',
   lastCurrentDate: '',
   initialLoadingCompleted: false,
