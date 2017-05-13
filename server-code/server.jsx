@@ -6,6 +6,9 @@ import i18next from 'i18next';
 import {handle} from 'i18next-express-middleware';
 import {setI18n, getI18n} from '../shared-code/locales/i18n';
 
+import log from 'loglevel';
+log.enableAll();
+
 import express from 'express';
 import httpsRedirect from 'express-https-redirect';
 import helmet from 'helmet';
@@ -76,7 +79,7 @@ app.use((req, res) => {
       try {
         res.cookie(key, JSON.stringify(jsValue));
       } catch (e) {
-        console.error(e);
+        log.error(e);
       }
     } else {
       res.clearCookie(key);

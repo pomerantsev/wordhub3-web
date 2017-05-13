@@ -1,3 +1,5 @@
+import log from 'loglevel';
+
 import {fromJS, List, Map} from 'immutable';
 
 import * as constants from '../data/constants';
@@ -204,7 +206,7 @@ export default function userDataReducer (state, action) {
         ['flashcards', updatedRepetition.get('flashcardUuid')],
         flashcard => flashcard.set('learned', !nextRepetition)
       );
-    console.log('Reducer took ' + (Date.now() - startTime) + ' ms');
+    log.debug('Reducer took ' + (Date.now() - startTime) + ' ms');
     return returnValue;
   }
 
@@ -282,7 +284,7 @@ export default function userDataReducer (state, action) {
         flashcard.set('learned', !!lastRepetitionActualDates.get(flashcard.get('uuid')))));
 
     const stateWithUpdatedRepetitionIndices = getStateWithUpdatedRepetitionIndices(stateWithUpdatedFlashcardLearned, existingRepetitions, newRepetitions);
-    console.log('SyncData reducer took ' + (Date.now() - startTime) + ' ms');
+    log.debug('SyncData reducer took ' + (Date.now() - startTime) + ' ms');
     return stateWithUpdatedRepetitionIndices;
   }
   case 'SET_SYNC_ERROR': {

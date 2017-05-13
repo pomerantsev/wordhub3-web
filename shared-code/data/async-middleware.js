@@ -1,3 +1,5 @@
+import log from 'loglevel';
+
 // This is a combination of two approaches:
 // 1. Code from https://github.com/gaearon/redux-thunk/blob/f8d41b003221c270639cdd8eba19f8e9a141b53d/src/index.js,
 //    with one small improvement: we can pass the return value of the action function to next(), so we don't have
@@ -39,7 +41,7 @@ export default function asyncMiddleware ({dispatch, getState}) {
       })
       .catch(error => {
         next({...rest, error, type: FAILURE});
-        console.log(error);
+        log.info(error);
         return false;
       });
   };

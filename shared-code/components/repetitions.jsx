@@ -1,5 +1,7 @@
 import {getI18n} from '../locales/i18n';
 
+import log from 'loglevel';
+
 import React from 'react';
 import {connect} from 'react-redux';
 
@@ -81,7 +83,7 @@ class Repetitions extends React.Component {
 
   render () {
     if (this.startTime) {
-      console.log('Updating repetitions took ' + (Date.now() - this.startTime) + ' ms');
+      log.debug('Updating repetitions took ' + (Date.now() - this.startTime) + ' ms');
       this.startTime = null;
     }
     if (!this.props.currentRepetition) {

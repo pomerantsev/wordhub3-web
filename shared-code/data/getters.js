@@ -1,3 +1,5 @@
+import log from 'loglevel';
+
 import moment from 'moment';
 import {List, Map} from 'immutable';
 import escapeStringRegexp from 'escape-string-regexp';
@@ -101,7 +103,7 @@ export const getTodayRepetitionsFromMainState = helpers.createDeepEqualSelector(
       // We shouldn't need to filter anything out, just making sure that even if overall data
       // is inconsistent, all of today's repetitions have flashcards
       .filter(repetitionUuid => !!flashcards.get(allRepetitions.getIn([repetitionUuid, 'flashcardUuid'])));
-    console.log('Getter took ' + (Date.now() - startTime) + ' ms');
+    log.debug('Getter took ' + (Date.now() - startTime) + ' ms');
     return returnValue;
   }
 );

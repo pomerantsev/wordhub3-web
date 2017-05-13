@@ -1,5 +1,7 @@
 import {getI18n} from '../locales/i18n';
 
+import log from 'loglevel';
+
 import {fromJS, Map} from 'immutable';
 import uuid from 'uuid';
 
@@ -25,7 +27,7 @@ export function storeCredentials (credentials, setCookieOnServer) {
   return function (dispatch, getState) {
     const updatedCredentials = getState().get('credentials', Map()).merge(credentials);
     storage.storeCredentials(updatedCredentials, setCookieOnServer);
-    console.log('Before openLocalDb');
+    log.debug('Before openLocalDb');
     if (!setCookieOnServer) {
       dispatch(openLocalDb(updatedCredentials.get('email')));
     }
@@ -156,7 +158,7 @@ export function syncData () {
   return function (dispatch, getState) {
     const syncDataActionStart = Date.now();
     const syncSince = getState().getIn(['userData', 'lastSyncClientTime']);
-    console.log('Flashcards:', getState().getIn(['userData', 'flashcards']));
+    log.debug('Flashcards:', getState().getIn(['userData', 'flashcards']));
     const flashcards = getState().getIn(['userData', 'flashcards'])
       .filter(flashcard => flashcard.get('updatedAt') > syncSince)
       .valueSeq()
@@ -168,7 +170,7 @@ export function syncData () {
       .toList()
       .toJS();
 
-    console.log('Sync data action took ' + (Date.now() - syncDataActionStart) + ' ms');
+    log.debug('Sync data action took ' + (Date.now() - syncDataActionStart) + ' ms');
 
     dbStorage.writeData(getState().get('openLocalDbPromise'), {
       flashcards: flashcards,
@@ -217,7 +219,7 @@ export function syncData () {
           // Token expired
           dispatch(setTokenExpired());
         } else if (error.status) {
-          console.log('Sync error:', error.body.message);
+          log.debug('Sync error:', error.body.message);
           // An actual error happened, indicate to user
           dispatch(setSyncError(error.body.errorCode));
         } else {

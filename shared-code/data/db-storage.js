@@ -1,3 +1,5 @@
+import log from 'loglevel';
+
 const dbNamePrefix = 'wordhub_';
 
 // Only enable indexedDB in Chrome for now - performance in Safari and Firefox
@@ -11,7 +13,7 @@ function putRecord (transaction, store, record) {
     const request = transaction.objectStore(store).put(record);
     request.addEventListener('success', resolve);
     request.addEventListener('error', event => {
-      console.log('Request errored:', event);
+      log.error('Request errored:', event);
       reject(event.target.errorCode);
     });
   });
@@ -22,7 +24,7 @@ function deleteRecord (transaction, store, key) {
     const request = transaction.objectStore(store).delete(key);
     request.addEventListener('success', resolve);
     request.addEventListener('error', event => {
-      console.log('Request errored:', event);
+      log.error('Request errored:', event);
       reject(event.target.errorCode);
     });
   });
@@ -36,7 +38,7 @@ export function openDb (email) {
       let db;
 
       request.addEventListener('upgradeneeded', event => {
-        console.log('Upgrading the database');
+        log.debug('Upgrading the database');
         db = event.target.result;
         if (event.newVersion >= 1 && event.oldVersion < 1) {
           db.createObjectStore('flashcards', {keyPath: 'uuid'});
@@ -46,13 +48,13 @@ export function openDb (email) {
       });
 
       request.addEventListener('success', event => {
-        console.log('Dababase successfully opened');
+        log.debug('Dababase successfully opened');
         db = event.target.result;
         resolve(db);
       });
 
       request.addEventListener('error', event => {
-        console.log('IndexedDB error:', event);
+        log.warn('IndexedDB error:', event);
         reject();
       });
     }) :
@@ -60,8 +62,8 @@ export function openDb (email) {
 }
 
 export function writeData (openDbPromise, {flashcards, repetitionUuidsToDelete, newRepetitions, assortedValues}) {
-  console.log('To delete:', repetitionUuidsToDelete);
-  console.log('To create:', newRepetitions);
+  log.debug('To delete:', repetitionUuidsToDelete);
+  log.debug('To create:', newRepetitions);
   if (!openDbPromise) {
     return Promise.reject();
   }
@@ -71,7 +73,6 @@ export function writeData (openDbPromise, {flashcards, repetitionUuidsToDelete, 
 
     return new Promise((resolve, reject) => {
       let requestPromise = Promise.resolve();
-      console.log('Before forEach');
       for (const flashcard of flashcards) {
         requestPromise = requestPromise.then(() => putRecord(transaction, 'flashcards', flashcard));
       }
@@ -86,12 +87,12 @@ export function writeData (openDbPromise, {flashcards, repetitionUuidsToDelete, 
       }
 
       transaction.addEventListener('complete', () => {
-        console.log('Write transaction completed successfully, it took', (Date.now() - startTime), 'ms');
+        log.debug('Write transaction completed successfully, it took', (Date.now() - startTime), 'ms');
         resolve();
       });
 
       transaction.addEventListener('error', event => {
-        console.log('Error in transaction:', event);
+        log.error('Error in transaction:', event);
         reject(event.target.errorCode);
       });
     });
@@ -109,7 +110,7 @@ function getRecord (db, store, key) {
     });
 
     request.addEventListener('error', event => {
-      console.log('Read request error', event);
+      log.error('Read request error', event);
       reject();
     });
   });
@@ -131,7 +132,7 @@ function getAllRecords (db, store) {
     });
 
     request.addEventListener('error', event => {
-      console.log('Read request error', event);
+      log.error('Read request error', event);
       reject();
     });
   });
@@ -146,7 +147,7 @@ export function getData (openDbPromise) {
       getRecord(db, 'assortedValues', 'lastSyncClientTime'),
       getRecord(db, 'assortedValues', 'lastSyncServerTime')
     ]).then(([flashcards, repetitions, lastSyncClientTime, lastSyncServerTime]) => {
-      console.log('Read transaction completed successfully, it took', (Date.now() - startTime), 'ms');
+      log.debug('Read transaction completed successfully, it took', (Date.now() - startTime), 'ms');
       return {
         flashcards,
         repetitions,

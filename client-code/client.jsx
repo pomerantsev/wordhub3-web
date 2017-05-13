@@ -6,6 +6,13 @@ import {getI18n} from '../shared-code/locales/i18n';
 import moment from 'moment';
 moment.locale(getI18n().language);
 
+import log from 'loglevel';
+if (process.env.NODE_ENV === 'development' || /(\?|&)debug/.test(window.location.search)) {
+  log.enableAll();
+} else {
+  log.setLevel('error');
+}
+
 import React from 'react';
 import ReactDOM from 'react-dom';
 
@@ -33,7 +40,6 @@ if ('serviceWorker' in navigator) {
 
 const initialState = (() => {
   try {
-    console.log(transit.fromJSON(window.__SERIALIZED_INITIAL_STATE__).toJS());
     return transit.fromJSON(window.__SERIALIZED_INITIAL_STATE__);
   } catch (e) {
     return undefined;
