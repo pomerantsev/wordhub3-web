@@ -12,7 +12,8 @@ const enTranslation = {
   errors: {
     sync: {
       0: 'Unfortunately, sychronization with server failed, please try running another repetition or creating another flashcard.'
-    }
+    },
+    tokenExpired: 'Your token has expired. For your security, we require you to re-login from time to time. Please log out and log back in. Otherwise, your data won’t be synchronized with the server.'
   },
   home: {
     login: 'Login'

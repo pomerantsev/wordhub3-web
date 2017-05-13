@@ -20,7 +20,8 @@ const INITIAL_USER_DATA = fromJS({
   lastCurrentDate: '',
   initialLoadingCompleted: false,
   dateUpdateIntervalId: null,
-  syncError: null
+  syncError: null,
+  tokenExpired: false
 });
 
 const INITIAL_STATE = fromJS({

@@ -17,6 +17,13 @@ class AuthedRoot extends React.Component {
           <div>
             <AuthedMenuContainer
             />
+            {this.props.tokenExpired ?
+              <div
+                  className="authed-root__alert">
+                {getI18n().t('errors.tokenExpired')}
+              </div> :
+              null
+            }
             {typeof this.props.syncError === 'number' ?
               <div
                   className="authed-root__alert">
@@ -41,7 +48,8 @@ class AuthedRoot extends React.Component {
 export const AuthedRootContainer = connect(
   state => ({
     initialLoadingCompleted: state.getIn(['userData', 'initialLoadingCompleted']),
-    syncError: state.getIn(['userData', 'syncError'])
+    syncError: state.getIn(['userData', 'syncError']),
+    tokenExpired: state.getIn(['userData', 'tokenExpired'])
   }),
   actionCreators
 )(AuthedRoot);

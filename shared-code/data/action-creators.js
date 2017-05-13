@@ -213,7 +213,10 @@ export function syncData () {
         dispatch(setOnline(true));
         return result;
       }).catch(error => {
-        if (error.status) {
+        if (error.status === 401) {
+          // Token expired
+          dispatch(setTokenExpired());
+        } else if (error.status) {
           console.log('Sync error:', error.body.message);
           // An actual error happened, indicate to user
           dispatch(setSyncError(error.body.errorCode));
@@ -233,6 +236,10 @@ export function setOnline (online) {
 
 export function setSyncError (errorCode) {
   return {type: 'SET_SYNC_ERROR', errorCode};
+}
+
+export function setTokenExpired () {
+  return {type: 'SET_TOKEN_EXPIRED'};
 }
 
 export function searchStringChange (value) {

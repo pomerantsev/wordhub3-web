@@ -289,6 +289,10 @@ export default function userDataReducer (state, action) {
     return state
       .set('syncError', action.errorCode);
   }
+  case 'SET_TOKEN_EXPIRED': {
+    return state
+      .set('tokenExpired', true);
+  }
   case 'SEARCH_STRING_CHANGE': {
     return state
       .set('searchString', action.value);
