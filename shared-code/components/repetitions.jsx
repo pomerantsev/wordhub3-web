@@ -4,6 +4,7 @@ import log from 'loglevel';
 
 import React from 'react';
 import {connect} from 'react-redux';
+import {Helmet} from 'react-helmet';
 
 import * as actionCreators from '../data/action-creators';
 import * as getters from '../data/getters';
@@ -93,6 +94,9 @@ class Repetitions extends React.Component {
     const flashcard = this.props.flashcards.get(repetition.get('flashcardUuid'));
     return (
       <div>
+        <Helmet>
+          <title>{getI18n().t('repetitions.title')}</title>
+        </Helmet>
         <div
             className="repetitions__flashcard"
             onClick={this.rotateFlashcard}>{

@@ -1,12 +1,15 @@
+const appName = 'Вордхаб';
+
+const getTitle = title => `${title} — ${appName}`;
+
 const ruTranslation = {
-  flashcardList: {
-    searchingFor: 'Отфильтровано по «{{searchString}}»',
-    clear: 'показать все'
-  },
+  appName,
   createFlashcard: {
+    title: getTitle('Новая карточка'),
     create: 'Создать'
   },
   editFlashcard: {
+    title: getTitle('Редактирование карточки'),
     save: 'Сохранить'
   },
   errors: {
@@ -14,6 +17,11 @@ const ruTranslation = {
       0: 'Ошибка синхронизации с сервером. Постараемся это исправить. А пока попробуйте создать новую карточку или сделать ещё один повтор.'
     },
     tokenExpired: 'Ваша сессия истекла. Для безопасности аккаунта мы ограничиваем сессии по времени. Пожалуйста, выйдите и войдите снова. Иначе данные не будут синхронизироваться с сервером.'
+  },
+  flashcardList: {
+    title: getTitle('Карточки'),
+    searchingFor: 'Отфильтровано по «{{searchString}}»',
+    clear: 'показать все'
   },
   home: {
     login: 'Войти'
@@ -27,21 +35,25 @@ const ruTranslation = {
     stats: 'Статистика'
   },
   notFound: {
+    title: getTitle('404'),
     notFound: 'Страница не найдена'
   },
   notifications: {
     offline: 'Нет связи с сетью!'
   },
   repetitions: {
+    title: getTitle('Повтор слов'),
     remember: 'Помню',
     dontRemember: 'Не помню',
     turnOver: 'Перевернуть'
   },
   signup: {
+    title: getTitle('Регистрация'),
     signUp: 'Зарегистрироваться'
   },
   stats: {
-    title: 'Статистика',
+    title: getTitle('Статистика'),
+    heading: 'Статистика',
     general: 'Общая',
     flashcardsCreated: 'Создано карточек',
     flashcardsLearned: 'Выучено карточек',

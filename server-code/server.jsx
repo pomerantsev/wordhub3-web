@@ -16,6 +16,7 @@ import cookieParser from 'cookie-parser';
 
 import React from 'react';
 import {renderToString} from 'react-dom/server';
+import {Helmet as ReactHelmet} from 'react-helmet';
 import {createStore, applyMiddleware} from 'redux';
 import {Provider} from 'react-redux';
 import {match, RouterContext} from 'react-router';
@@ -114,10 +115,12 @@ app.use((req, res) => {
       );
 
       const componentHTML = renderToString(InitialComponent);
+      const reactHelmet = ReactHelmet.renderStatic();
 
       return new Promise((resolve, reject) => {
         app.render('index', {
           componentHTML,
+          title: reactHelmet.title.toString(),
           serializedInitialState: transit.toJSON(store.getState())
         }, (err, html) => {
           if (err) {

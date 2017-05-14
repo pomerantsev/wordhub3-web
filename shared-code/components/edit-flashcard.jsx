@@ -2,6 +2,7 @@ import {getI18n} from '../locales/i18n';
 
 import React from 'react';
 import {connect} from 'react-redux';
+import {Helmet} from 'react-helmet';
 
 import * as actionCreators from '../data/action-creators';
 
@@ -79,6 +80,9 @@ class EditFlashcard extends React.Component {
   render () {
     return (
       <div>
+        <Helmet>
+          <title>{getI18n().t('editFlashcard.title')}</title>
+        </Helmet>
         <form
             onSubmit={this.onSubmit}>
           <textarea

@@ -15,3 +15,6 @@ export const credentialsKey = 'wordhubCredentials';
 
 export const defaultAuthedPath = '/flashcards/new';
 export const defaultUnauthedPath = '/';
+
+export const appName = 'Wordhub';
+export const titleDelimiter = '—';

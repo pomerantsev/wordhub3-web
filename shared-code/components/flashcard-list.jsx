@@ -4,6 +4,7 @@ import React from 'react';
 import classNames from 'classnames';
 import {connect} from 'react-redux';
 import {Link} from 'react-router';
+import {Helmet} from 'react-helmet';
 import moment from 'moment';
 import * as helpers from '../utils/helpers';
 import * as getters from '../data/getters';
@@ -64,6 +65,9 @@ class FlashcardList extends React.Component {
     const displayedFlashcards = this.getDisplayedFlashcards();
     return (
       <div>
+        <Helmet>
+          <title>{getI18n().t('flashcardList.title')}</title>
+        </Helmet>
         <div>
           <input
               ref={this.searchStringRef}

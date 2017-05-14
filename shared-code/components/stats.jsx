@@ -3,6 +3,7 @@ import {getI18n} from '../locales/i18n';
 import React from 'react';
 import {connect} from 'react-redux';
 import moment from 'moment';
+import {Helmet} from 'react-helmet';
 
 import * as getters from '../data/getters';
 import * as helpers from '../utils/helpers';
@@ -14,7 +15,10 @@ class Stats extends React.Component {
   render () {
     return (
       <div>
-        <h2>{getI18n().t('stats.title')}</h2>
+        <Helmet>
+          <title>{getI18n().t('stats.title')}</title>
+        </Helmet>
+        <h2>{getI18n().t('stats.heading')}</h2>
         <div
             className="stats__container">
           <div
