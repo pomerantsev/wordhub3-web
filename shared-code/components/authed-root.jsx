@@ -14,7 +14,8 @@ class AuthedRoot extends React.Component {
     return (
       <div>
         {this.props.initialLoadingCompleted ?
-          <div>
+          <div
+              className="authed-root__container--loaded">
             <AuthedMenuContainer
             />
             {this.props.tokenExpired ?
@@ -33,8 +34,12 @@ class AuthedRoot extends React.Component {
             }
             {this.props.children}
           </div> :
-          <div>
+          <div
+              className="authed-root__container--pending">
             <CircularProgress
+                size={100}
+                thickness={4}
+                color="currentColor"
                 mode="indeterminate"
             />
           </div>
