@@ -12,6 +12,7 @@ log.enableAll();
 import express from 'express';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
+import compression from 'compression';
 
 import React from 'react';
 import {renderToString} from 'react-dom/server';
@@ -32,6 +33,7 @@ import * as constants from '../shared-code/data/constants';
 import NotFound from '../shared-code/components/not-found.jsx';
 
 const app = express();
+app.use(compression());
 
 // https://blog.risingstack.com/node-js-security-checklist/
 app.use(helmet({

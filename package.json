@@ -21,6 +21,7 @@
     "babel-register": "^6.18.0",
     "bootstrap-sass": "^3.3.7",
     "classnames": "^2.2.5",
+    "compression": "^1.6.2",
     "cookie-parser": "^1.4.3",
     "dotenv": "^2.0.0",
     "ejs": "^2.5.6",
