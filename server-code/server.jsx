@@ -24,6 +24,8 @@ import {fromJS} from 'immutable';
 import transit from 'transit-immutable-js';
 import moment from 'moment';
 
+import fs from 'fs';
+
 import * as actionCreators from '../shared-code/data/action-creators';
 import reducer from '../shared-code/reducers/core-reducer';
 import asyncMiddleware from '../shared-code/data/async-middleware';
@@ -118,7 +120,7 @@ app.use((req, res) => {
       return res.status(404).send('Not found');
     }
 
-    function renderView () {
+    async function renderView () {
       const InitialComponent = (
         <Provider store={store}>
           <RouterContext {...renderProps} />
@@ -128,11 +130,18 @@ app.use((req, res) => {
       const componentHTML = renderToString(InitialComponent);
       const reactHelmet = ReactHelmet.renderStatic();
 
+      const css = await new Promise(resolve => {
+        fs.readFile('dist/styles/main.css', 'utf8', (err, cssData) => {
+          resolve(cssData);
+        });
+      });
+
       return new Promise((resolve, reject) => {
         app.render('index', {
           componentHTML,
           title: reactHelmet.title.toString(),
-          serializedInitialState: transit.toJSON(store.getState())
+          serializedInitialState: transit.toJSON(store.getState()),
+          css
         }, (err, html) => {
           if (err) {
             reject(err);
