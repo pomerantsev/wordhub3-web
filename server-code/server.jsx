@@ -10,7 +10,6 @@ import log from 'loglevel';
 log.enableAll();
 
 import express from 'express';
-import httpsRedirect from 'express-https-redirect';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
 
@@ -56,7 +55,17 @@ app.use(express.static('dist'));
 
 app.use((req, res, next) => {
   if (process.env.NODE_ENV === 'production') {
-    httpsRedirect()(req, res, next);
+    // req.secure is https requests coming directly to server.
+    // x-forwarded-proto is a header used by AWS in requests from load balancers
+    // to servers.
+    const isNotSecure = !(req.secure || req.headers['x-forwarded-proto'] === 'https');
+    const isNotCanonicalHostname = req.hostname !== process.env.CANONICAL_HOSTNAME;
+    if (isNotSecure || isNotCanonicalHostname) {
+      const hostname = process.env.CANONICAL_HOSTNAME;
+      res.redirect(`https://${hostname}${req.originalUrl}`);
+    } else {
+      next();
+    }
   } else {
     next();
   }
