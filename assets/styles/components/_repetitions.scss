@@ -17,6 +17,8 @@
   background-color: $gray-lighter;
   border-bottom: 20px solid white;
   position: relative;
+
+  @extend .clearfix;
 }
 
 %repetitions__response {

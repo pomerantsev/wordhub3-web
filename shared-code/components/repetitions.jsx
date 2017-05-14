@@ -129,9 +129,6 @@ class Repetitions extends React.Component {
             </div>
           </div>
           <div
-              className="clearfix">
-          </div>
-          <div
               className="repetitions__responses-hotkey-center">
             {getI18n().t('repetitions.turnOver')} : Space
           </div>
@@ -145,26 +142,6 @@ class Repetitions extends React.Component {
               }}>
           </div>
         </div>
-        {/*.responses
-          = form_for @current_repetition, html: { class: "dont-remember js-dont-remember" } do |f|
-            = f.hidden_field :id
-            = hidden_field_tag :successful, false
-            = submit_tag t(".dont_remember")
-            .responses-hotkey
-              Shift +
-              = "\u2190"
-          = form_for @current_repetition, html: { class: "remember js-remember" } do |f|
-            = f.hidden_field :id
-            = hidden_field_tag :successful, true
-            = submit_tag t(".remember")
-            .responses-hotkey
-              Shift +
-              = "\u2192"
-          .clearfix
-          .responses-hotkey-center
-            = t(".rotate") + ": Space"
-        .progress
-          .progress-bar{ style: "width: #{current_user.repetitions.progress_today * 100}%" }*/}
       </div>
     );
   }
