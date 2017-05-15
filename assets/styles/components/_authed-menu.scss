@@ -2,6 +2,10 @@
   @extend .navbar, .navbar-default;
 }
 
+.authed-menu__main {
+  @extend .navbar-header;
+}
+
 .authed-menu__primary-link {
   color: $navbar-default-brand-color;
   float: left;
@@ -13,4 +17,63 @@
     color: $navbar-default-brand-color;
     text-decoration: none;
   }
+  &:focus {
+    text-decoration: none;
+  }
+  &.authed-menu__primary-link--active {
+    background-color: $active-background-gray;
+  }
+  &.authed-menu__primary-link--to-do {
+    color: $universal-green;
+    text-shadow: 0 1px 0 $universal-green-shadow;
+    font-weight: bold;
+  }
+  &.authed-menu__primary-link--muted {
+    color: $muted-gray;
+  }
+}
+
+.authed-menu__toggle {
+  @extend .navbar-toggle;
+  margin-top: 13px;
+}
+
+.authed-menu__toggle__icon-bar {
+  @extend .icon-bar;
+  background-color: $light-gray !important;
+}
+
+%authed-menu__collapsing-menu {
+  @extend .navbar-collapse;
+}
+
+.authed-menu__collapsing-menu--collapsed {
+  @extend %authed-menu__collapsing-menu;
+  @media (min-width: 0) and (max-width: $breakpoint700 - 1px) {
+    display: none;
+  }
+  @media (min-width: $breakpoint700) {
+    display: block;
+  }
+}
+
+.authed-menu__collapsing-menu--open {
+  @extend %authed-menu__collapsing-menu;
+  display: block;
+}
+
+.authed-menu__secondary {
+  @extend .nav, .navbar-nav, .navbar-right;
+}
+
+.authed-menu__secondary-menu-item {
+  @media (min-width: $breakpoint700) {
+    padding-top: 20px !important;
+    padding-bottom: 21px !important;
+  }
+}
+
+.authed-menu__menu-item--active {
+  color: $active-text-gray !important;
+  background-color: $active-background-gray !important;
 }
