@@ -5,6 +5,7 @@ import * as authUtils from './utils/auth-utils';
 import * as constants from './data/constants';
 
 import {AppContainer} from './components/app.jsx';
+import UnauthedRoot from './components/unauthed-root.jsx';
 import {HomeContainer} from './components/home.jsx';
 import {SignupContainer} from './components/signup.jsx';
 import {AuthedRootContainer} from './components/authed-root.jsx';
@@ -33,16 +34,20 @@ function getRoutes (store) {
         path="/"
         component={AppContainer}>
 
-      <IndexRoute
-          component={HomeContainer}
-          onEnter={onUnauthedEnter.bind(null, store)}
-      />
-
       <Route
-          path="/signup"
-          component={SignupContainer}
-          onEnter={onUnauthedEnter.bind(null, store)}
-      />
+          component={UnauthedRoot}
+          onEnter={onUnauthedEnter.bind(null, store)}>
+
+        <IndexRoute
+            component={HomeContainer}
+        />
+
+        <Route
+            path="/signup"
+            component={SignupContainer}
+        />
+
+      </Route>
 
       <Route
           component={AuthedRootContainer}

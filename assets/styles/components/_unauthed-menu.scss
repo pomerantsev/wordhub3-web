@@ -1,0 +1,11 @@
+.unauthed-menu {
+  @extend .navbar, .navbar-default;
+}
+
+.unauthed-menu__main {
+  @extend .navbar-header;
+}
+
+.unauthed-menu__brand {
+  @extend .navbar-brand;
+}
