@@ -2,6 +2,7 @@ import {getI18n} from '../locales/i18n';
 
 import React from 'react';
 import {connect} from 'react-redux';
+import {Link} from 'react-router';
 
 import * as actionCreators from '../data/action-creators';
 
@@ -52,6 +53,12 @@ class Home extends React.Component {
               value={getI18n().t('home.login')}
           />
         </form>
+        <div>
+          <Link
+              to="/signup">
+            {getI18n().t('home.signUp')}
+          </Link>
+        </div>
       </div>
     );
   }

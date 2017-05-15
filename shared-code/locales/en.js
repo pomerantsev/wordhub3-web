@@ -24,7 +24,8 @@ const enTranslation = {
     clear: 'clear'
   },
   home: {
-    login: 'Login'
+    login: 'Login',
+    signUp: 'Sign up'
   },
   menu: {
     allFlashcards: 'All Flashcards',

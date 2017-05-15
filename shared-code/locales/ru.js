@@ -24,7 +24,8 @@ const ruTranslation = {
     clear: 'показать все'
   },
   home: {
-    login: 'Войти'
+    login: 'Войти',
+    signUp: 'Зарегистрироваться'
   },
   menu: {
     allFlashcards: 'Все карточки',
