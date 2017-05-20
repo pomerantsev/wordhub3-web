@@ -17,10 +17,9 @@ self.addEventListener('fetch', async function (event) {
 
       if (fetchResponse && fetchResponse.ok && fetchResponse.type === 'basic') {
         const fetchResponseToCache = fetchResponse.clone();
-        (async function () {
-          const cache = await caches.open(CACHE_NAME);
+        caches.open(CACHE_NAME).then(cache => {
           cache.put(event.request, fetchResponseToCache);
-        })();
+        });
       }
 
       return fetchResponse;
