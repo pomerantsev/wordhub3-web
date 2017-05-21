@@ -7,7 +7,7 @@ import userDataReducer from './user-data-reducer';
 const INITIAL_CREDENTIALS = Map({});
 
 const INITIAL_USER_DATA = fromJS({
-  user: [],
+  userSettings: {},
   flashcards: {},
   repetitions: {},
   repetitionsIndexedByPlannedDay: OrderedMap(),

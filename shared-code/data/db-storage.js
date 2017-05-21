@@ -33,7 +33,7 @@ function deleteRecord (transaction, store, key) {
 export function openDb (email) {
   return indexedDB ?
     new Promise((resolve, reject) => {
-      const request = indexedDB.open(dbNamePrefix + email, 1);
+      const request = indexedDB.open(dbNamePrefix + email, 2);
 
       let db;
 
@@ -44,6 +44,9 @@ export function openDb (email) {
           db.createObjectStore('flashcards', {keyPath: 'uuid'});
           db.createObjectStore('repetitions', {keyPath: 'uuid'});
           db.createObjectStore('assortedValues', {keyPath: 'key'});
+        }
+        if (event.newVersion >= 2 && event.oldVersion < 2) {
+          db.createObjectStore('userSettings', {keyPath: 'key'});
         }
       });
 
@@ -101,6 +104,29 @@ export function writeData (openDbPromise, {flashcards, repetitionUuidsToDelete, 
   });
 }
 
+export function writeUserSettings (openDbPromise, userSettings) {
+  if (!openDbPromise) {
+    return Promise.reject();
+  }
+  openDbPromise.then(db => {
+    const transaction = db.transaction(['userSettings'], 'readwrite');
+
+    return new Promise((resolve, reject) => {
+      let requestPromise = Promise.resolve();
+      for (const key in userSettings) {
+        requestPromise = requestPromise.then(() => putRecord(transaction, 'userSettings', {key, value: userSettings[key]}));
+      }
+
+      transaction.addEventListener('complete', resolve);
+
+      transaction.addEventListener('error', event => {
+        log.error('Error in transaction:', event);
+        reject(event.target.errorCode);
+      });
+    });
+  });
+}
+
 function getRecord (db, store, key) {
   return new Promise((resolve, reject) => {
     const request = db.transaction(store).objectStore(store).get(key);
@@ -145,14 +171,16 @@ export function getData (openDbPromise) {
       getAllRecords(db, 'flashcards'),
       getAllRecords(db, 'repetitions'),
       getRecord(db, 'assortedValues', 'lastSyncClientTime'),
-      getRecord(db, 'assortedValues', 'lastSyncServerTime')
-    ]).then(([flashcards, repetitions, lastSyncClientTime, lastSyncServerTime]) => {
+      getRecord(db, 'assortedValues', 'lastSyncServerTime'),
+      getAllRecords(db, 'userSettings')
+    ]).then(([flashcards, repetitions, lastSyncClientTime, lastSyncServerTime, userSettingsAsArray]) => {
       log.debug('Read transaction completed successfully, it took', (Date.now() - startTime), 'ms');
       return {
         flashcards,
         repetitions,
         lastSyncClientTime,
-        lastSyncServerTime
+        lastSyncServerTime,
+        userSettings: Object.assign({}, ...userSettingsAsArray.map(setting => ({[setting.key]: setting.value})))
       };
     });
   }, () => ({

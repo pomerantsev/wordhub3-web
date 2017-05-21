@@ -215,7 +215,8 @@ export default function userDataReducer (state, action) {
       .set('flashcards', action.flashcards)
       .set('repetitions', action.repetitions)
       .set('lastSyncClientTime', action.lastSyncClientTime)
-      .set('lastSyncServerTime', action.lastSyncServerTime);
+      .set('lastSyncServerTime', action.lastSyncServerTime)
+      .set('userSettings', action.userSettings);
     return getStateWithUpdatedRepetitionIndices(updatedState, List(), action.repetitions);
   }
 
@@ -306,6 +307,11 @@ export default function userDataReducer (state, action) {
   case 'SET_DATE_UPDATE_INTERVAL_ID': {
     return state
       .set('dateUpdateIntervalId', action.intervalId);
+  }
+  case 'SET_USER_SETTINGS': {
+    const userSettings = fromJS(action.userSettings);
+    return state
+      .set('userSettings', userSettings);
   }
   default:
     return state;

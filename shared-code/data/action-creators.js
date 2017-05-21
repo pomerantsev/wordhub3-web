@@ -141,13 +141,14 @@ export function runRepetition (repetitionUuid, successful) {
 export function readDb () {
   return function (dispatch, getState) {
     dbStorage.getData(getState().get('openLocalDbPromise'))
-      .then(({flashcards, repetitions, lastSyncClientTime, lastSyncServerTime}) => {
+      .then(({flashcards, repetitions, lastSyncClientTime, lastSyncServerTime, userSettings}) => {
         dispatch(() => ({
           type: 'READ_DB',
           flashcards: Map(flashcards.map(flashcard => [flashcard.uuid, fromJS(flashcard)])),
           repetitions: Map(repetitions.map(repetition => [repetition.uuid, fromJS(repetition)])),
           lastSyncClientTime,
-          lastSyncServerTime
+          lastSyncServerTime,
+          userSettings: fromJS(userSettings)
         }));
         dispatch(syncData());
       });
@@ -196,6 +197,9 @@ export function syncData () {
           repetitions
         }
       ).then(result => {
+
+        dispatch(setUserSettings(result.userSettings));
+
         // Writing data to DB happens asynchronously and independently from the
         // in-memory representation of data.
         dbStorage.writeData(getState().get('openLocalDbPromise'), {
@@ -229,6 +233,13 @@ export function syncData () {
         throw error;
       })
     };
+  };
+}
+
+export function setUserSettings (userSettings) {
+  return function (dispatch, getState) {
+    dbStorage.writeUserSettings(getState().get('openLocalDbPromise'), userSettings);
+    return {type: 'SET_USER_SETTINGS', userSettings};
   };
 }
 

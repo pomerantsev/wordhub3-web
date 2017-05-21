@@ -6,6 +6,7 @@ import {Link} from 'react-router';
 import classNames from 'classnames';
 
 import * as actionCreators from '../data/action-creators';
+import * as getters from '../data/getters';
 
 class AuthedMenu extends React.Component {
 
@@ -65,15 +66,28 @@ class AuthedMenu extends React.Component {
 
   render () {
     const repetitionCounts = this.getTodayRepetitionCounts();
+    const todayFlashcardsCount = this.props.todayFlashcards.size;
+    const dailyLimit = this.props.userSettings.get('dailyLimit');
     return (
       <div
           className="authed-menu">
         <div
             className="authed-menu__main">
           <Link
-              className="authed-menu__primary-link"
+              className={classNames({
+                'authed-menu__primary-link': true,
+                'authed-menu__primary-link--to-do': todayFlashcardsCount < dailyLimit
+              })}
               to="/flashcards/new">
-            {getI18n().t('menu.create')}
+            <div>
+              {getI18n().t('menu.create')}
+            </div>
+            <div>
+              {getI18n().t('menu.completedOfTotal', {
+                completed: todayFlashcardsCount,
+                total: dailyLimit
+              })}
+            </div>
           </Link>
           <Link
               className={classNames({
@@ -156,8 +170,10 @@ class AuthedMenu extends React.Component {
 
 export const AuthedMenuContainer = connect(
   state => ({
+    todayFlashcards: getters.getTodayFlashcards(state.get('userData')),
     todayRepetitions: state.getIn(['userData', 'repetitionsForToday']),
     repetitions: state.getIn(['userData', 'repetitions']),
+    userSettings: state.getIn(['userData', 'userSettings']),
     online: state.get('online')
   }),
   actionCreators

@@ -27,6 +27,20 @@ export const getFlashcardsSorted = helpers.createDeepEqualSelector(
   }
 );
 
+export const getTodayFlashcards = createSelector(
+  [
+    state => state.get('flashcards'),
+    () => helpers.getCurrentDate()
+  ],
+  (flashcards, currentDate) => {
+    const startTimestamp = moment(currentDate).startOf('day');
+    const endTimestamp = moment(currentDate).startOf('day').add(1, 'day');
+    return flashcards.filter(flashcard =>
+      flashcard.get('createdAt') >= startTimestamp &&
+        flashcard.get('createdAt') < endTimestamp);
+  }
+);
+
 export const getLearnedFlashcards = createSelector(
   [state => state.get('flashcards')],
   flashcards => flashcards.filter(flashcard => flashcard.get('learned'))
