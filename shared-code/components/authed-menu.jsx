@@ -78,6 +78,7 @@ class AuthedMenu extends React.Component {
                 'authed-menu__primary-link': true,
                 'authed-menu__primary-link--to-do': todayFlashcardsCount < dailyLimit
               })}
+              activeClassName="authed-menu__primary-link--active"
               to="/flashcards/new">
             <div>
               {getI18n().t('menu.create')}
