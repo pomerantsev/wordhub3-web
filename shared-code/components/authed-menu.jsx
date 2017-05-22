@@ -14,28 +14,37 @@ class AuthedMenu extends React.Component {
     super();
 
     this.state = {
-      dropdownMenuOpen: false
+      narrowDropdownMenuOpen: false,
+      wideDropdownMenuOpen: false
     };
 
     this.logout = this.logout.bind(this);
     this.getTodayRepetitionCounts = this.getTodayRepetitionCounts.bind(this);
-    this.onDropdownToggleClick = this.onDropdownToggleClick.bind(this);
+    this.onNarrowDropdownToggleClick = this.onNarrowDropdownToggleClick.bind(this);
+    this.onWideDropdownToggleClick = this.onWideDropdownToggleClick.bind(this);
     this.onBodyClick = this.onBodyClick.bind(this);
-    this.toggleRef = this.toggleRef.bind(this);
+    this.narrowToggleRef = this.narrowToggleRef.bind(this);
+    this.wideToggleRef = this.wideToggleRef.bind(this);
   }
 
   componentDidMount () {
-    this.toggleElement.addEventListener('click', this.onDropdownToggleClick);
+    this.narrowToggleElement.addEventListener('click', this.onNarrowDropdownToggleClick);
+    this.wideToggleElement.addEventListener('click', this.onWideDropdownToggleClick);
     document.body.addEventListener('click', this.onBodyClick);
   }
 
   componentWillUnmount () {
-    this.toggleElement.removeEventListener('click', this.onDropdownToggleClick);
+    this.narrowToggleElement.removeEventListener('click', this.onNarrowDropdownToggleClick);
+    this.wideToggleElement.removeEventListener('click', this.onWideDropdownToggleClick);
     document.body.removeEventListener('click', this.onBodyClick);
   }
 
-  toggleRef (element) {
-    this.toggleElement = element;
+  narrowToggleRef (element) {
+    this.narrowToggleElement = element;
+  }
+
+  wideToggleRef (element) {
+    this.wideToggleElement = element;
   }
 
   logout (event) {
@@ -51,16 +60,24 @@ class AuthedMenu extends React.Component {
     return {total, completed};
   }
 
-  onDropdownToggleClick (event) {
+  onNarrowDropdownToggleClick (event) {
     event.stopPropagation();
     this.setState({
-      dropdownMenuOpen: !this.state.dropdownMenuOpen
+      narrowDropdownMenuOpen: !this.state.narrowDropdownMenuOpen
+    });
+  }
+
+  onWideDropdownToggleClick (event) {
+    event.stopPropagation();
+    this.setState({
+      wideDropdownMenuOpen: !this.state.wideDropdownMenuOpen
     });
   }
 
   onBodyClick () {
     this.setState({
-      dropdownMenuOpen: false
+      narrowDropdownMenuOpen: false,
+      wideDropdownMenuOpen: false
     });
   }
 
@@ -119,7 +136,7 @@ class AuthedMenu extends React.Component {
             </span>
           }
           <button
-              ref={this.toggleRef}
+              ref={this.narrowToggleRef}
               className="authed-menu__toggle">
             <div>
               <span
@@ -136,34 +153,86 @@ class AuthedMenu extends React.Component {
         </div>
         <div
             className={classNames(
-              this.state.dropdownMenuOpen ? 'authed-menu__collapsing-menu--open' : 'authed-menu__collapsing-menu--collapsed'
+              this.state.narrowDropdownMenuOpen ? 'authed-menu__collapsing-menu--open' : 'authed-menu__collapsing-menu--collapsed'
             )}>
-          <ul
-              className="authed-menu__secondary">
-            <li>
-              <Link
-                  className="authed-menu__secondary-menu-item"
-                  activeClassName="authed-menu__menu-item--active"
-                  to="/flashcards">
-                {getI18n().t('menu.allFlashcards')}
-              </Link>
-            </li>
-            <li>
-              <Link
-                  className="authed-menu__secondary-menu-item"
-                  activeClassName="authed-menu__menu-item--active"
-                  to="/stats">
-                {getI18n().t('menu.stats')}
-              </Link>
-            </li>
-            <li>
-              <a
-                  className="authed-menu__secondary-menu-item"
-                  onClick={this.logout}>
-                {getI18n().t('menu.logout')}
-              </a>
-            </li>
-          </ul>
+          <div
+              className="authed-menu__secondary--narrow">
+            <ul
+                className="authed-menu__secondary-menu">
+              <li>
+                <Link
+                    className="authed-menu__secondary-menu-item"
+                    activeClassName="authed-menu__menu-item--active"
+                    to="/flashcards">
+                  {getI18n().t('menu.allFlashcards')}
+                </Link>
+              </li>
+              <li>
+                <Link
+                    className="authed-menu__secondary-menu-item"
+                    activeClassName="authed-menu__menu-item--active"
+                    to="/stats">
+                  {getI18n().t('menu.stats')}
+                </Link>
+              </li>
+              <li>
+                <a
+                    className="authed-menu__secondary-menu-item"
+                    onClick={this.logout}>
+                  {getI18n().t('menu.logout')}
+                </a>
+              </li>
+            </ul>
+          </div>
+          <div
+              className="authed-menu__secondary--wide">
+            <ul
+                className="authed-menu__secondary-menu">
+              <li>
+                <Link
+                    className="authed-menu__secondary-menu-item"
+                    activeClassName="authed-menu__menu-item--active"
+                    to="/flashcards">
+                  {getI18n().t('menu.allFlashcards')}
+                </Link>
+              </li>
+              <li
+                  className={classNames(
+                    this.state.wideDropdownMenuOpen ? 'authed-menu__dropdown--open' : 'authed-menu__dropdown--collapsed'
+                  )}>
+                <a
+                    ref={this.wideToggleRef}
+                    className="authed-menu__dropdown-toggle authed-menu__secondary-menu-item">
+                  {this.props.userSettings.get('name')}
+                  {' '}
+                  <b
+                      className="authed-menu__dropdown-toggle__caret"
+                  />
+                </a>
+                <ul
+                    className="authed-menu__dropdown-menu">
+                  <li>
+                    <Link
+                        className="authed-menu__secondary-menu-dropdown-item"
+                        activeClassName="authed-menu__menu-dropdown-item--active"
+                        to="/stats">
+                      {getI18n().t('menu.stats')}
+                    </Link>
+                  </li>
+                  <li
+                      className="authed-menu__divider"
+                  />
+                  <li>
+                    <a
+                        className="authed-menu__secondary-menu-dropdown-item"
+                        onClick={this.logout}>
+                      {getI18n().t('menu.logout')}
+                    </a>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
     );
