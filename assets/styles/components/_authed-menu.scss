@@ -33,6 +33,10 @@
   }
 }
 
+.authed-menu__primary-link__small {
+  font-size: 0.85em;
+}
+
 .authed-menu__toggle {
   @extend .navbar-toggle;
   margin-top: 13px;

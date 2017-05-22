@@ -82,7 +82,8 @@ class AuthedMenu extends React.Component {
             <div>
               {getI18n().t('menu.create')}
             </div>
-            <div>
+            <div
+                className="authed-menu__primary-link__small">
               {getI18n().t('menu.completedOfTotal', {
                 completed: todayFlashcardsCount,
                 total: dailyLimit
@@ -100,7 +101,8 @@ class AuthedMenu extends React.Component {
             <div>
               {getI18n().t('menu.repeat')}
             </div>
-            <div>
+            <div
+                className="authed-menu__primary-link__small">
               {getI18n().t('menu.completedOfTotal', {
                 completed: repetitionCounts.completed,
                 total: repetitionCounts.total
