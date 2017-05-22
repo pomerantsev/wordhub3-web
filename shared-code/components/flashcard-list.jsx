@@ -58,7 +58,7 @@ class FlashcardList extends React.Component {
     return this.props.flashcards
       .skip((parseInt(this.props.location.query.page) - 1) * FLASHCARDS_PER_PAGE)
       .take(FLASHCARDS_PER_PAGE)
-      .map(flashcard => flashcard.set('date', moment(flashcard.get('createdAt')).format('D MMM YYYY')));
+      .map(flashcard => flashcard.set('date', moment(flashcard.get('creationDate')).format('D MMM YYYY')));
   }
 
   render () {

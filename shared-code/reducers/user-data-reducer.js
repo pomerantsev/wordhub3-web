@@ -73,6 +73,7 @@ export default function userDataReducer (state, action) {
       uuid: action.flashcardUuid,
       frontText: action.frontText,
       backText: action.backText,
+      creationDate: helpers.getCurrentDate(action.currentTime),
       creationDay: flashcardCreationDay,
       createdAt: action.currentTime,
       updatedAt: action.currentTime,

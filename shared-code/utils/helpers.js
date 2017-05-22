@@ -42,3 +42,15 @@ export function getRoundedPercentageString (value, precision = 0) {
   const multiplier = Math.pow(10, precision);
   return Math.round(value * multiplier * 100) / multiplier + '%';
 }
+
+// Used in sorting algorithms, similarly to int1 - int2
+// which sorts in ascending order
+export function compareStrings (string1, string2) {
+  if (string1 > string2) {
+    return 1;
+  } else if (string1 < string2) {
+    return -1;
+  } else {
+    return 0;
+  }
+}

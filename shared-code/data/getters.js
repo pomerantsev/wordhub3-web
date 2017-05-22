@@ -23,7 +23,9 @@ export const getFlashcardsSorted = helpers.createDeepEqualSelector(
       )
       .valueSeq()
       .toList()
-      .sort((flashcard1, flashcard2) => flashcard2.get('createdAt') - flashcard1.get('createdAt'));
+      .sort((flashcard1, flashcard2) =>
+        helpers.compareStrings(flashcard2.get('creationDate'), flashcard1.get('creationDate')) ||
+          flashcard2.get('createdAt') - flashcard1.get('createdAt'));
   }
 );
 
@@ -32,13 +34,7 @@ export const getTodayFlashcards = createSelector(
     state => state.get('flashcards'),
     () => helpers.getCurrentDate()
   ],
-  (flashcards, currentDate) => {
-    const startTimestamp = moment(currentDate).startOf('day');
-    const endTimestamp = moment(currentDate).startOf('day').add(1, 'day');
-    return flashcards.filter(flashcard =>
-      flashcard.get('createdAt') >= startTimestamp &&
-        flashcard.get('createdAt') < endTimestamp);
-  }
+  (flashcards, currentDate) => flashcards.filter(flashcard => flashcard.get('creationDate') === currentDate)
 );
 
 export const getLearnedFlashcards = createSelector(
@@ -205,7 +201,7 @@ export const getIntervalStats = helpers.memoizeOneArg(dayCount => {
       const startDate = helpers.getCurrentDate(startTimestamp);
       const allRepetitions = repetitions.filter(repetition => repetition.get('actualDate') >= startDate);
       return Map({
-        flashcardsCreated: flashcards.filter(flashcard => flashcard.get('createdAt') >= startTimestamp),
+        flashcardsCreated: flashcards.filter(flashcard => flashcard.get('creationDate') >= startDate),
         flashcardsLearnedCount: repetitionsGroupedByFlashcard
           .filter(repetitionsForFlashcard =>
             repetitionsForFlashcard.last().get('actualDate') >= startDate
