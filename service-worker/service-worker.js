@@ -16,16 +16,16 @@ self.addEventListener('fetch', async function (event) {
     const cachedResponse = await caches.match(event.request);
 
     try {
+      const fetchPromise = fetch(fetchRequest);
       // If request is cached, only wait for a response for a certain time,
       // then default to reading from the cache
-      const fetchResponse = await Promise.race([
-        fetch(fetchRequest),
-        new Promise((resolve, reject) =>
-          cachedResponse ?
-            setTimeout(reject, MAX_NETWORK_WAIT_TIME) :
-            resolve()
-        )
-      ]);
+      const fetchResponse = await (cachedResponse ?
+        Promise.race([
+          fetchPromise,
+          new Promise((resolve, reject) => setTimeout(reject, MAX_NETWORK_WAIT_TIME))
+        ]) :
+        fetchPromise
+      );
 
       if (fetchResponse && fetchResponse.ok && fetchResponse.type === 'basic') {
         const fetchResponseToCache = fetchResponse.clone();
