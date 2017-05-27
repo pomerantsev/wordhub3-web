@@ -1,6 +1,7 @@
 import {getI18n} from '../locales/i18n';
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {Helmet} from 'react-helmet';
 
@@ -9,7 +10,7 @@ import * as actionCreators from '../data/action-creators';
 class EditFlashcard extends React.Component {
 
   static contextTypes = {
-    router: React.PropTypes.object.isRequired
+    router: PropTypes.object.isRequired
   }
 
   constructor () {

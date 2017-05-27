@@ -3,6 +3,7 @@ import {getI18n} from '../locales/i18n';
 import log from 'loglevel';
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {Helmet} from 'react-helmet';
 
@@ -12,7 +13,7 @@ import * as getters from '../data/getters';
 class Repetitions extends React.Component {
 
   static contextTypes = {
-    router: React.PropTypes.object.isRequired
+    router: PropTypes.object.isRequired
   }
 
   constructor () {
