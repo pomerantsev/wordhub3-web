@@ -5,6 +5,8 @@ import {connect} from 'react-redux';
 import {Link} from 'react-router';
 import classNames from 'classnames';
 
+import MenuNotification from './menu-notification.jsx';
+
 import * as actionCreators from '../data/action-creators';
 import * as getters from '../data/getters';
 
@@ -127,6 +129,10 @@ class AuthedMenu extends React.Component {
               })}
             </div>
           </Link>
+          <MenuNotification
+              title="You’re offline"
+              hint="This is what happens when you lose connectivity."
+          />
           {this.props.online ?
             null :
             <span
