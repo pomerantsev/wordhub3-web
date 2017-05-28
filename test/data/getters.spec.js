@@ -2,7 +2,7 @@ import 'mocha';
 import {assert} from 'chai';
 import {fromJS, OrderedMap} from 'immutable';
 import moment from 'moment';
-import {getTodayRepetitionsFromMainState} from '../../shared-code/data/getters';
+import {getRepetitionsForToday} from '../../shared-code/data/getters';
 
 // This is not perfect - if we start testing some time at 23:59, some tests might fail if they run after 0:00.
 const dateFormat = 'YYYY-MM-DD';
@@ -11,7 +11,7 @@ const yesterday = moment(today).subtract(1, 'day').format(dateFormat);
 const twoDaysAgo = moment(today).subtract(2, 'days').format(dateFormat);
 const tomorrow = moment(today).add(1, 'day').format(dateFormat);
 
-describe('getTodayRepetitionsFromMainState', () => {
+describe('getRepetitionsForToday', () => {
   describe('when there are no repetitions', () => {
     it('returns an empty list', () => {
       const state = fromJS({
@@ -19,7 +19,7 @@ describe('getTodayRepetitionsFromMainState', () => {
         repetitions: {},
         repetitionsIndexedByPlannedDay: OrderedMap()
       });
-      assert.equal(0, getTodayRepetitionsFromMainState(state).size);
+      assert.equal(0, getRepetitionsForToday(state).size);
     });
   })
 
@@ -60,7 +60,7 @@ describe('getTodayRepetitionsFromMainState', () => {
           }))
         });
 
-        const repetitions = getTodayRepetitionsFromMainState(state);
+        const repetitions = getRepetitionsForToday(state);
         assert.deepEqual(['3', '5', '6'], repetitions.toJS());
       })
     })
@@ -102,7 +102,7 @@ describe('getTodayRepetitionsFromMainState', () => {
             }))
           });
 
-          const repetitions = getTodayRepetitionsFromMainState(state);
+          const repetitions = getRepetitionsForToday(state);
           assert.deepEqual(['5', '6'], repetitions.toJS());
         });
       });

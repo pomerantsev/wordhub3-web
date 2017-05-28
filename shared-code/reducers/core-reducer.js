@@ -11,7 +11,6 @@ const INITIAL_USER_DATA = fromJS({
   flashcards: {},
   repetitions: {},
   repetitionsIndexedByPlannedDay: OrderedMap(),
-  repetitionsForToday: [],
   currentRepetition: null,
   lastSyncServerTime: 0,
   lastSyncClientTime: 0,

@@ -8,8 +8,7 @@ import * as helpers from '../utils/helpers';
 
 function getStateWithCurrentRepetition (state) {
   const currentRepetition = state.get('currentRepetition');
-  const remainingRepetitionsForToday = state.get('repetitionsForToday')
-    .filter(repetitionUuid => !state.getIn(['repetitions', repetitionUuid, 'actualDate']));
+  const remainingRepetitionsForToday = getters.getRemainingRepetitionsForToday(state);
   if (remainingRepetitionsForToday.indexOf(currentRepetition) > -1) {
     return state;
   } else if (remainingRepetitionsForToday.size > 0) {
@@ -56,12 +55,7 @@ function getStateWithUpdatedRepetitionIndices (state, existingRepetitions, newRe
     state
       .set('repetitionsIndexedByPlannedDay', fullyUpdatedRepetitionsIndexByPlannedDay);
 
-  const repetitionsForToday = getters.getTodayRepetitionsFromMainState(stateWithUpdatedRepetitionsIndexedByPlannedDay);
-
-  const stateWithUpdatedRepetitionsForToday = stateWithUpdatedRepetitionsIndexedByPlannedDay
-    .set('repetitionsForToday', repetitionsForToday);
-
-  return getStateWithCurrentRepetition(stateWithUpdatedRepetitionsForToday);
+  return getStateWithCurrentRepetition(stateWithUpdatedRepetitionsIndexedByPlannedDay);
 }
 
 export default function userDataReducer (state, action) {
@@ -126,9 +120,7 @@ export default function userDataReducer (state, action) {
   }
 
   case 'UPDATE_REPETITIONS_FOR_TODAY': {
-    const stateWithUpdatedRepetitionsForToday = state
-      .set('repetitionsForToday', getters.getTodayRepetitionsFromMainState(state));
-    return getStateWithCurrentRepetition(stateWithUpdatedRepetitionsForToday);
+    return getStateWithCurrentRepetition(state);
   }
 
   case 'RUN_REPETITION': {

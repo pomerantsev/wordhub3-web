@@ -31,52 +31,6 @@ export const getRepetitionsIndexedByPlannedDay = helpers.createDeepEqualSelector
 
 export const getRepetitionsForToday = helpers.createDeepEqualSelector(
   [
-    state => state.get('repetitionsForToday')
-  ],
-  repetitionsForToday => repetitionsForToday
-);
-
-export const getFlashcardsSorted = helpers.createDeepEqualSelector(
-  [
-    state => getFlashcards(state),
-    state => state.get('searchString')
-  ],
-  (flashcards, searchString) => {
-    const searchStringRegExp = new RegExp(escapeStringRegexp(searchString.toLowerCase()), 'i');
-    return flashcards
-      .filter(flashcard => searchString ?
-        searchStringRegExp.test(flashcard.get('frontText')) ||
-          searchStringRegExp.test(flashcard.get('backText')) :
-        true
-      )
-      .valueSeq()
-      .toList()
-      .sort((flashcard1, flashcard2) =>
-        helpers.compareStrings(flashcard2.get('creationDate'), flashcard1.get('creationDate')) ||
-          flashcard2.get('createdAt') - flashcard1.get('createdAt'));
-  }
-);
-
-export const getTodayFlashcards = createSelector(
-  [
-    state => getFlashcards(state),
-    () => helpers.getCurrentDate()
-  ],
-  (flashcards, currentDate) => flashcards.filter(flashcard => flashcard.get('creationDate') === currentDate)
-);
-
-export const getLearnedFlashcards = createSelector(
-  [state => getFlashcards(state)],
-  flashcards => flashcards.filter(flashcard => flashcard.get('learned'))
-);
-
-export const getPlannedRepetitions = createSelector(
-  [state => getRepetitions(state)],
-  repetitions => repetitions.filter(repetition => !repetition.get('actualDate'))
-);
-
-export const getTodayRepetitionsFromMainState = helpers.createDeepEqualSelector(
-  [
     state => getRepetitionsIndexedByPlannedDay(state),
     state => getRepetitions(state),
     state => getFlashcards(state),
@@ -144,6 +98,46 @@ export const getTodayRepetitionsFromMainState = helpers.createDeepEqualSelector(
     log.debug('Getter took ' + (Date.now() - startTime) + ' ms');
     return returnValue;
   }
+);
+
+
+export const getFlashcardsSorted = helpers.createDeepEqualSelector(
+  [
+    state => getFlashcards(state),
+    state => state.get('searchString')
+  ],
+  (flashcards, searchString) => {
+    const searchStringRegExp = new RegExp(escapeStringRegexp(searchString.toLowerCase()), 'i');
+    return flashcards
+      .filter(flashcard => searchString ?
+        searchStringRegExp.test(flashcard.get('frontText')) ||
+          searchStringRegExp.test(flashcard.get('backText')) :
+        true
+      )
+      .valueSeq()
+      .toList()
+      .sort((flashcard1, flashcard2) =>
+        helpers.compareStrings(flashcard2.get('creationDate'), flashcard1.get('creationDate')) ||
+          flashcard2.get('createdAt') - flashcard1.get('createdAt'));
+  }
+);
+
+export const getTodayFlashcards = createSelector(
+  [
+    state => getFlashcards(state),
+    () => helpers.getCurrentDate()
+  ],
+  (flashcards, currentDate) => flashcards.filter(flashcard => flashcard.get('creationDate') === currentDate)
+);
+
+export const getLearnedFlashcards = createSelector(
+  [state => getFlashcards(state)],
+  flashcards => flashcards.filter(flashcard => flashcard.get('learned'))
+);
+
+export const getPlannedRepetitions = createSelector(
+  [state => getRepetitions(state)],
+  repetitions => repetitions.filter(repetition => !repetition.get('actualDate'))
 );
 
 export const getCurrentDay = helpers.createDeepEqualSelector(
