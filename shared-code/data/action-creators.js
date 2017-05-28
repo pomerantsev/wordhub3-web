@@ -123,10 +123,8 @@ export function updateFlashcard (flashcardUuid, frontText, backText) {
   const currentTime = Date.now();
   return function (dispatch) {
     dispatch(() => ({type: 'UPDATE_FLASHCARD', flashcardUuid, frontText, backText, currentTime}));
-    window.setTimeout(() => {
-      dispatch(() => ({type: 'UPDATE_REPETITIONS_FOR_TODAY'}));
-      dispatch(syncData());
-    });
+    dispatch(() => ({type: 'UPDATE_REPETITIONS_FOR_TODAY'}));
+    dispatch(syncData());
   };
 }
 

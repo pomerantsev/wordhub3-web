@@ -10,8 +10,8 @@ import * as helpers from '../utils/helpers';
 
 export const getFlashcardsSorted = helpers.createDeepEqualSelector(
   [
-    state => state.getIn(['userData', 'flashcards']),
-    state => state.getIn(['userData', 'searchString'])
+    state => state.get('flashcards'),
+    state => state.get('searchString')
   ],
   (flashcards, searchString) => {
     const searchStringRegExp = new RegExp(escapeStringRegexp(searchString.toLowerCase()), 'i');

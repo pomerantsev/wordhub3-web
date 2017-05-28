@@ -136,7 +136,7 @@ class FlashcardList extends React.Component {
 
 export const FlashcardListContainer = connect(
   state => ({
-    flashcards: getters.getFlashcardsSorted(state),
+    flashcards: getters.getFlashcardsSorted(state.get('userData')),
     searchString: state.getIn(['userData', 'searchString'])
   }),
   actionCreators
