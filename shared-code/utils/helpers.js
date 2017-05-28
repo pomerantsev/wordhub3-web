@@ -63,3 +63,7 @@ export function getIndexedDB () {
     window.indexedDB;
 
 }
+
+export function getCopyrightYears () {
+  return `2013—${moment().format('YYYY')}`;
+}

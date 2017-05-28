@@ -23,6 +23,9 @@ const ruTranslation = {
     searchingFor: 'Отфильтровано по «{{searchString}}»',
     clear: 'показать все'
   },
+  footer: {
+    authorName: 'Павел Померанцев'
+  },
   home: {
     login: 'Войти',
     signUp: 'Зарегистрироваться'

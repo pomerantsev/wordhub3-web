@@ -23,6 +23,9 @@ const enTranslation = {
     searchingFor: 'Searching for “{{searchString}}”',
     clear: 'clear'
   },
+  footer: {
+    authorName: 'Pavel Pomerantsev'
+  },
   home: {
     login: 'Login',
     signUp: 'Sign up'
