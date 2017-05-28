@@ -123,7 +123,6 @@ export function updateFlashcard (flashcardUuid, frontText, backText) {
   const currentTime = Date.now();
   return function (dispatch) {
     dispatch(() => ({type: 'UPDATE_FLASHCARD', flashcardUuid, frontText, backText, currentTime}));
-    dispatch(() => ({type: 'UPDATE_REPETITIONS_FOR_TODAY'}));
     dispatch(syncData());
   };
 }
@@ -133,7 +132,6 @@ export function runRepetition (repetitionUuid, successful) {
   const nextRepetitionUuid = uuid.v4();
   return function (dispatch) {
     dispatch(() => ({type: 'RUN_REPETITION', repetitionUuid, successful, currentTime, nextRepetitionUuid}));
-    dispatch(() => ({type: 'UPDATE_REPETITIONS_FOR_TODAY'}));
     dispatch(syncData());
   };
 }
@@ -264,7 +262,6 @@ export function updateCurrentDate () {
     const newCurrentDate = helpers.getCurrentDate();
     if (newCurrentDate !== getState().getIn(['userData', 'lastCurrentDate'])) {
       dispatch(() => ({type: 'SET_LAST_CURRENT_DATE', value: newCurrentDate}));
-      dispatch(() => ({type: 'UPDATE_REPETITIONS_FOR_TODAY'}));
     }
   };
 }

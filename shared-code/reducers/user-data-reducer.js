@@ -65,10 +65,6 @@ export default function userDataReducer (state, action) {
       );
   }
 
-  case 'UPDATE_REPETITIONS_FOR_TODAY': {
-    return getStateWithCurrentRepetition(state);
-  }
-
   case 'RUN_REPETITION': {
     const startTime = Date.now();
     const updatedRepetition = state.getIn(['repetitions', action.repetitionUuid])
@@ -125,7 +121,7 @@ export default function userDataReducer (state, action) {
         flashcard => flashcard.set('learned', !nextRepetition)
       );
     log.debug('Reducer took ' + (Date.now() - startTime) + ' ms');
-    return returnValue;
+    return getStateWithCurrentRepetition(returnValue);
   }
 
   case 'READ_DB': {
@@ -218,8 +214,9 @@ export default function userDataReducer (state, action) {
       .set('searchString', action.value);
   }
   case 'SET_LAST_CURRENT_DATE': {
-    return state
+    const updatedState = state
       .set('lastCurrentDate', action.value);
+    return getStateWithCurrentRepetition(updatedState);
   }
   case 'SET_DATE_UPDATE_INTERVAL_ID': {
     return state
