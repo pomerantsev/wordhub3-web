@@ -54,3 +54,12 @@ export function compareStrings (string1, string2) {
     return 0;
   }
 }
+
+export function getIndexedDB () {
+  // Only enable indexedDB in Chrome for now - performance in Safari and Firefox
+  // seems to be too low.
+  return typeof window !== 'undefined' &&
+    /Chrome/.test(navigator.userAgent) &&
+    window.indexedDB;
+
+}

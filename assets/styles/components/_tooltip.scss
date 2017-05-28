@@ -1,0 +1,12 @@
+.tooltip__tooltip {
+  @extend .tooltip, .bottom, .in;
+  transform: translateX(-50%);
+}
+
+.tooltip__tooltip-arrow {
+  @extend .tooltip-arrow;
+}
+
+.tooltip__tooltip-text {
+  @extend .tooltip-inner;
+}

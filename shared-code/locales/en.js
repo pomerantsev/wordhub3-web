@@ -40,7 +40,11 @@ const enTranslation = {
     notFound: 'Page not found'
   },
   notifications: {
-    offline: 'Offline!'
+    offline: 'Offline',
+    offlineHint: 'No network connection, but you can keep using the app. Don’t reload the page: in that case, everything you’ve done while being offline will be lost.',
+    offlineDataSafe: 'Data is safe',
+    offlineDataSafeHint: 'No network connection, but you can keep using the app. Data is stored locally, and when network is available again, all latest changes will be sent to the server.',
+    whatsThis: 'what’s this?'
   },
   repetitions: {
     title: getTitle('Word Repetition'),

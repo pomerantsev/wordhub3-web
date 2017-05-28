@@ -29,3 +29,10 @@
     color: $gray-dark;
   }
 }
+
+@mixin elements__primary-menu-item {
+  float: left;
+  font-size: 14px;
+  line-height: 20px;
+  padding: 10px 15px;
+}

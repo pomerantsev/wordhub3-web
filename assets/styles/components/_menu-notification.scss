@@ -1,0 +1,26 @@
+.menu-notification {
+  @include elements__primary-menu-item;
+}
+
+%menu-notification__primary {
+  font-weight: bold;
+}
+
+.menu-notification__primary--warning {
+  @extend %menu-notification__primary;
+  color: $warning-yellow;
+}
+
+.menu-notification__primary--danger {
+  @extend %menu-notification__primary;
+  color: $danger-red;
+}
+
+.menu-notification__secondary {
+  font-size: $text-reduced-size;
+}
+
+.menu-notification__tooltip-toggle {
+  color: $link-blue;
+  cursor: pointer;
+}

@@ -7,11 +7,8 @@
 }
 
 .authed-menu__primary-link {
+  @include elements__primary-menu-item;
   color: $navbar-default-brand-color;
-  float: left;
-  font-size: 14px;
-  line-height: 20px;
-  padding: 10px 15px;
 
   &:hover {
     color: $navbar-default-brand-color;
@@ -34,7 +31,7 @@
 }
 
 .authed-menu__primary-link__small {
-  font-size: 0.85em;
+  font-size: $text-reduced-size;
 }
 
 .authed-menu__toggle {

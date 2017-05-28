@@ -43,6 +43,7 @@ function getUpdatedState (state, action) {
         credentials => credentials.merge(action.credentials));
   case 'OPEN_LOCAL_DB_REQUEST':
     return state
+      .set('indexedDB', action.indexedDB)
       .set('openLocalDbPromise', action.promise);
   case 'RESET_LOGGED_IN_STATE':
     return state

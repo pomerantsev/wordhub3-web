@@ -129,17 +129,19 @@ class AuthedMenu extends React.Component {
               })}
             </div>
           </Link>
-          <MenuNotification
-              title="You’re offline"
-              hint="This is what happens when you lose connectivity."
-          />
           {this.props.online ?
             null :
-            <span
-                className="authed-menu__primary-link"
-                style={{color: 'red'}}>
-              {getI18n().t('notifications.offline')}
-            </span>
+            this.props.indexedDB ?
+              <MenuNotification
+                  type="warning"
+                  title={getI18n().t('notifications.offlineDataSafe')}
+                  hint={getI18n().t('notifications.offlineDataSafeHint')}
+              /> :
+              <MenuNotification
+                  type="danger"
+                  title={getI18n().t('notifications.offline')}
+                  hint={getI18n().t('notifications.offlineHint')}
+              />
           }
           <button
               ref={this.narrowToggleRef}
@@ -252,7 +254,8 @@ export const AuthedMenuContainer = connect(
     todayRepetitions: state.getIn(['userData', 'repetitionsForToday']),
     repetitions: state.getIn(['userData', 'repetitions']),
     userSettings: state.getIn(['userData', 'userSettings']),
-    online: state.get('online')
+    online: state.get('online'),
+    indexedDB: state.get('indexedDB')
   }),
   actionCreators
 )(AuthedMenu);

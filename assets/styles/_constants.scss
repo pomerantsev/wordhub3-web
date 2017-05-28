@@ -1,5 +1,7 @@
 $margin-standard: 20px;
 
+$text-reduced-size: 0.85em;
+
 $universal-green: #468847;
 $universal-green-shadow: #f0fff1;
 $background-green: #dff0d8;
@@ -8,9 +10,12 @@ $universal-blue: #428bca;
 
 // These colors are taken from bootstrap.
 $button-blue: #428bca;
+$link-blue: #337ab7;
 $active-text-gray: #555555;
 $active-background-gray: #e7e7e7;
 $muted-gray: #999999;
 $light-gray: #cccccc;
+$danger-red: #a94442;
+$warning-yellow: #8a6d3b;
 
 $breakpoint700: 768px;

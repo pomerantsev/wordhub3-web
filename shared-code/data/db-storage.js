@@ -2,12 +2,6 @@ import log from 'loglevel';
 
 const dbNamePrefix = 'wordhub_';
 
-// Only enable indexedDB in Chrome for now - performance in Safari and Firefox
-// seems to be too low.
-const indexedDB = typeof window !== 'undefined' &&
-  /Chrome/.test(navigator.userAgent) &&
-  window.indexedDB;
-
 function putRecord (transaction, store, record) {
   return new Promise((resolve, reject) => {
     const request = transaction.objectStore(store).put(record);
@@ -30,7 +24,7 @@ function deleteRecord (transaction, store, key) {
   });
 }
 
-export function openDb (email) {
+export function openDb (indexedDB, email) {
   return indexedDB ?
     new Promise((resolve, reject) => {
       const request = indexedDB.open(dbNamePrefix + email, 2);

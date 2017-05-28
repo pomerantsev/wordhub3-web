@@ -73,9 +73,11 @@ export function setDateUpdateIntervalId (intervalId) {
 }
 
 export function openLocalDb (email) {
+  const indexedDB = helpers.getIndexedDB();
   return {
     type: 'OPEN_LOCAL_DB',
-    promise: dbStorage.openDb(email)
+    indexedDB,
+    promise: dbStorage.openDb(indexedDB, email)
   };
 }
 
