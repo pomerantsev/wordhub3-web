@@ -14,7 +14,7 @@ export const getFlashcardsSorted = helpers.createDeepEqualSelector(
     state => state.getIn(['userData', 'searchString'])
   ],
   (flashcards, searchString) => {
-    const searchStringRegExp = new RegExp(escapeStringRegexp(searchString));
+    const searchStringRegExp = new RegExp(escapeStringRegexp(searchString.toLowerCase()), 'i');
     return flashcards
       .filter(flashcard => searchString ?
         searchStringRegExp.test(flashcard.get('frontText')) ||
