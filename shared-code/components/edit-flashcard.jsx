@@ -6,6 +6,7 @@ import {connect} from 'react-redux';
 import {Helmet} from 'react-helmet';
 
 import * as actionCreators from '../data/action-creators';
+import * as getters from '../data/getters';
 
 class EditFlashcard extends React.Component {
 
@@ -114,7 +115,7 @@ class EditFlashcard extends React.Component {
 
 export const EditFlashcardContainer = connect(
   state => ({
-    flashcards: state.getIn(['userData', 'flashcards'])
+    flashcards: getters.getFlashcards(state.get('userData'))
   }),
   actionCreators
 )(EditFlashcard);

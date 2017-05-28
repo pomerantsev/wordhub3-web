@@ -117,7 +117,7 @@ class Stats extends React.Component {
 
 export const StatsContainer = connect(
   state => ({
-    flashcards: state.getIn(['userData', 'flashcards']),
+    flashcards: getters.getFlashcards(state.get('userData')),
     learnedFlashcards: getters.getLearnedFlashcards(state.get('userData')),
     plannedRepetitions: getters.getPlannedRepetitions(state.get('userData')),
     nextDayData: getters.getNextDayData(state.get('userData')),

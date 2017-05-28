@@ -251,8 +251,8 @@ class AuthedMenu extends React.Component {
 export const AuthedMenuContainer = connect(
   state => ({
     todayFlashcards: getters.getTodayFlashcards(state.get('userData')),
-    todayRepetitions: state.getIn(['userData', 'repetitionsForToday']),
-    repetitions: state.getIn(['userData', 'repetitions']),
+    todayRepetitions: getters.getRepetitionsForToday(state.get('userData')),
+    repetitions: getters.getRepetitions(state.get('userData')),
     userSettings: state.getIn(['userData', 'userSettings']),
     online: state.get('online'),
     indexedDB: state.get('indexedDB')

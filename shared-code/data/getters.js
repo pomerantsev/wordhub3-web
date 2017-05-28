@@ -8,9 +8,37 @@ import {createSelector} from 'reselect';
 import * as constants from '../data/constants';
 import * as helpers from '../utils/helpers';
 
+export const getFlashcards = helpers.createDeepEqualSelector(
+  [state => state.get('flashcards')],
+  flashcards => flashcards
+);
+
+export const getRepetitions = helpers.createDeepEqualSelector(
+  [
+    state => getFlashcards(state),
+    state => state.get('repetitions')
+  ],
+  (flashcards, repetitions) => repetitions.filter(repetition => flashcards.get(repetition.get('flashcardUuid')))
+);
+
+export const getRepetitionsIndexedByPlannedDay = helpers.createDeepEqualSelector(
+  [
+    state => state.get('repetitionsIndexedByPlannedDay')
+  ],
+  // TODO: this is supposed to change
+  repetitionsIndexedByPlannedDay => repetitionsIndexedByPlannedDay
+);
+
+export const getRepetitionsForToday = helpers.createDeepEqualSelector(
+  [
+    state => state.get('repetitionsForToday')
+  ],
+  repetitionsForToday => repetitionsForToday
+);
+
 export const getFlashcardsSorted = helpers.createDeepEqualSelector(
   [
-    state => state.get('flashcards'),
+    state => getFlashcards(state),
     state => state.get('searchString')
   ],
   (flashcards, searchString) => {
@@ -31,27 +59,27 @@ export const getFlashcardsSorted = helpers.createDeepEqualSelector(
 
 export const getTodayFlashcards = createSelector(
   [
-    state => state.get('flashcards'),
+    state => getFlashcards(state),
     () => helpers.getCurrentDate()
   ],
   (flashcards, currentDate) => flashcards.filter(flashcard => flashcard.get('creationDate') === currentDate)
 );
 
 export const getLearnedFlashcards = createSelector(
-  [state => state.get('flashcards')],
+  [state => getFlashcards(state)],
   flashcards => flashcards.filter(flashcard => flashcard.get('learned'))
 );
 
 export const getPlannedRepetitions = createSelector(
-  [state => state.get('repetitions')],
+  [state => getRepetitions(state)],
   repetitions => repetitions.filter(repetition => !repetition.get('actualDate'))
 );
 
 export const getTodayRepetitionsFromMainState = helpers.createDeepEqualSelector(
   [
-    state => state.get('repetitionsIndexedByPlannedDay'),
-    state => state.get('repetitions'),
-    state => state.get('flashcards'),
+    state => getRepetitionsIndexedByPlannedDay(state),
+    state => getRepetitions(state),
+    state => getFlashcards(state),
     () => helpers.getCurrentDate()
   ],
   (repetitionsIndexedByPlannedDay, allRepetitions, flashcards, currentDate) => {
@@ -120,9 +148,9 @@ export const getTodayRepetitionsFromMainState = helpers.createDeepEqualSelector(
 
 export const getCurrentDay = helpers.createDeepEqualSelector(
   [
-    state => state.get('repetitionsForToday'),
-    state => state.get('repetitions'),
-    state => state.get('repetitionsIndexedByPlannedDay')
+    state => getRepetitionsForToday(state),
+    state => getRepetitions(state),
+    state => getRepetitionsIndexedByPlannedDay(state)
   ],
   (todayRepetitions, repetitions, repetitionsIndexedByPlannedDay) => {
     if (todayRepetitions.size > 0) {
@@ -149,7 +177,7 @@ export const getCurrentDay = helpers.createDeepEqualSelector(
 export const getNextDayData = helpers.createDeepEqualSelector(
   [
     state => getCurrentDay(state),
-    state => state.get('repetitionsIndexedByPlannedDay'),
+    state => getRepetitionsIndexedByPlannedDay(state),
     () => helpers.getCurrentDate()
   ],
   (currentDay, repetitionsIndexedByPlannedDay, currentDate) => {
@@ -170,7 +198,7 @@ export const getNextDayData = helpers.createDeepEqualSelector(
 export const getLastDayData = helpers.createDeepEqualSelector(
   [
     state => getCurrentDay(state),
-    state => state.get('repetitionsIndexedByPlannedDay'),
+    state => getRepetitionsIndexedByPlannedDay(state),
     () => helpers.getCurrentDate()
   ],
   (currentDay, repetitionsIndexedByPlannedDay, currentDate) => {
@@ -191,8 +219,8 @@ export const getLastDayData = helpers.createDeepEqualSelector(
 export const getIntervalStats = helpers.memoizeOneArg(dayCount => {
   return helpers.createDeepEqualSelector(
     [
-      state => state.get('flashcards'),
-      state => state.get('repetitions'),
+      state => getFlashcards(state),
+      state => getRepetitions(state),
       state => getRepetitionsGroupedByFlashcard(state),
       () => helpers.getCurrentDate()
     ],
@@ -216,7 +244,7 @@ export const getIntervalStats = helpers.memoizeOneArg(dayCount => {
 
 export const getRepetitionsGroupedByFlashcard = helpers.createDeepEqualSelector(
   [
-    state => state.get('repetitions')
+    state => getRepetitions(state)
   ],
   (repetitions) => {
     let repetitionsGroupedByFlashcard = Map();
@@ -233,8 +261,8 @@ export const getRepetitionsGroupedByFlashcard = helpers.createDeepEqualSelector(
 
 export const getRemainingRepetitionsForToday = helpers.createDeepEqualSelector(
   [
-    state => state.get('repetitionsForToday'),
-    state => state.get('repetitions')
+    state => getRepetitionsForToday(state),
+    state => getRepetitions(state)
   ],
   (repetitionsForToday, allRepetitions) => repetitionsForToday
     .filter(repetitionUuid => !allRepetitions.getIn([repetitionUuid, 'actualDate']))

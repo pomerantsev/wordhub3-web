@@ -151,11 +151,11 @@ class Repetitions extends React.Component {
 
 export const RepetitionsContainer = connect(
   state => ({
-    repetitionsForToday: state.getIn(['userData', 'repetitionsForToday']),
-    remainingRepetitionsForToday: getters.getRemainingRepetitionsForToday(state.getIn(['userData'])),
+    repetitionsForToday: getters.getRepetitionsForToday(state.get('userData')),
+    remainingRepetitionsForToday: getters.getRemainingRepetitionsForToday(state.get('userData')),
     currentRepetition: state.getIn(['userData', 'currentRepetition']),
-    repetitions: state.getIn(['userData', 'repetitions']),
-    flashcards: state.getIn(['userData', 'flashcards'])
+    repetitions: getters.getRepetitions(state.get('userData')),
+    flashcards: getters.getFlashcards(state.get('userData'))
   }),
   actionCreators
 )(Repetitions);
