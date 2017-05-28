@@ -1,6 +1,6 @@
 import log from 'loglevel';
 
-import {fromJS, List, Map} from 'immutable';
+import {fromJS, Map} from 'immutable';
 
 import * as constants from '../data/constants';
 import * as getters from '../data/getters';
@@ -18,44 +18,6 @@ function getStateWithCurrentRepetition (state) {
     return state
       .set('currentRepetition', null);
   }
-}
-
-function getStateWithUpdatedRepetitionIndices (state, existingRepetitions, newRepetitions) {
-  let repetitionsIndexedByPlannedDay = state.get('repetitionsIndexedByPlannedDay');
-
-  existingRepetitions.forEach(existingRepetition => {
-    const repetitionInState = state.get('repetitions').find(repetition => helpers.repetitionsEqual(repetition, existingRepetition));
-    repetitionsIndexedByPlannedDay = repetitionsIndexedByPlannedDay
-      .updateIn([repetitionInState.get('plannedDay'), 'repetitions'], List(), repetitionUuids =>
-        repetitionUuids.splice(repetitionUuids.findIndex(repetitionUuid => helpers.repetitionsEqual(state.getIn(['repetitions', repetitionUuid]), existingRepetition)), 1)
-      )
-      .updateIn([existingRepetition.get('plannedDay'), 'repetitions'], List(), repetitionUuids =>
-        repetitionUuids.push(existingRepetition.get('uuid'))
-      );
-  });
-
-  newRepetitions.forEach(newRepetition => {
-    repetitionsIndexedByPlannedDay = repetitionsIndexedByPlannedDay
-      .updateIn([newRepetition.get('plannedDay'), 'repetitions'], List(), repetitionUuids =>
-        repetitionUuids.push(newRepetition.get('uuid'))
-      );
-  });
-
-  const fullyUpdatedRepetitionsIndexByPlannedDay = repetitionsIndexedByPlannedDay
-    .sortBy(
-      (value, key) => key,
-      (a, b) => a - b
-    )
-    .filter(repetitionsIndexForDay => repetitionsIndexForDay.get('repetitions').size > 0)
-    .map(repetitionsIndexForDay => repetitionsIndexForDay
-      .set('completed', repetitionsIndexForDay.get('repetitions').every(repetitionUuid => !!state.getIn(['repetitions', repetitionUuid, 'actualDate'])))
-    );
-
-  const stateWithUpdatedRepetitionsIndexedByPlannedDay =
-    state
-      .set('repetitionsIndexedByPlannedDay', fullyUpdatedRepetitionsIndexByPlannedDay);
-
-  return getStateWithCurrentRepetition(stateWithUpdatedRepetitionsIndexedByPlannedDay);
 }
 
 export default function userDataReducer (state, action) {
@@ -90,23 +52,7 @@ export default function userDataReducer (state, action) {
         repetitions => repetitions.set(action.repetitionUuid, newRepetition)
       );
 
-    return updatedState
-      .updateIn(
-        ['repetitionsIndexedByPlannedDay', newRepetition.get('plannedDay')],
-        Map(),
-        repetitionsIndexForDay => {
-          const updatedRepetitions = repetitionsIndexForDay.get('repetitions', List()).push(newRepetition.get('uuid'));
-          return repetitionsIndexForDay
-            .set('repetitions', updatedRepetitions)
-            .set('completed', updatedRepetitions.every(repetitionUuid => !!updatedState.getIn(['repetitions', repetitionUuid, 'actualDate'])));
-        }
-      )
-      .update('repetitionsIndexedByPlannedDay', repetitionsIndexedByPlannedDay =>
-        repetitionsIndexedByPlannedDay.sortBy(
-          (value, key) => key,
-          (a, b) => a - b
-        )
-      );
+    return updatedState;
   }
 
   case 'UPDATE_FLASHCARD': {
@@ -133,14 +79,9 @@ export default function userDataReducer (state, action) {
     const stateWithUpdatedRepetition = state
       .setIn(['repetitions', action.repetitionUuid], updatedRepetition);
 
-    const stateWithUpdatedRepetitionAndIndex = stateWithUpdatedRepetition
-      .updateIn(['repetitionsIndexedByPlannedDay', updatedRepetition.get('plannedDay')], repetitionsIndexForDay => {
-        return repetitionsIndexForDay
-          .set('completed', repetitionsIndexForDay.get('repetitions').every(repetitionUuid => !!stateWithUpdatedRepetition.getIn(['repetitions', repetitionUuid, 'actualDate'])));
-      });
     const nextRepetition = (() => {
-      const allRepetitionsForFlashcard = stateWithUpdatedRepetitionAndIndex.get('repetitions')
-        .filter(repetition => repetition.get('flashcardUuid') === stateWithUpdatedRepetitionAndIndex.getIn(['repetitions', action.repetitionUuid, 'flashcardUuid']))
+      const allRepetitionsForFlashcard = stateWithUpdatedRepetition.get('repetitions')
+        .filter(repetition => repetition.get('flashcardUuid') === stateWithUpdatedRepetition.getIn(['repetitions', action.repetitionUuid, 'flashcardUuid']))
         .toList()
         .sort((repetition1, repetition2) => repetition1.get('seq') - repetition2.get('seq'));
       const lastUnsuccessfulIndex = allRepetitionsForFlashcard.findLastIndex(repetition => !repetition.get('successful'));
@@ -173,27 +114,11 @@ export default function userDataReducer (state, action) {
     const stateWithAddedNextRepetition = nextRepetition ?
       (() => {
         const stateWithAddedRepetition =
-          stateWithUpdatedRepetitionAndIndex
+          stateWithUpdatedRepetition
             .update('repetitions', repetitions => repetitions.set(action.nextRepetitionUuid, nextRepetition));
-        return stateWithAddedRepetition
-          .updateIn(
-            ['repetitionsIndexedByPlannedDay', nextRepetition.get('plannedDay')],
-            Map(),
-            repetitionsIndexForDay => {
-              const updatedRepetitions = repetitionsIndexForDay.get('repetitions', List()).push(nextRepetition.get('uuid'));
-              return repetitionsIndexForDay
-                .set('repetitions', updatedRepetitions)
-                .set('completed', updatedRepetitions.every(repetitionUuid => !!stateWithAddedRepetition.getIn(['repetitions', repetitionUuid, 'actualDate'])));
-            }
-          )
-          .update('repetitionsIndexedByPlannedDay', repetitionsIndexedByPlannedDay =>
-            repetitionsIndexedByPlannedDay.sortBy(
-              (value, key) => key,
-              (a, b) => a - b
-            )
-          );
+        return stateWithAddedRepetition;
       })() :
-      stateWithUpdatedRepetitionAndIndex;
+      stateWithUpdatedRepetition;
     const returnValue = stateWithAddedNextRepetition
       .updateIn(
         ['flashcards', updatedRepetition.get('flashcardUuid')],
@@ -210,7 +135,7 @@ export default function userDataReducer (state, action) {
       .set('lastSyncClientTime', action.lastSyncClientTime)
       .set('lastSyncServerTime', action.lastSyncServerTime)
       .set('userSettings', action.userSettings);
-    return getStateWithUpdatedRepetitionIndices(updatedState, List(), action.repetitions);
+    return getStateWithCurrentRepetition(updatedState);
   }
 
   case 'SYNC_DATA_REQUEST': {
@@ -277,9 +202,8 @@ export default function userDataReducer (state, action) {
       .update('flashcards', flashcards => flashcards.map(flashcard =>
         flashcard.set('learned', !!lastRepetitionActualDates.get(flashcard.get('uuid')))));
 
-    const stateWithUpdatedRepetitionIndices = getStateWithUpdatedRepetitionIndices(stateWithUpdatedFlashcardLearned, existingRepetitions, newRepetitions);
     log.debug('SyncData reducer took ' + (Date.now() - startTime) + ' ms');
-    return stateWithUpdatedRepetitionIndices;
+    return getStateWithCurrentRepetition(stateWithUpdatedFlashcardLearned);
   }
   case 'SET_SYNC_ERROR': {
     return state

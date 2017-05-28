@@ -1,4 +1,4 @@
-import {fromJS, Map, OrderedMap} from 'immutable';
+import {fromJS, Map} from 'immutable';
 
 import * as authUtils from '../utils/auth-utils';
 
@@ -10,7 +10,6 @@ const INITIAL_USER_DATA = fromJS({
   userSettings: {},
   flashcards: {},
   repetitions: {},
-  repetitionsIndexedByPlannedDay: OrderedMap(),
   currentRepetition: null,
   lastSyncServerTime: 0,
   lastSyncClientTime: 0,

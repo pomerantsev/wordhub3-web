@@ -1,7 +1,7 @@
 import log from 'loglevel';
 
 import moment from 'moment';
-import {List, Map} from 'immutable';
+import {List, Map, OrderedMap} from 'immutable';
 import escapeStringRegexp from 'escape-string-regexp';
 import {createSelector} from 'reselect';
 
@@ -23,10 +23,24 @@ export const getRepetitions = helpers.createDeepEqualSelector(
 
 export const getRepetitionsIndexedByPlannedDay = helpers.createDeepEqualSelector(
   [
-    state => state.get('repetitionsIndexedByPlannedDay')
+    state => getRepetitions(state)
   ],
-  // TODO: this is supposed to change
-  repetitionsIndexedByPlannedDay => repetitionsIndexedByPlannedDay
+  repetitions => {
+    let repetitionsIndexedByPlannedDay = OrderedMap();
+    repetitions.forEach(repetition => {
+      repetitionsIndexedByPlannedDay = repetitionsIndexedByPlannedDay
+        .updateIn([repetition.get('plannedDay'), 'repetitions'], List(), repetitionUuids =>
+          repetitionUuids.push(repetition.get('uuid')));
+    });
+    return repetitionsIndexedByPlannedDay
+      .sortBy(
+        (value, key) => key,
+        (a, b) => a - b
+      )
+      .map(repetitionsIndexForDay => repetitionsIndexForDay
+        .set('completed', repetitionsIndexForDay.get('repetitions').every(repetitionUuid => !!repetitions.getIn([repetitionUuid, 'actualDate'])))
+      );
+  }
 );
 
 export const getRepetitionsForToday = helpers.createDeepEqualSelector(

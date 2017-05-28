@@ -16,8 +16,7 @@ describe('getRepetitionsForToday', () => {
     it('returns an empty list', () => {
       const state = fromJS({
         flashcards: {},
-        repetitions: {},
-        repetitionsIndexedByPlannedDay: OrderedMap()
+        repetitions: {}
       });
       assert.equal(0, getRepetitionsForToday(state).size);
     });
@@ -35,29 +34,15 @@ describe('getRepetitionsForToday', () => {
             4: {uuid: '4'}
           },
           repetitions: {
-            1: {uuid: '1', actualDate: twoDaysAgo, flashcardUuid: '1'},
-            2: {uuid: '2', actualDate: twoDaysAgo, flashcardUuid: '2'},
-            3: {uuid: '3', actualDate: null, flashcardUuid: '3'},
-            4: {uuid: '4', actualDate: yesterday, flashcardUuid: '4'},
-            5: {uuid: '5', actualDate: today, flashcardUuid: '1'},
-            6: {uuid: '6', actualDate: tomorrow, flashcardUuid: '2'},
-            7: {uuid: '7', actualDate: null, flashcardUuid: '1'},
-            8: {uuid: '8', actualDate: null, flashcardUuid: '2'}
-          },
-          repetitionsIndexedByPlannedDay: OrderedMap(fromJS({
-            1: {
-              completed: true,
-              repetitions: ['1', '2']
-            },
-            2: {
-              completed: false,
-              repetitions: ['3', '4', '5', '6']
-            },
-            4: {
-              completed: false,
-              repetitions: ['7', '8']
-            }
-          }))
+            1: {uuid: '1', plannedDay: 1, actualDate: twoDaysAgo, flashcardUuid: '1'},
+            2: {uuid: '2', plannedDay: 1, actualDate: twoDaysAgo, flashcardUuid: '2'},
+            3: {uuid: '3', plannedDay: 2, actualDate: null, flashcardUuid: '3'},
+            4: {uuid: '4', plannedDay: 2, actualDate: yesterday, flashcardUuid: '4'},
+            5: {uuid: '5', plannedDay: 2, actualDate: today, flashcardUuid: '1'},
+            6: {uuid: '6', plannedDay: 2, actualDate: tomorrow, flashcardUuid: '2'},
+            7: {uuid: '7', plannedDay: 4, actualDate: null, flashcardUuid: '1'},
+            8: {uuid: '8', plannedDay: 4, actualDate: null, flashcardUuid: '2'}
+          }
         });
 
         const repetitions = getRepetitionsForToday(state);
@@ -77,29 +62,15 @@ describe('getRepetitionsForToday', () => {
               4: {uuid: '4'}
             },
             repetitions: {
-              1: {uuid: '1', actualDate: twoDaysAgo, flashcardUuid: '1'},
-              2: {uuid: '2', actualDate: twoDaysAgo, flashcardUuid: '2'},
-              3: {uuid: '3', actualDate: yesterday, flashcardUuid: '3'},
-              4: {uuid: '4', actualDate: yesterday, flashcardUuid: '4'},
-              5: {uuid: '5', actualDate: today, flashcardUuid: '1'},
-              6: {uuid: '6', actualDate: tomorrow, flashcardUuid: '2'},
-              7: {uuid: '7', actualDate: null, flashcardUuid: '1'},
-              8: {uuid: '8', actualDate: null, flashcardUuid: '2'}
-            },
-            repetitionsIndexedByPlannedDay: OrderedMap(fromJS({
-              1: {
-                completed: true,
-                repetitions: ['1', '2']
-              },
-              2: {
-                completed: true,
-                repetitions: ['3', '4', '5', '6']
-              },
-              4: {
-                completed: false,
-                repetitions: ['7', '8']
-              }
-            }))
+              1: {uuid: '1', plannedDay: 1, actualDate: twoDaysAgo, flashcardUuid: '1'},
+              2: {uuid: '2', plannedDay: 1, actualDate: twoDaysAgo, flashcardUuid: '2'},
+              3: {uuid: '3', plannedDay: 2, actualDate: yesterday, flashcardUuid: '3'},
+              4: {uuid: '4', plannedDay: 2, actualDate: yesterday, flashcardUuid: '4'},
+              5: {uuid: '5', plannedDay: 2, actualDate: today, flashcardUuid: '1'},
+              6: {uuid: '6', plannedDay: 2, actualDate: tomorrow, flashcardUuid: '2'},
+              7: {uuid: '7', plannedDay: 4, actualDate: null, flashcardUuid: '1'},
+              8: {uuid: '8', plannedDay: 4, actualDate: null, flashcardUuid: '2'}
+            }
           });
 
           const repetitions = getRepetitionsForToday(state);
