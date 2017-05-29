@@ -10,60 +10,6 @@
     color: $universal-green;
     background-color: $background-green;
   }
-  // &.flashcard-rows {
-  //   .flashcard-side {
-  //     position: relative;
-
-  //     &:not(:first-child) {
-  //       margin-top: 40px;
-  //       &:before {
-  //         content: "";
-  //         position: absolute;
-  //         top: -20px;
-  //         left: 0;
-  //         right: 0;
-  //         height: 1px;
-  //         background-color: white;
-  //       }
-  //     }
-  //   }
-  // }
-
-  // &.flashcard-columns {
-  //   position: relative;
-
-  //   content: "";
-  //   display: table;
-  //   clear: both;
-  //   width: 100%;
-
-  //   .flashcard-side {
-  //     float: left;
-  //     width: 50%;
-  //     height: 100%;
-
-  //     &:first-child {
-  //       padding-right: 20px;
-  //     }
-
-  //     &:not(:first-child) {
-  //       padding-left: 20px;
-
-  //       &:before {
-  //         content: "";
-  //         position: absolute;
-  //         left: 50%;
-  //         width: 1px;
-  //         top: 0;
-  //         bottom: 0;
-  //         background-color: white;
-  //       }
-  //     }
-  //   }
-
-
-  // }
-
 }
 
 .flashcard-list__flashcard__side {
