@@ -22,7 +22,9 @@ const enTranslation = {
   flashcardList: {
     title: getTitle('Flashcards'),
     searchingFor: 'Searching for “{{searchString}}”',
-    clear: 'clear'
+    clear: 'clear',
+    deleted: 'Flashcard deleted.',
+    undo: 'Undo'
   },
   footer: {
     authorName: 'Pavel Pomerantsev'

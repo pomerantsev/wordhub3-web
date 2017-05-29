@@ -11,6 +11,7 @@ const INITIAL_USER_DATA = fromJS({
   flashcards: {},
   repetitions: {},
   currentRepetition: null,
+  recentlyDeletedFlashcard: null,
   lastSyncServerTime: 0,
   lastSyncClientTime: 0,
   lastSyncRequestClientTime: null,

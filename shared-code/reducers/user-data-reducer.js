@@ -71,8 +71,25 @@ export default function userDataReducer (state, action) {
         flashcard
           .set('deleted', true)
           .set('updatedAt', action.currentTime)
-      );
+      )
+      .set('recentlyDeletedFlashcard', action.flashcardUuid);
     return getStateWithCurrentRepetition(updatedState);
+  }
+
+  case 'UNDO_FLASHCARD_DELETION': {
+    const updatedState = state
+      .updateIn(['flashcards', state.get('recentlyDeletedFlashcard')], flashcard =>
+        flashcard
+          .set('deleted', false)
+          .set('updatedAt', action.currentTime)
+      )
+      .set('recentlyDeletedFlashcard', null);
+    return getStateWithCurrentRepetition(updatedState);
+  }
+
+  case 'FINALIZE_FLASHCARD_DELETION': {
+    return state
+      .set('recentlyDeletedFlashcard', null);
   }
 
   case 'RUN_REPETITION': {

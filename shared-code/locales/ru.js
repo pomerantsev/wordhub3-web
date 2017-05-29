@@ -22,7 +22,9 @@ const ruTranslation = {
   flashcardList: {
     title: getTitle('Карточки'),
     searchingFor: 'Отфильтровано по «{{searchString}}»',
-    clear: 'показать все'
+    clear: 'показать все',
+    deleted: 'Карточка удалена.',
+    undo: 'Восстановить'
   },
   footer: {
     authorName: 'Павел Померанцев'

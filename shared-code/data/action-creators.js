@@ -135,6 +135,18 @@ export function deleteFlashcard (flashcardUuid) {
   };
 }
 
+export function undoFlashcardDeletion () {
+  const currentTime = Date.now();
+  return function (dispatch) {
+    dispatch(() => ({type: 'UNDO_FLASHCARD_DELETION', currentTime}));
+    dispatch(syncData());
+  };
+}
+
+export function finalizeFlashcardDeletion () {
+  return {type: 'FINALIZE_FLASHCARD_DELETION'};
+}
+
 export function runRepetition (repetitionUuid, successful) {
   const currentTime = Date.now();
   const nextRepetitionUuid = uuid.v4();

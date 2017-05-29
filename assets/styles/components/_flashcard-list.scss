@@ -82,3 +82,19 @@
     }
   }
 }
+
+.flashcard-list__deleted-alert {
+  @extend .alert;
+  @extend .alert-info;
+  @extend .alert-dismissible;
+}
+
+.flashcard-list__deleted-alert__undo {
+  font-weight: bold;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.flashcard-list__deleted-alert__close {
+  @extend .close;
+}

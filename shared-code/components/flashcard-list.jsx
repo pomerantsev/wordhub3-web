@@ -26,6 +26,8 @@ class FlashcardList extends React.Component {
     this.getDisplayedFlashcards = this.getDisplayedFlashcards.bind(this);
     this.onSearchStringChange = this.onSearchStringChange.bind(this);
     this.onClearSearchClick = this.onClearSearchClick.bind(this);
+    this.undoDeletion = this.undoDeletion.bind(this);
+    this.onDeletionAlertClose = this.onDeletionAlertClose.bind(this);
 
     this.searchStringRef = this.searchStringRef.bind(this);
   }
@@ -40,6 +42,10 @@ class FlashcardList extends React.Component {
 
   componentWillReceiveProps (nextProps) {
     this.ensureExistingPage(nextProps);
+  }
+
+  componentWillUnmount () {
+    this.props.finalizeFlashcardDeletion();
   }
 
   searchStringRef (element) {
@@ -61,6 +67,15 @@ class FlashcardList extends React.Component {
   onClearSearchClick (event) {
     event.preventDefault();
     this.props.searchStringChange('');
+  }
+
+  undoDeletion () {
+    this.props.undoFlashcardDeletion();
+  }
+
+  onDeletionAlertClose (event) {
+    event.preventDefault();
+    this.props.finalizeFlashcardDeletion();
   }
 
   getDisplayedFlashcards () {
@@ -94,6 +109,24 @@ class FlashcardList extends React.Component {
                 onClick={this.onClearSearchClick}>
               {getI18n().t('flashcardList.clear')}
             </a>)
+          </div> :
+          null
+        }
+        {this.props.recentlyDeletedFlashcard ?
+          <div
+              className="flashcard-list__deleted-alert">
+            <button
+                onClick={this.onDeletionAlertClose}
+                className="flashcard-list__deleted-alert__close">
+              &times;
+            </button>
+            {getI18n().t('flashcardList.deleted')}
+            {' '}
+            <span
+                className="flashcard-list__deleted-alert__undo"
+                onClick={this.undoDeletion}>
+              {getI18n().t('flashcardList.undo')}
+            </span>
           </div> :
           null
         }
@@ -145,7 +178,8 @@ class FlashcardList extends React.Component {
 export const FlashcardListContainer = connect(
   state => ({
     flashcards: getters.getFlashcardsSorted(state.get('userData')),
-    searchString: state.getIn(['userData', 'searchString'])
+    searchString: state.getIn(['userData', 'searchString']),
+    recentlyDeletedFlashcard: state.getIn(['userData', 'recentlyDeletedFlashcard'])
   }),
   actionCreators
 )(FlashcardList);
