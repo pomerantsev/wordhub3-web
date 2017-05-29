@@ -3,7 +3,7 @@ import log from 'loglevel';
 import moment from 'moment';
 import {List, Map, OrderedMap} from 'immutable';
 import escapeStringRegexp from 'escape-string-regexp';
-import {createSelector} from 'reselect';
+import {createSelector, defaultMemoize} from 'reselect';
 
 import * as constants from '../data/constants';
 import * as helpers from '../utils/helpers';
@@ -11,6 +11,22 @@ import * as helpers from '../utils/helpers';
 export const getFlashcards = helpers.createDeepEqualSelector(
   [state => state.get('flashcards')],
   flashcards => flashcards.filter(flashcard => !flashcard.get('deleted'))
+);
+
+export const makeGetFlashcardWithComputedProps = defaultMemoize(uuid =>
+  helpers.createDeepEqualSelector(
+    [
+      state => getFlashcards(state),
+      state => getRepetitionsGroupedByFlashcard(state)
+    ],
+    (flashcards, repetitionsForFlashcard) => flashcards.get(uuid).set('learned',
+      !!repetitionsForFlashcard.get(uuid).last().get('actualDate'))
+  )
+);
+
+export const getBeefedUpFlashcardsWithComputedProps = helpers.createDeepEqualSelector(
+  [state => getFlashcards(state).map(flashcard => makeGetFlashcardWithComputedProps(flashcard.get('uuid'))(state))],
+  flashcards => flashcards
 );
 
 export const getRepetitions = helpers.createDeepEqualSelector(
@@ -117,7 +133,7 @@ export const getRepetitionsForToday = helpers.createDeepEqualSelector(
 
 export const getFlashcardsSorted = helpers.createDeepEqualSelector(
   [
-    state => getFlashcards(state),
+    state => getBeefedUpFlashcardsWithComputedProps(state),
     state => state.get('searchString')
   ],
   (flashcards, searchString) => {
@@ -145,7 +161,7 @@ export const getTodayFlashcards = createSelector(
 );
 
 export const getLearnedFlashcards = createSelector(
-  [state => getFlashcards(state)],
+  [state => getBeefedUpFlashcardsWithComputedProps(state)],
   flashcards => flashcards.filter(flashcard => flashcard.get('learned'))
 );
 

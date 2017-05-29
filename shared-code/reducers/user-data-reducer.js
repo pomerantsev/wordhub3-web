@@ -32,9 +32,7 @@ export default function userDataReducer (state, action) {
       creationDate: helpers.getCurrentDate(action.currentTime),
       creationDay: flashcardCreationDay,
       createdAt: action.currentTime,
-      updatedAt: action.currentTime,
-      // An aggregate property that's not used by the backend
-      learned: false
+      updatedAt: action.currentTime
     });
     const newRepetition = fromJS({
       uuid: action.repetitionUuid,
@@ -142,13 +140,8 @@ export default function userDataReducer (state, action) {
         return stateWithAddedRepetition;
       })() :
       stateWithUpdatedRepetition;
-    const returnValue = stateWithAddedNextRepetition
-      .updateIn(
-        ['flashcards', updatedRepetition.get('flashcardUuid')],
-        flashcard => flashcard.set('learned', !nextRepetition)
-      );
     log.debug('Reducer took ' + (Date.now() - startTime) + ' ms');
-    return getStateWithCurrentRepetition(returnValue);
+    return getStateWithCurrentRepetition(stateWithAddedNextRepetition);
   }
 
   case 'READ_DB': {
@@ -216,17 +209,8 @@ export default function userDataReducer (state, action) {
         .merge(Map(newRepetitions.map(repetition => [repetition.get('uuid'), repetition])))
       );
 
-    const lastRepetitionActualDates = getters.getRepetitionsGroupedByFlashcard(updatedState)
-      .map(repetitionsForFlashcard => repetitionsForFlashcard
-        .last()
-        .get('actualDate')
-      );
-    const stateWithUpdatedFlashcardLearned = updatedState
-      .update('flashcards', flashcards => flashcards.map(flashcard =>
-        flashcard.set('learned', !!lastRepetitionActualDates.get(flashcard.get('uuid')))));
-
     log.debug('SyncData reducer took ' + (Date.now() - startTime) + ' ms');
-    return getStateWithCurrentRepetition(stateWithUpdatedFlashcardLearned);
+    return getStateWithCurrentRepetition(updatedState);
   }
   case 'SET_SYNC_ERROR': {
     return state

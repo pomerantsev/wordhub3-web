@@ -25,6 +25,7 @@ export function getCurrentDate (timestamp = Date.now()) {
   return moment(timestamp).format('YYYY-MM-DD');
 }
 
+// TODO: we probably don't need it - defaultMemoize from reselect is good enough
 export function memoizeOneArg (func) {
   const memo = {};
   return function (arg) {
