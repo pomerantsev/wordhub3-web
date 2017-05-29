@@ -98,3 +98,7 @@
 .flashcard-list__deleted-alert__close {
   @extend .close;
 }
+
+.flashcard-list__no-flashcards-text {
+  @extend .lead;
+}

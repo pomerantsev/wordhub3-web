@@ -24,7 +24,9 @@ const ruTranslation = {
     searchingFor: 'Отфильтровано по «{{searchString}}»',
     clear: 'показать все',
     deleted: 'Карточка удалена.',
-    undo: 'Восстановить'
+    undo: 'Восстановить',
+    noFlashcards: 'У вас пока нет ни одной карточки.',
+    create: 'Создать'
   },
   footer: {
     authorName: 'Павел Померанцев'

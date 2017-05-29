@@ -24,7 +24,9 @@ const enTranslation = {
     searchingFor: 'Searching for “{{searchString}}”',
     clear: 'clear',
     deleted: 'Flashcard deleted.',
-    undo: 'Undo'
+    undo: 'Undo',
+    noFlashcards: 'You haven’t created any flashcards.',
+    create: 'Create'
   },
   footer: {
     authorName: 'Pavel Pomerantsev'
