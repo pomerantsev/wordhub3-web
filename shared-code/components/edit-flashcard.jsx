@@ -82,6 +82,9 @@ class EditFlashcard extends React.Component {
     event.preventDefault();
     this.props.deleteFlashcard(this.props.params.uuid);
     this.context.router.goBack();
+    this.setState({
+      deleted: true
+    });
   }
 
   getFlashcard (props) {
@@ -124,7 +127,9 @@ class EditFlashcard extends React.Component {
           />
         </form>
       </div> :
-      <NotFound />;
+      this.state.deleted ?
+        null :
+        <NotFound />;
   }
 
 }
