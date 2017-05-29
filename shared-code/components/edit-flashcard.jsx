@@ -5,6 +5,8 @@ import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {Helmet} from 'react-helmet';
 
+import NotFound from './not-found.jsx';
+
 import * as actionCreators from '../data/action-creators';
 import * as getters from '../data/getters';
 
@@ -87,7 +89,7 @@ class EditFlashcard extends React.Component {
   }
 
   render () {
-    return (
+    return this.getFlashcard(this.props) ?
       <div>
         <Helmet>
           <title>{getI18n().t('editFlashcard.title')}</title>
@@ -121,8 +123,8 @@ class EditFlashcard extends React.Component {
               value={getI18n().t('editFlashcard.delete')}
           />
         </form>
-      </div>
-    );
+      </div> :
+      <NotFound />;
   }
 
 }
