@@ -30,20 +30,28 @@ class FlashcardList extends React.Component {
     this.searchStringRef = this.searchStringRef.bind(this);
   }
 
+  componentWillMount () {
+    this.ensureExistingPage(this.props);
+  }
+
   componentDidMount () {
     this.searchStringElement.focus();
   }
 
   componentWillReceiveProps (nextProps) {
-    const nextPage = parseInt(nextProps.location.query.page) || 1;
-    const nextTotalPages = Math.ceil(nextProps.flashcards.size / FLASHCARDS_PER_PAGE);
-    if (nextPage > 1 && nextPage > nextTotalPages || nextPage < 1) {
-      this.context.router.replace(helpers.getPaginatedLink(nextProps.location.pathname, nextTotalPages || 1));
-    }
+    this.ensureExistingPage(nextProps);
   }
 
   searchStringRef (element) {
     this.searchStringElement = element;
+  }
+
+  ensureExistingPage (props) {
+    const page = parseInt(props.location.query.page) || 1;
+    const totalPages = Math.ceil(props.flashcards.size / FLASHCARDS_PER_PAGE);
+    if (page > 1 && page > totalPages || page < 1) {
+      this.context.router.replace(helpers.getPaginatedLink(props.location.pathname, totalPages || 1));
+    }
   }
 
   onSearchStringChange (event) {
