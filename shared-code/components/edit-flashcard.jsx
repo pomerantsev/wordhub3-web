@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {Helmet} from 'react-helmet';
 
+import FlashcardInputs from './flashcard-inputs.jsx';
 import NotFound from './not-found.jsx';
 
 import * as actionCreators from '../data/action-creators';
@@ -99,32 +100,22 @@ class EditFlashcard extends React.Component {
         </Helmet>
         <form
             onSubmit={this.onSubmit}>
-          <textarea
-              ref={this.frontTextRef}
-              rows={6}
-              required
-              value={this.state.frontText}
-              onChange={this.onFrontTextChange}
+          <FlashcardInputs
+              frontTextRef={this.frontTextRef}
+              frontText={this.state.frontText}
+              backText={this.state.backText}
+              onFrontTextChange={this.onFrontTextChange}
+              onBackTextChange={this.onBackTextChange}
           />
-          <br />
-          <textarea
-              rows={6}
-              required
-              value={this.state.backText}
-              onChange={this.onBackTextChange}
-          />
-          <br />
-          <input
-              type="submit"
-              value={getI18n().t('editFlashcard.save')}
-          />
-        </form>
-        <form
-            onSubmit={this.deleteFlashcard}>
-          <input
-              type="submit"
-              value={getI18n().t('editFlashcard.delete')}
-          />
+          <button
+              className="edit-flashcard__submit">
+            {getI18n().t('editFlashcard.save')}
+          </button>
+          <button
+              className="edit-flashcard__delete"
+              onClick={this.deleteFlashcard}>
+            {getI18n().t('editFlashcard.delete')}
+          </button>
         </form>
       </div> :
       this.state.deleted ?

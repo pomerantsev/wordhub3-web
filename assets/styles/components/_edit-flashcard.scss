@@ -1,0 +1,22 @@
+.edit-flashcard__input-container {
+  @extend .row;
+}
+
+.edit-flashcard__submit {
+  @extend .btn;
+  @extend .btn-default;
+  @extend .col-md-10;
+  @media (min-width: 0) and (max-width: $breakpoint900 - 1px) {
+    width: 100% !important;
+    margin-bottom: 15px;
+  }
+}
+
+.edit-flashcard__delete {
+  @extend .btn;
+  @extend .btn-link;
+  @extend .col-md-2;
+  @media (min-width: 0) and (max-width: $breakpoint900 - 1px) {
+    width: 100% !important;
+  }
+}

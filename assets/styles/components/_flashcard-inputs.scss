@@ -1,0 +1,8 @@
+.flashcard-inputs__form-group {
+  @extend .form-group;
+}
+
+.flashcard-inputs__textarea {
+  @extend .form-control;
+  resize: none;
+}

@@ -19,6 +19,10 @@ const ruTranslation = {
     },
     tokenExpired: 'Ваша сессия истекла. Для безопасности аккаунта мы ограничиваем сессии по времени. Пожалуйста, выйдите и войдите снова. Иначе данные не будут синхронизироваться с сервером.'
   },
+  flashcardInputs: {
+    frontText: 'Слово:',
+    backText: 'Значение:'
+  },
   flashcardList: {
     title: getTitle('Карточки'),
     searchingFor: 'Отфильтровано по «{{searchString}}»',

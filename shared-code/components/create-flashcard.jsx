@@ -4,6 +4,8 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {Helmet} from 'react-helmet';
 
+import FlashcardInputs from './flashcard-inputs.jsx';
+
 import * as actionCreators from '../data/action-creators';
 
 class CreateFlashcard extends React.Component {
@@ -61,25 +63,17 @@ class CreateFlashcard extends React.Component {
         </Helmet>
         <form
             onSubmit={this.onSubmit}>
-          <textarea
-              ref={this.frontTextRef}
-              rows={6}
-              required
-              value={this.state.frontText}
-              onChange={this.onFrontTextChange}
+          <FlashcardInputs
+              frontTextRef={this.frontTextRef}
+              frontText={this.state.frontText}
+              backText={this.state.backText}
+              onFrontTextChange={this.onFrontTextChange}
+              onBackTextChange={this.onBackTextChange}
           />
-          <br />
-          <textarea
-              rows={6}
-              required
-              value={this.state.backText}
-              onChange={this.onBackTextChange}
-          />
-          <br />
-          <input
-              type="submit"
-              value={getI18n().t('createFlashcard.create')}
-          />
+          <button
+              className="create-flashcard__submit">
+            {getI18n().t('createFlashcard.create')}
+          </button>
         </form>
       </div>
     );

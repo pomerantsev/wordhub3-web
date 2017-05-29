@@ -19,6 +19,10 @@ const enTranslation = {
     },
     tokenExpired: 'Your token has expired. For your security, we require you to re-login from time to time. Please log out and log back in. Otherwise, your data won’t be synchronized with the server.'
   },
+  flashcardInputs: {
+    frontText: 'Word:',
+    backText: 'Meaning:'
+  },
   flashcardList: {
     title: getTitle('Flashcards'),
     searchingFor: 'Searching for “{{searchString}}”',
