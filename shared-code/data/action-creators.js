@@ -127,6 +127,14 @@ export function updateFlashcard (flashcardUuid, frontText, backText) {
   };
 }
 
+export function deleteFlashcard (flashcardUuid) {
+  const currentTime = Date.now();
+  return function (dispatch) {
+    dispatch(() => ({type: 'DELETE_FLASHCARD', flashcardUuid, currentTime}));
+    dispatch(syncData());
+  };
+}
+
 export function runRepetition (repetitionUuid, successful) {
   const currentTime = Date.now();
   const nextRepetitionUuid = uuid.v4();

@@ -65,6 +65,16 @@ export default function userDataReducer (state, action) {
       );
   }
 
+  case 'DELETE_FLASHCARD': {
+    const updatedState = state
+      .updateIn(['flashcards', action.flashcardUuid], flashcard =>
+        flashcard
+          .set('deleted', true)
+          .set('updatedAt', action.currentTime)
+      );
+    return getStateWithCurrentRepetition(updatedState);
+  }
+
   case 'RUN_REPETITION': {
     const startTime = Date.now();
     const updatedRepetition = state.getIn(['repetitions', action.repetitionUuid])

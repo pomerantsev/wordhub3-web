@@ -10,7 +10,8 @@ const ruTranslation = {
   },
   editFlashcard: {
     title: getTitle('Редактирование карточки'),
-    save: 'Сохранить'
+    save: 'Сохранить',
+    delete: 'Удалить'
   },
   errors: {
     sync: {

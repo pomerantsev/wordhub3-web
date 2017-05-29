@@ -10,7 +10,7 @@ import * as helpers from '../utils/helpers';
 
 export const getFlashcards = helpers.createDeepEqualSelector(
   [state => state.get('flashcards')],
-  flashcards => flashcards
+  flashcards => flashcards.filter(flashcard => !flashcard.get('deleted'))
 );
 
 export const getRepetitions = helpers.createDeepEqualSelector(

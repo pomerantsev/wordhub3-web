@@ -10,7 +10,8 @@ const enTranslation = {
   },
   editFlashcard: {
     title: getTitle('Edit Flashcard'),
-    save: 'Save'
+    save: 'Save',
+    delete: 'Delete'
   },
   errors: {
     sync: {

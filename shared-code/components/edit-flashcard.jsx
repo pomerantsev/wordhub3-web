@@ -25,6 +25,7 @@ class EditFlashcard extends React.Component {
     this.onFrontTextChange = this.onFrontTextChange.bind(this);
     this.onBackTextChange = this.onBackTextChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
+    this.deleteFlashcard = this.deleteFlashcard.bind(this);
 
     this.frontTextRef = this.frontTextRef.bind(this);
   }
@@ -75,6 +76,12 @@ class EditFlashcard extends React.Component {
     this.context.router.goBack();
   }
 
+  deleteFlashcard (event) {
+    event.preventDefault();
+    this.props.deleteFlashcard(this.props.params.uuid);
+    this.context.router.goBack();
+  }
+
   getFlashcard (props) {
     return props.flashcards.get(props.params.uuid);
   }
@@ -105,6 +112,13 @@ class EditFlashcard extends React.Component {
           <input
               type="submit"
               value={getI18n().t('editFlashcard.save')}
+          />
+        </form>
+        <form
+            onSubmit={this.deleteFlashcard}>
+          <input
+              type="submit"
+              value={getI18n().t('editFlashcard.delete')}
           />
         </form>
       </div>
