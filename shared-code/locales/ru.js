@@ -25,6 +25,7 @@ const ruTranslation = {
   },
   flashcardList: {
     title: getTitle('Карточки'),
+    search: 'Найти:',
     searchingFor: 'Отфильтровано по «{{searchString}}»',
     clear: 'показать все',
     deleted: 'Карточка удалена.',

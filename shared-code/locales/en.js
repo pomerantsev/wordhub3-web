@@ -25,6 +25,7 @@ const enTranslation = {
   },
   flashcardList: {
     title: getTitle('Flashcards'),
+    search: 'Search:',
     searchingFor: 'Searching for “{{searchString}}”',
     clear: 'clear',
     deleted: 'Flashcard deleted.',

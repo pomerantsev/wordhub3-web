@@ -96,26 +96,6 @@ class FlashcardList extends React.Component {
         </Helmet>
         {displayedFlashcards.size > 0 ?
           <div>
-            <div>
-              <input
-                  ref={this.searchStringRef}
-                  type="text"
-                  value={this.props.searchString}
-                  onChange={this.onSearchStringChange}
-              />
-            </div>
-            {this.props.searchString ?
-              <div>
-                {getI18n().t('flashcardList.searchingFor', {searchString: this.props.searchString})}
-                {' '}
-                (<a
-                    href
-                    onClick={this.onClearSearchClick}>
-                  {getI18n().t('flashcardList.clear')}
-                </a>)
-              </div> :
-              null
-            }
             {this.props.recentlyDeletedFlashcard ?
               <div
                   className="flashcard-list__deleted-alert">
@@ -134,11 +114,49 @@ class FlashcardList extends React.Component {
               </div> :
               null
             }
-            <Paginator
-                itemCount={this.props.flashcards.size}
-                itemsPerPage={FLASHCARDS_PER_PAGE}
-                location={this.props.location}
-            />
+            <div
+                className="flashcard-list__search-form-container">
+              <form
+                  className={classNames({
+                    'flashcard-list__search-form': true,
+                    'flashcard-list__search-form--with-bottom-margin': !!this.props.searchString
+                  })}>
+                <div
+                    className="flashcard-list__search-form__form-group">
+                  <div
+                      className="flashcard-list__search-form__input-group">
+                    <div
+                        className="flashcard-list__search-form__label">
+                      {getI18n().t('flashcardList.search')}
+                    </div>
+                    <input
+                        ref={this.searchStringRef}
+                        type="text"
+                        className="flashcard-list__search-form__input"
+                        value={this.props.searchString}
+                        onChange={this.onSearchStringChange}
+                    />
+                  </div>
+                </div>
+                {this.props.searchString ?
+                  <div>
+                    {getI18n().t('flashcardList.searchingFor', {searchString: this.props.searchString})}
+                    {' '}
+                    (<a
+                        href
+                        onClick={this.onClearSearchClick}>
+                      {getI18n().t('flashcardList.clear')}
+                    </a>)
+                  </div> :
+                  null
+                }
+              </form>
+              <Paginator
+                  itemCount={this.props.flashcards.size}
+                  itemsPerPage={FLASHCARDS_PER_PAGE}
+                  location={this.props.location}
+              />
+            </div>
             {displayedFlashcards.map((flashcard, index) => {
               return (
                 <div

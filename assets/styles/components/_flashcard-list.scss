@@ -1,3 +1,34 @@
+.flashcard-list__search-form-container {
+  @extend .clearfix;
+}
+
+.flashcard-list__search-form {
+  @extend .col-md-4, .pull-right;
+  padding-left: 0;
+  padding-right: 0;
+  margin-top: 20px;
+}
+
+.flashcard-list__search-form--with-bottom-margin {
+  margin-bottom: 20px;
+}
+
+.flashcard-list__search-form__form-group {
+  @extend .form-group;
+}
+
+.flashcard-list__search-form__input-group {
+  @extend .input-group;
+}
+
+.flashcard-list__search-form__label {
+  @extend .input-group-addon;
+}
+
+.flashcard-list__search-form__input {
+  @extend .form-control;
+}
+
 .flashcard-list__date {
   @extend .lead;
   margin: 0;
