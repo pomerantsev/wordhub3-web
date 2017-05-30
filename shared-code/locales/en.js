@@ -30,6 +30,7 @@ const enTranslation = {
     clear: 'clear',
     deleted: 'Flashcard deleted.',
     undo: 'Undo',
+    noSearchResults: 'No flashcards found.',
     noFlashcards: 'You haven’t created any flashcards.',
     create: 'Create'
   },

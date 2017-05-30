@@ -94,26 +94,39 @@ class FlashcardList extends React.Component {
         <Helmet>
           <title>{getI18n().t('flashcardList.title')}</title>
         </Helmet>
-        {displayedFlashcards.size > 0 ?
+        {this.props.recentlyDeletedFlashcard ?
+          <div
+              className="flashcard-list__deleted-alert">
+            <button
+                onClick={this.onDeletionAlertClose}
+                className="flashcard-list__deleted-alert__close">
+              &times;
+            </button>
+            {getI18n().t('flashcardList.deleted')}
+            {' '}
+            <span
+                className="flashcard-list__deleted-alert__undo"
+                onClick={this.undoDeletion}>
+              {getI18n().t('flashcardList.undo')}
+            </span>
+          </div> :
+          null
+        }
+        {this.props.allFlashcards.size === 0 ?
           <div>
-            {this.props.recentlyDeletedFlashcard ?
-              <div
-                  className="flashcard-list__deleted-alert">
-                <button
-                    onClick={this.onDeletionAlertClose}
-                    className="flashcard-list__deleted-alert__close">
-                  &times;
-                </button>
-                {getI18n().t('flashcardList.deleted')}
-                {' '}
-                <span
-                    className="flashcard-list__deleted-alert__undo"
-                    onClick={this.undoDeletion}>
-                  {getI18n().t('flashcardList.undo')}
-                </span>
-              </div> :
-              null
-            }
+            <p
+                className="flashcard-list__no-flashcards-text">
+              {getI18n().t('flashcardList.noFlashcards')}
+            </p>
+            <p
+                className="flashcard-list__no-flashcards-text">
+              <Link
+                  to="/flashcards/new">
+                {getI18n().t('flashcardList.create')}
+              </Link>
+            </p>
+          </div> :
+          <div>
             <div
                 className="flashcard-list__search-form-container">
               <form
@@ -157,53 +170,48 @@ class FlashcardList extends React.Component {
                   location={this.props.location}
               />
             </div>
-            {displayedFlashcards.map((flashcard, index) => {
-              return (
-                <div
-                    key={flashcard.get('uuid')}>
-                  {index === 0 || flashcard.get('date') !== displayedFlashcards.getIn([index - 1, 'date']) ?
-                    <p
-                        className="flashcard-list__date">
-                      {flashcard.get('date')}
-                    </p> :
-                    null
-                  }
-                  <Link
-                      to={`/flashcards/${flashcard.get('uuid')}`}
-                      className={classNames(
-                        'flashcard-list__flashcard',
-                        flashcard.get('learned') ? 'flashcard-list__flashcard--learned' : 'flashcard-list__flashcard--not-learned'
-                      )}>
-                    <div
-                        className="flashcard-list__flashcard__side">{
-                        `${flashcard.get('frontText')}`
-                    }</div>
-                    <div
-                        className="flashcard-list__flashcard__side">{
-                        `${flashcard.get('backText')}`
-                    }</div>
-                  </Link>
-                </div>
-              );
-            })}
+            {displayedFlashcards.size > 0 ?
+              displayedFlashcards.map((flashcard, index) => {
+                return (
+                  <div
+                      key={flashcard.get('uuid')}>
+                    {index === 0 || flashcard.get('date') !== displayedFlashcards.getIn([index - 1, 'date']) ?
+                      <p
+                          className="flashcard-list__date">
+                        {flashcard.get('date')}
+                      </p> :
+                      null
+                    }
+                    <Link
+                        to={`/flashcards/${flashcard.get('uuid')}`}
+                        className={classNames(
+                          'flashcard-list__flashcard',
+                          flashcard.get('learned') ? 'flashcard-list__flashcard--learned' : 'flashcard-list__flashcard--not-learned'
+                        )}>
+                      <div
+                          className="flashcard-list__flashcard__side">{
+                          `${flashcard.get('frontText')}`
+                      }</div>
+                      <div
+                          className="flashcard-list__flashcard__side">{
+                          `${flashcard.get('backText')}`
+                      }</div>
+                    </Link>
+                  </div>
+                );
+              }) :
+              <div>
+                <p
+                    className="flashcard-list__no-flashcards-text">
+                  {getI18n().t('flashcardList.noSearchResults')}
+                </p>
+              </div>
+            }
             <Paginator
                 itemCount={this.props.flashcards.size}
                 itemsPerPage={FLASHCARDS_PER_PAGE}
                 location={this.props.location}
             />
-          </div> :
-          <div>
-            <p
-                className="flashcard-list__no-flashcards-text">
-              {getI18n().t('flashcardList.noFlashcards')}
-            </p>
-            <p
-                className="flashcard-list__no-flashcards-text">
-              <Link
-                  to="/flashcards/new">
-                {getI18n().t('flashcardList.create')}
-              </Link>
-            </p>
           </div>
         }
       </div>
@@ -214,6 +222,7 @@ class FlashcardList extends React.Component {
 
 export const FlashcardListContainer = connect(
   state => ({
+    allFlashcards: getters.getFlashcards(state.get('userData')),
     flashcards: getters.getFlashcardsSorted(state.get('userData')),
     searchString: state.getIn(['userData', 'searchString']),
     recentlyDeletedFlashcard: state.getIn(['userData', 'recentlyDeletedFlashcard'])

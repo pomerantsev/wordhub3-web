@@ -30,6 +30,7 @@ const ruTranslation = {
     clear: 'показать все',
     deleted: 'Карточка удалена.',
     undo: 'Восстановить',
+    noSearchResults: 'Ничего не найдено.',
     noFlashcards: 'У вас пока нет ни одной карточки.',
     create: 'Создать'
   },
