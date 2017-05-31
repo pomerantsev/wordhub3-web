@@ -40,6 +40,9 @@ export function login (email, password) {
     api.login(email, password)
       .then(credentials => {
         dispatch(loginSuccess(email, credentials));
+      }, () => {
+        // Server error
+        dispatch(loginFailure(0));
       });
   };
 }
@@ -47,10 +50,17 @@ export function login (email, password) {
 export function loginSuccess (email, credentials) {
   return function (dispatch) {
     if (credentials.token) {
+      dispatch(() => ({type: 'LOGIN_SUCCESS'}));
       dispatch(storeCredentials(Object.assign({}, credentials, {email})));
       dispatch(startLoggedInState());
+    } else {
+      dispatch(loginFailure(credentials.errorCode));
     }
   };
+}
+
+export function loginFailure (errorCode) {
+  return {type: 'LOGIN_FAILURE', errorCode};
 }
 
 export function startLoggedInState () {

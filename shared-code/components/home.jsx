@@ -36,28 +36,69 @@ class Home extends React.Component {
   render () {
     return (
       <div>
-        <form
-            onSubmit={this.onLoginFormSubmit.bind(this)}>
-          <input
-              type="email"
-              onChange={this.onEmailChange.bind(this)}
-          />
-          <br />
-          <input
-              type="password"
-              onChange={this.onPasswordChange.bind(this)}
-          />
-          <br />
-          <input
-              type="submit"
-              value={getI18n().t('home.login')}
-          />
-        </form>
-        <div>
-          <Link
-              to="/signup">
-            {getI18n().t('home.signUp')}
-          </Link>
+        {typeof this.props.loginError === 'number' ?
+          <div
+              className="home__alert">
+            {getI18n().t(`errors.login.${this.props.loginError}`)}
+          </div> :
+          null
+        }
+        <div
+            className="home__header">
+          <div
+              className="home__main">
+            <div
+                className="home__jumbotron">
+              <h2>
+                {getI18n().t('home.header')}
+              </h2>
+              <p>
+                {getI18n().t('home.subheader')}
+              </p>
+            </div>
+          </div>
+          <div
+              className="home__login-form">
+            <h4
+                className="home__login-form__heading">
+              {getI18n().t('home.formHeader')}
+            </h4>
+            <form
+                onSubmit={this.onLoginFormSubmit.bind(this)}>
+              <div
+                  className="home__login-form__form-group">
+                <label>
+                  {getI18n().t('home.email')}
+                </label>
+                <input
+                    className="home__login-form__control"
+                    type="email"
+                    onChange={this.onEmailChange.bind(this)}
+                />
+              </div>
+              <div
+                  className="home__login-form__form-group">
+                <label>
+                  {getI18n().t('home.password')}
+                </label>
+                <input
+                    className="home__login-form__control"
+                    type="password"
+                    onChange={this.onPasswordChange.bind(this)}
+                />
+              </div>
+              <input
+                  className="home__login-form__submit"
+                  type="submit"
+                  value={getI18n().t('home.signIn')}
+              />
+              <Link
+                  className="home__login-form__sign-up-link"
+                  to="/signup">
+                {getI18n().t('home.signUp')}
+              </Link>
+            </form>
+          </div>
         </div>
       </div>
     );
@@ -66,6 +107,8 @@ class Home extends React.Component {
 }
 
 export const HomeContainer = connect(
-  () => ({}),
+  state => ({
+    loginError: state.getIn(['login', 'error'])
+  }),
   actionCreators
 )(Home);

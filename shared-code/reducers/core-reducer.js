@@ -26,7 +26,11 @@ const INITIAL_USER_DATA = fromJS({
 const INITIAL_STATE = fromJS({
   credentials: INITIAL_CREDENTIALS,
   userData: INITIAL_USER_DATA,
-  online: true
+  online: true,
+  login: {
+    submitting: false,
+    error: null
+  }
 });
 
 export default function reducer (state = INITIAL_STATE, action = {}) {
@@ -49,6 +53,13 @@ function getUpdatedState (state, action) {
       .set('credentials', INITIAL_CREDENTIALS)
       .set('userData', INITIAL_USER_DATA)
       .delete('openLocalDbPromise');
+
+  case 'LOGIN_FAILURE':
+    return state
+      .setIn(['login', 'error'], action.errorCode);
+  case 'LOGIN_SUCCESS':
+    return state
+      .setIn(['login', 'error'], null);
 
   case 'SET_ONLINE': {
     return state

@@ -17,6 +17,10 @@ const enTranslation = {
     sync: {
       0: 'Unfortunately, sychronization with server failed, please try running another repetition or creating another flashcard.'
     },
+    login: {
+      0: 'There’s been a server error. We’ll make our best effort to fix it soon.',
+      1: 'User with such email and password is not registered.'
+    },
     tokenExpired: 'Your token has expired. For your security, we require you to re-login from time to time. Please log out and log back in. Otherwise, your data won’t be synchronized with the server.'
   },
   flashcardInputs: {
@@ -38,7 +42,12 @@ const enTranslation = {
     authorName: 'Pavel Pomerantsev'
   },
   home: {
-    login: 'Login',
+    header: 'A simple way to memorize foreign words',
+    subheader: 'Just like paper flashcards, but a lot more convenient.',
+    formHeader: 'Sign In',
+    email: 'Email:',
+    password: 'Password:',
+    signIn: 'Sign in',
     signUp: 'Sign up'
   },
   menu: {

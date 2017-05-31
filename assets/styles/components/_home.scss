@@ -1,0 +1,47 @@
+.home__alert {
+  @extend .alert, .alert-danger;
+}
+
+.home__header {
+  @extend .row;
+}
+
+.home__main {
+  @extend .col-md-8;
+}
+
+.home__jumbotron {
+  @extend .jumbotron;
+}
+
+.home__login-form {
+  @extend .col-md-4;
+}
+
+.home__login-form__heading {
+  margin-top: 0;
+}
+
+.home__login-form__form-group {
+  @extend .form-group;
+}
+
+.home__login-form__control {
+  @extend .form-control;
+}
+
+.home__login-form__submit {
+  @extend .btn, .btn-default;
+}
+
+.home__login-form__sign-up-link {
+  @extend .btn, .btn-link, .pull-right;
+}
+
+.homepage-info {
+  @extend .row;
+}
+
+.homepage-info-column {
+  @extend .col-md-4;
+}
