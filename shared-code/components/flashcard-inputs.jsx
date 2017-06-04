@@ -1,4 +1,4 @@
-import {getI18n} from '../locales/i18n';
+import i18next from 'i18next';
 
 import React from 'react';
 
@@ -14,7 +14,7 @@ export default class FlashcardInputs extends React.Component {
         <div
             className="flashcard-inputs__form-group">
           <label>
-            {getI18n().t('flashcardInputs.frontText')}
+            {i18next.t('flashcardInputs.frontText')}
           </label>
           <textarea
               ref={this.frontTextRef.bind(this)}
@@ -28,7 +28,7 @@ export default class FlashcardInputs extends React.Component {
         <div
             className="flashcard-inputs__form-group">
           <label>
-            {getI18n().t('flashcardInputs.backText')}
+            {i18next.t('flashcardInputs.backText')}
           </label>
           <textarea
               className="flashcard-inputs__textarea"

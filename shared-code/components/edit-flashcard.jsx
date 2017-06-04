@@ -1,4 +1,4 @@
-import {getI18n} from '../locales/i18n';
+import i18next from 'i18next';
 
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -96,7 +96,7 @@ class EditFlashcard extends React.Component {
     return this.getFlashcard(this.props) ?
       <div>
         <Helmet>
-          <title>{getI18n().t('editFlashcard.title')}</title>
+          <title>{i18next.t('editFlashcard.title')}</title>
         </Helmet>
         <form
             onSubmit={this.onSubmit}>
@@ -109,12 +109,12 @@ class EditFlashcard extends React.Component {
           />
           <button
               className="edit-flashcard__submit">
-            {getI18n().t('editFlashcard.save')}
+            {i18next.t('editFlashcard.save')}
           </button>
           <button
               className="edit-flashcard__delete"
               onClick={this.deleteFlashcard}>
-            {getI18n().t('editFlashcard.delete')}
+            {i18next.t('editFlashcard.delete')}
           </button>
         </form>
       </div> :

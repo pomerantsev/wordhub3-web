@@ -1,4 +1,4 @@
-import {getI18n} from '../locales/i18n';
+import i18next from 'i18next';
 
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -92,7 +92,7 @@ class FlashcardList extends React.Component {
     return (
       <div>
         <Helmet>
-          <title>{getI18n().t('flashcardList.title')}</title>
+          <title>{i18next.t('flashcardList.title')}</title>
         </Helmet>
         {this.props.recentlyDeletedFlashcard ?
           <div
@@ -102,12 +102,12 @@ class FlashcardList extends React.Component {
                 className="flashcard-list__deleted-alert__close">
               &times;
             </button>
-            {getI18n().t('flashcardList.deleted')}
+            {i18next.t('flashcardList.deleted')}
             {' '}
             <span
                 className="flashcard-list__deleted-alert__undo"
                 onClick={this.undoDeletion}>
-              {getI18n().t('flashcardList.undo')}
+              {i18next.t('flashcardList.undo')}
             </span>
           </div> :
           null
@@ -116,13 +116,13 @@ class FlashcardList extends React.Component {
           <div>
             <p
                 className="flashcard-list__no-flashcards-text">
-              {getI18n().t('flashcardList.noFlashcards')}
+              {i18next.t('flashcardList.noFlashcards')}
             </p>
             <p
                 className="flashcard-list__no-flashcards-text">
               <Link
                   to="/flashcards/new">
-                {getI18n().t('flashcardList.create')}
+                {i18next.t('flashcardList.create')}
               </Link>
             </p>
           </div> :
@@ -140,7 +140,7 @@ class FlashcardList extends React.Component {
                       className="flashcard-list__search-form__input-group">
                     <div
                         className="flashcard-list__search-form__label">
-                      {getI18n().t('flashcardList.search')}
+                      {i18next.t('flashcardList.search')}
                     </div>
                     <input
                         ref={this.searchStringRef}
@@ -153,12 +153,12 @@ class FlashcardList extends React.Component {
                 </div>
                 {this.props.searchString ?
                   <div>
-                    {getI18n().t('flashcardList.searchingFor', {searchString: this.props.searchString})}
+                    {i18next.t('flashcardList.searchingFor', {searchString: this.props.searchString})}
                     {' '}
                     (<a
                         href
                         onClick={this.onClearSearchClick}>
-                      {getI18n().t('flashcardList.clear')}
+                      {i18next.t('flashcardList.clear')}
                     </a>)
                   </div> :
                   null
@@ -203,7 +203,7 @@ class FlashcardList extends React.Component {
               <div>
                 <p
                     className="flashcard-list__no-flashcards-text">
-                  {getI18n().t('flashcardList.noSearchResults')}
+                  {i18next.t('flashcardList.noSearchResults')}
                 </p>
               </div>
             }

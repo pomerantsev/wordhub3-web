@@ -1,4 +1,4 @@
-import {getI18n} from '../locales/i18n';
+import i18next from 'i18next';
 
 import React from 'react';
 import {connect} from 'react-redux';
@@ -16,41 +16,41 @@ class Stats extends React.Component {
     return (
       <div>
         <Helmet>
-          <title>{getI18n().t('stats.title')}</title>
+          <title>{i18next.t('stats.title')}</title>
         </Helmet>
-        <h2>{getI18n().t('stats.heading')}</h2>
+        <h2>{i18next.t('stats.heading')}</h2>
         <div
             className="stats__container">
           <div
               className="stats__column">
-            <h3>{getI18n().t('stats.general')}</h3>
+            <h3>{i18next.t('stats.general')}</h3>
             <table
                 className="stats__column__table">
               <tbody>
                 <StatsItem
-                    title={getI18n().t('stats.flashcardsCreated')}
+                    title={i18next.t('stats.flashcardsCreated')}
                     value={this.props.flashcards.size}
                 />
                 <StatsItem
-                    title={getI18n().t('stats.flashcardsLearned')}
+                    title={i18next.t('stats.flashcardsLearned')}
                     value={this.props.learnedFlashcards.size}
                 />
                 <StatsItem
-                    title={getI18n().t('stats.totalRepetitionsPlanned')}
+                    title={i18next.t('stats.totalRepetitionsPlanned')}
                     value={this.props.plannedRepetitions.size}
                 />
                 <StatsItem
-                    title={getI18n().t('stats.upcomingRepetitions')}
+                    title={i18next.t('stats.upcomingRepetitions')}
                     value={this.props.nextDayData ?
                       `${this.props.nextDayData.get('repetitions').size} (${moment(this.props.nextDayData.get('date')).format('D MMM YYYY')})` :
-                      getI18n().t('stats.none')
+                      i18next.t('stats.none')
                     }
                 />
                 <StatsItem
-                    title={getI18n().t('stats.repetitionsPlannedUntil')}
+                    title={i18next.t('stats.repetitionsPlannedUntil')}
                     value={this.props.lastDayData ?
                       `${moment(this.props.lastDayData.get('date')).format('D MMM YYYY')}` :
-                      getI18n().t('stats.none')
+                      i18next.t('stats.none')
                     }
                 />
               </tbody>
@@ -59,24 +59,24 @@ class Stats extends React.Component {
 
           <div
               className="stats__column">
-            <h3>{getI18n().t('stats.last30Days')}</h3>
+            <h3>{i18next.t('stats.last30Days')}</h3>
             <table
                 className="stats__column__table">
               <tbody>
                 <StatsItem
-                    title={getI18n().t('stats.flashcardsCreated')}
+                    title={i18next.t('stats.flashcardsCreated')}
                     value={this.props.monthStats.get('flashcardsCreated').size}
                 />
                 <StatsItem
-                    title={getI18n().t('stats.flashcardsLearned')}
+                    title={i18next.t('stats.flashcardsLearned')}
                     value={this.props.monthStats.get('flashcardsLearnedCount')}
                 />
                 <StatsItem
-                    title={getI18n().t('stats.totalRepetitions')}
+                    title={i18next.t('stats.totalRepetitions')}
                     value={this.props.monthStats.get('allRepetitions').size}
                 />
                 <StatsItem
-                    title={getI18n().t('stats.successfulRepetitions')}
+                    title={i18next.t('stats.successfulRepetitions')}
                     value={`${this.props.monthStats.get('successfulRepetitions').size} (${helpers.getRoundedPercentageString(this.props.monthStats.get('successfulRepetitions').size / this.props.monthStats.get('allRepetitions').size)})`}
                 />
               </tbody>
@@ -85,24 +85,24 @@ class Stats extends React.Component {
 
           <div
               className="stats__column">
-            <h3>{getI18n().t('stats.today')}</h3>
+            <h3>{i18next.t('stats.today')}</h3>
             <table
                 className="stats__column__table">
               <tbody>
                 <StatsItem
-                    title={getI18n().t('stats.flashcardsCreated')}
+                    title={i18next.t('stats.flashcardsCreated')}
                     value={this.props.dayStats.get('flashcardsCreated').size}
                 />
                 <StatsItem
-                    title={getI18n().t('stats.flashcardsLearned')}
+                    title={i18next.t('stats.flashcardsLearned')}
                     value={this.props.dayStats.get('flashcardsLearnedCount')}
                 />
                 <StatsItem
-                    title={getI18n().t('stats.totalRepetitions')}
+                    title={i18next.t('stats.totalRepetitions')}
                     value={this.props.dayStats.get('allRepetitions').size}
                 />
                 <StatsItem
-                    title={getI18n().t('stats.successfulRepetitions')}
+                    title={i18next.t('stats.successfulRepetitions')}
                     value={`${this.props.dayStats.get('successfulRepetitions').size} (${helpers.getRoundedPercentageString(this.props.dayStats.get('successfulRepetitions').size / this.props.dayStats.get('allRepetitions').size)})`}
                 />
               </tbody>

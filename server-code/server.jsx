@@ -1,10 +1,8 @@
 import dotenv from 'dotenv';
 dotenv.config({silent: true});
 
-import '../shared-code/locales/init';
-import i18next from 'i18next';
+import i18n from '../shared-code/locales/i18n';
 import {handle} from 'i18next-express-middleware';
-import {setI18n, getI18n} from '../shared-code/locales/i18n';
 import {I18nextProvider} from 'react-i18next';
 
 import log from 'loglevel';
@@ -81,12 +79,7 @@ app.set('view engine', 'ejs');
 
 app.use(cookieParser());
 
-app.use(handle(i18next));
-
-app.use((req, res, next) => {
-  setI18n(req);
-  next();
-});
+app.use(handle(i18n));
 
 app.use((req, res) => {
   function setCookieOnServer (key, jsValue) {
@@ -101,6 +94,8 @@ app.use((req, res) => {
     }
   }
 
+  i18n.changeLanguage(req.language);
+
   const store = applyMiddleware(asyncMiddleware)(createStore)(reducer);
 
   store.dispatch(actionCreators.storeUserAgent(req.headers['user-agent']));
@@ -111,7 +106,7 @@ app.use((req, res) => {
   } catch (e) {}
 
   match({routes: getRoutes(store, setCookieOnServer), location: req.url}, (error, redirectLocation, renderProps) => {
-    moment.locale(getI18n().language);
+    moment.locale(req.language);
     if (error) {
       // This is probably an error that happens during async route resolution
       return res.status(500).send(error.message);
@@ -124,7 +119,7 @@ app.use((req, res) => {
     async function renderView () {
       const InitialComponent = (
         <I18nextProvider
-            i18n={req.i18n}>
+            i18n={i18n}>
           <Provider store={store}>
             <RouterContext {...renderProps} />
           </Provider>

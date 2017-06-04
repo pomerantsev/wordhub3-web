@@ -1,4 +1,4 @@
-import {getI18n} from '../locales/i18n';
+import i18next from 'i18next';
 
 import React from 'react';
 import {connect} from 'react-redux';
@@ -16,7 +16,7 @@ class App extends React.Component {
         <div
             className="app__container">
           <Helmet>
-            <title>{getI18n().t('appName')}</title>
+            <title>{i18next.t('appName')}</title>
           </Helmet>
           <div
               className="app__content">
@@ -32,7 +32,7 @@ class App extends React.Component {
                 {' '}
                 <a
                     href="https://www.facebook.com/pomerantsevp">
-                  {getI18n().t('footer.authorName')}
+                  {i18next.t('footer.authorName')}
                 </a>
               </p>
               <p

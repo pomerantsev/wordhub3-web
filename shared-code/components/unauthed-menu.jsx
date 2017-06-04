@@ -1,4 +1,4 @@
-import {getI18n} from '../locales/i18n';
+import i18next from 'i18next';
 
 import React from 'react';
 import {Link} from 'react-router';
@@ -14,7 +14,7 @@ export default class AuthedMenu extends React.Component {
           <Link
               to="/"
               className="unauthed-menu__brand">
-            {getI18n().t('appName')}
+            {i18next.t('appName')}
           </Link>
         </div>
       </div>

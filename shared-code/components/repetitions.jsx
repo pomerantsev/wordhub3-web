@@ -1,4 +1,4 @@
-import {getI18n} from '../locales/i18n';
+import i18next from 'i18next';
 
 import log from 'loglevel';
 
@@ -96,7 +96,7 @@ class Repetitions extends React.Component {
     return (
       <div>
         <Helmet>
-          <title>{getI18n().t('repetitions.title')}</title>
+          <title>{i18next.t('repetitions.title')}</title>
         </Helmet>
         <div
             className="repetitions__flashcard"
@@ -110,7 +110,7 @@ class Repetitions extends React.Component {
             <button
                 className="repetitions__button"
                 onClick={this.runRepetition.bind(this, false)}>
-              {getI18n().t('repetitions.dontRemember')}
+              {i18next.t('repetitions.dontRemember')}
             </button>
             <div
                 className="repetitions__responses-hotkey">
@@ -122,7 +122,7 @@ class Repetitions extends React.Component {
             <button
                 className="repetitions__button"
                 onClick={this.runRepetition.bind(this, true)}>
-              {getI18n().t('repetitions.remember')}
+              {i18next.t('repetitions.remember')}
             </button>
             <div
                 className="repetitions__responses-hotkey">
@@ -131,7 +131,7 @@ class Repetitions extends React.Component {
           </div>
           <div
               className="repetitions__responses-hotkey-center">
-            {getI18n().t('repetitions.turnOver')} : Space
+            {i18next.t('repetitions.turnOver')} : Space
           </div>
         </div>
         <div

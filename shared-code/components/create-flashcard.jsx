@@ -1,4 +1,4 @@
-import {getI18n} from '../locales/i18n';
+import i18next from 'i18next';
 
 import React from 'react';
 import {connect} from 'react-redux';
@@ -59,7 +59,7 @@ class CreateFlashcard extends React.Component {
     return (
       <div>
         <Helmet>
-          <title>{getI18n().t('createFlashcard.title')}</title>
+          <title>{i18next.t('createFlashcard.title')}</title>
         </Helmet>
         <form
             onSubmit={this.onSubmit}>
@@ -72,7 +72,7 @@ class CreateFlashcard extends React.Component {
           />
           <button
               className="create-flashcard__submit">
-            {getI18n().t('createFlashcard.create')}
+            {i18next.t('createFlashcard.create')}
           </button>
         </form>
       </div>

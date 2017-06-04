@@ -1,4 +1,4 @@
-import {getI18n} from '../locales/i18n';
+import i18next from 'i18next';
 
 import React from 'react';
 import {Helmet} from 'react-helmet';
@@ -7,9 +7,9 @@ export default function NotFound () {
   return (
     <div>
       <Helmet>
-        <title>{getI18n().t('notFound.title')}</title>
+        <title>{i18next.t('notFound.title')}</title>
       </Helmet>
-      {getI18n().t('notFound.notFound')}
+      {i18next.t('notFound.notFound')}
     </div>
   );
 }

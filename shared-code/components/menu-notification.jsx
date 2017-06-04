@@ -1,4 +1,4 @@
-import {getI18n} from '../locales/i18n';
+import i18next from 'i18next';
 
 import React from 'react';
 import classNames from 'classnames';
@@ -24,7 +24,7 @@ export default class MenuNotification extends React.Component {
           <Tooltip
               className="menu-notification__tooltip-toggle"
               text={this.props.hint}>
-            {getI18n().t('notifications.whatsThis')}
+            {i18next.t('notifications.whatsThis')}
           </Tooltip>
           )
         </div>

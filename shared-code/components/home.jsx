@@ -1,4 +1,4 @@
-import {getI18n} from '../locales/i18n';
+import i18next from 'i18next';
 import {translate, Interpolate} from 'react-i18next';
 
 import React from 'react';
@@ -41,7 +41,7 @@ class Home extends React.Component {
         {typeof this.props.loginError === 'number' ?
           <div
               className="home__alert">
-            {getI18n().t(`errors.login.${this.props.loginError}`)}
+            {i18next.t(`errors.login.${this.props.loginError}`)}
           </div> :
           null
         }
@@ -52,10 +52,10 @@ class Home extends React.Component {
             <div
                 className="home__jumbotron">
               <h2>
-                {getI18n().t('home.header')}
+                {i18next.t('home.header')}
               </h2>
               <p>
-                {getI18n().t('home.subheader')}
+                {i18next.t('home.subheader')}
               </p>
             </div>
           </div>
@@ -63,14 +63,14 @@ class Home extends React.Component {
               className="home__login-form">
             <h4
                 className="home__login-form__heading">
-              {getI18n().t('home.formHeader')}
+              {i18next.t('home.formHeader')}
             </h4>
             <form
                 onSubmit={this.onLoginFormSubmit.bind(this)}>
               <div
                   className="home__login-form__form-group">
                 <label>
-                  {getI18n().t('home.email')}
+                  {i18next.t('home.email')}
                 </label>
                 <input
                     className="home__login-form__control"
@@ -81,7 +81,7 @@ class Home extends React.Component {
               <div
                   className="home__login-form__form-group">
                 <label>
-                  {getI18n().t('home.password')}
+                  {i18next.t('home.password')}
                 </label>
                 <input
                     className="home__login-form__control"
@@ -92,12 +92,12 @@ class Home extends React.Component {
               <input
                   className="home__login-form__submit"
                   type="submit"
-                  value={getI18n().t('home.signIn')}
+                  value={i18next.t('home.signIn')}
               />
               <Link
                   className="home__login-form__sign-up-link"
                   to="/signup">
-                {getI18n().t('home.signUp')}
+                {i18next.t('home.signUp')}
               </Link>
             </form>
           </div>
@@ -108,30 +108,30 @@ class Home extends React.Component {
               className="home__info__column">
             <h4
                 className="home__info__heading">
-              {getI18n().t('home.who.header')}
+              {i18next.t('home.who.header')}
             </h4>
             <ul>
               {[0, 1, 2].map(index => (
                 <li
                     key={index}>
-                  {getI18n().t(`home.who.options.${index}`)}
+                  {i18next.t(`home.who.options.${index}`)}
                 </li>
               ))}
             </ul>
             <p>
-              {getI18n().t('home.who.memorize')}
+              {i18next.t('home.who.memorize')}
             </p>
           </div>
           <div
               className="home__info__column">
             <h4
                 className="home__info__heading">
-              {getI18n().t('home.what.header')}
+              {i18next.t('home.what.header')}
             </h4>
             {[0, 1, 2, 3].map(index => (
               <p
                   key={index}>
-                {getI18n().t(`home.what.paragraphs.${index}`)}
+                {i18next.t(`home.what.paragraphs.${index}`)}
               </p>
             ))}
           </div>
@@ -139,16 +139,16 @@ class Home extends React.Component {
               className="home__info__column">
             <h4
                 className="home__info__heading">
-              {getI18n().t('home.why.header')}
+              {i18next.t('home.why.header')}
             </h4>
             <p>
-              {getI18n().t('home.why.sameWithPaper')}
+              {i18next.t('home.why.sameWithPaper')}
             </p>
             <ul>
               {[0, 1, 2, 3].map(index => (
                 <li
                     key={index}>
-                  {getI18n().t(`home.why.advantages.${index}`)}
+                  {i18next.t(`home.why.advantages.${index}`)}
                 </li>
               ))}
             </ul>

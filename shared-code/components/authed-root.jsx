@@ -1,4 +1,4 @@
-import {getI18n} from '../locales/i18n';
+import i18next from 'i18next';
 
 import React from 'react';
 import {connect} from 'react-redux';
@@ -21,14 +21,14 @@ class AuthedRoot extends React.Component {
             {this.props.tokenExpired ?
               <div
                   className="authed-root__alert">
-                {getI18n().t('errors.tokenExpired')}
+                {i18next.t('errors.tokenExpired')}
               </div> :
               null
             }
             {typeof this.props.syncError === 'number' ?
               <div
                   className="authed-root__alert">
-                {getI18n().t(`errors.sync.${this.props.syncError}`)}
+                {i18next.t(`errors.sync.${this.props.syncError}`)}
               </div> :
               null
             }

@@ -1,4 +1,4 @@
-import {getI18n} from '../locales/i18n';
+import i18next from 'i18next';
 
 import log from 'loglevel';
 
@@ -105,7 +105,7 @@ export function signup (email, password, name) {
       email,
       password,
       name,
-      language: getI18n().language
+      language: i18next.language
     })
       .then(credentials => {
         dispatch(loginSuccess(email, credentials));

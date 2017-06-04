@@ -1,12 +1,10 @@
 import 'babel-polyfill';
 import 'whatwg-fetch';
 
-import '../shared-code/locales/init';
-import i18next from 'i18next';
-import {getI18n} from '../shared-code/locales/i18n';
+import i18n from '../shared-code/locales/i18n';
 import {I18nextProvider} from 'react-i18next';
 import moment from 'moment';
-moment.locale(getI18n().language);
+moment.locale(i18n.language);
 
 import log from 'loglevel';
 if (process.env.NODE_ENV === 'development' || /(\?|&)debug/.test(window.location.search)) {
@@ -73,7 +71,7 @@ store.subscribe(() => {
 
 ReactDOM.render(
   <I18nextProvider
-      i18n={i18next}>
+      i18n={i18n}>
     <Provider
         store={store}>
       <Router
