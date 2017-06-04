@@ -36,3 +36,7 @@
   line-height: 20px;
   padding: 10px 15px;
 }
+
+@mixin heading {
+  margin-top: 40px;
+}

@@ -100,6 +100,64 @@ class Home extends React.Component {
             </form>
           </div>
         </div>
+        <div
+            className="home__info">
+          <div
+              className="home__info__column">
+            <h4
+                className="home__info__heading">
+              {getI18n().t('home.who.header')}
+            </h4>
+            <ul>
+              {[0, 1, 2].map(index => (
+                <li
+                    key={index}>
+                  {getI18n().t(`home.who.options.${index}`)}
+                </li>
+              ))}
+            </ul>
+            <p>
+              {getI18n().t('home.who.memorize')}
+            </p>
+          </div>
+          <div
+              className="home__info__column">
+            <h4
+                className="home__info__heading">
+              {getI18n().t('home.what.header')}
+            </h4>
+            {[0, 1, 2, 3].map(index => (
+              <p
+                  key={index}>
+                {getI18n().t(`home.what.paragraphs.${index}`)}
+              </p>
+            ))}
+          </div>
+          <div
+              className="home__info__column">
+            <h4
+                className="home__info__heading">
+              {getI18n().t('home.why.header')}
+            </h4>
+            <p>
+              {getI18n().t('home.why.sameWithPaper')}
+            </p>
+            <ul>
+              {[0, 1, 2, 3].map(index => (
+                <li
+                    key={index}>
+                  {getI18n().t(`home.why.advantages.${index}`)}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+        {/*<h4>
+          {getI18n().t('home.learnMoreOrSignUp', {
+            learnMore: (<Link to="/about">Hello</Link>),
+            signUp: (<Link to="/signup">World</Link>)
+          })}
+        </h4>*/}
       </div>
     );
   }

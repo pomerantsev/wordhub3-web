@@ -38,10 +38,14 @@
   @extend .btn, .btn-link, .pull-right;
 }
 
-.homepage-info {
+.home__info {
   @extend .row;
 }
 
-.homepage-info-column {
+.home__info__column {
   @extend .col-md-4;
+}
+
+.home__info__heading {
+  @include heading;
 }
