@@ -76,7 +76,10 @@ const enTranslation = {
         2: 'There’s less mental strain. You needn’t invent a system for your repetitions: the harder it is for you to memorize the word, the more often you have to repeat it. Wordhub takes care of the algorithm.',
         3: 'Wordhub is simpler than most other online learning systems — it just lets you add words to your vocabulary and repeat them at regular intervals. You might actually not need anything else than that.'
       }
-    }
+    },
+    learnMoreOrSignUp: 'You can {{learnMore}} or {{signUp}}.',
+    infoLearnMore: 'learn more',
+    infoSignUp: 'sign up'
   },
   menu: {
     allFlashcards: 'All Flashcards',

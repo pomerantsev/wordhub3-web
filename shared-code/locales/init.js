@@ -20,6 +20,9 @@ i18next
     }))
   .init({
     fallbackLng: 'en',
+    interpolation: {
+      escapeValue: false
+    },
     resources: {
       en: {
         translation: enTranslation

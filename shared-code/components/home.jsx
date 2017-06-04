@@ -1,4 +1,5 @@
 import {getI18n} from '../locales/i18n';
+import {translate, Interpolate} from 'react-i18next';
 
 import React from 'react';
 import {connect} from 'react-redux';
@@ -34,6 +35,7 @@ class Home extends React.Component {
   }
 
   render () {
+    const {t} = this.props;
     return (
       <div>
         {typeof this.props.loginError === 'number' ?
@@ -152,21 +154,35 @@ class Home extends React.Component {
             </ul>
           </div>
         </div>
-        {/*<h4>
-          {getI18n().t('home.learnMoreOrSignUp', {
-            learnMore: (<Link to="/about">Hello</Link>),
-            signUp: (<Link to="/signup">World</Link>)
-          })}
-        </h4>*/}
+        <h4
+            className="home__info__heading">
+          <Interpolate
+              i18nKey="home.learnMoreOrSignUp"
+              learnMore={
+                <Link
+                    to="/about">
+                  {t('home.infoLearnMore')}
+                </Link>
+              }
+              signUp={
+                <Link
+                    to="/signup">
+                  {t('home.infoSignUp')}
+                </Link>
+              }
+          />
+        </h4>
       </div>
     );
   }
 
 }
 
-export const HomeContainer = connect(
+const StatefulContainer = connect(
   state => ({
     loginError: state.getIn(['login', 'error'])
   }),
   actionCreators
 )(Home);
+
+export default translate()(StatefulContainer);

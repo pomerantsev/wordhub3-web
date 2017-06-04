@@ -5,6 +5,7 @@ import '../shared-code/locales/init';
 import i18next from 'i18next';
 import {handle} from 'i18next-express-middleware';
 import {setI18n, getI18n} from '../shared-code/locales/i18n';
+import {I18nextProvider} from 'react-i18next';
 
 import log from 'loglevel';
 log.enableAll();
@@ -122,9 +123,12 @@ app.use((req, res) => {
 
     async function renderView () {
       const InitialComponent = (
-        <Provider store={store}>
-          <RouterContext {...renderProps} />
-        </Provider>
+        <I18nextProvider
+            i18n={req.i18n}>
+          <Provider store={store}>
+            <RouterContext {...renderProps} />
+          </Provider>
+        </I18nextProvider>
       );
 
       const componentHTML = renderToString(InitialComponent);

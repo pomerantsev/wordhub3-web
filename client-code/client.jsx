@@ -2,7 +2,9 @@ import 'babel-polyfill';
 import 'whatwg-fetch';
 
 import '../shared-code/locales/init';
+import i18next from 'i18next';
 import {getI18n} from '../shared-code/locales/i18n';
+import {I18nextProvider} from 'react-i18next';
 import moment from 'moment';
 moment.locale(getI18n().language);
 
@@ -70,11 +72,14 @@ store.subscribe(() => {
 });
 
 ReactDOM.render(
-  <Provider
-      store={store}>
-    <Router
-        history={history}
-        routes={getRoutes(store)} />
-  </Provider>,
+  <I18nextProvider
+      i18n={i18next}>
+    <Provider
+        store={store}>
+      <Router
+          history={history}
+          routes={getRoutes(store)} />
+    </Provider>
+  </I18nextProvider>,
   document.getElementById('app')
 );
