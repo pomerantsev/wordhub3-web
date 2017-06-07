@@ -37,6 +37,7 @@ export function storeCredentials (credentials, setCookieOnServer) {
 
 export function login (email, password) {
   return function (dispatch) {
+    dispatch(() => ({type: 'LOGIN_REQUEST'}));
     api.login(email, password)
       .then(credentials => {
         dispatch(loginSuccess(email, credentials));

@@ -92,6 +92,7 @@ class Home extends React.Component {
               <input
                   className="home__login-form__submit"
                   type="submit"
+                  disabled={this.props.loginRequesting}
                   value={i18next.t('home.signIn')}
               />
               <Link
@@ -180,6 +181,7 @@ class Home extends React.Component {
 
 const StatefulContainer = connect(
   state => ({
+    loginRequesting: state.getIn(['login', 'requesting']),
     loginError: state.getIn(['login', 'error'])
   }),
   actionCreators

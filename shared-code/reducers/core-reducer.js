@@ -54,11 +54,16 @@ function getUpdatedState (state, action) {
       .set('userData', INITIAL_USER_DATA)
       .delete('openLocalDbPromise');
 
+  case 'LOGIN_REQUEST':
+    return state
+      .setIn(['login', 'requesting'], true);
   case 'LOGIN_FAILURE':
     return state
+      .setIn(['login', 'requesting'], false)
       .setIn(['login', 'error'], action.errorCode);
   case 'LOGIN_SUCCESS':
     return state
+      .setIn(['login', 'requesting'], false)
       .setIn(['login', 'error'], null);
 
   case 'SET_ONLINE': {
