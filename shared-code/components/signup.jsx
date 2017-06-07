@@ -49,6 +49,13 @@ class Signup extends React.Component {
         <h2>
           {t('signup.heading')}
         </h2>
+        {typeof this.props.signupError === 'number' ?
+          <div
+              className="home__alert">
+            {t(`errors.signup.${this.props.signupError}`)}
+          </div> :
+          null
+        }
         <form
             onSubmit={this.onSignupFormSubmit.bind(this)}>
           <div
@@ -111,6 +118,7 @@ class Signup extends React.Component {
           <input
               type="submit"
               className="signup__submit"
+              disabled={this.props.signupRequesting}
               value={t('signup.signUp')}
           />
         </form>
@@ -121,7 +129,10 @@ class Signup extends React.Component {
 }
 
 const StatefulContainer = connect(
-  () => ({}),
+  state => ({
+    signupRequesting: state.get('requestingLoginOrSignup'),
+    signupError: state.getIn(['signup', 'error'])
+  }),
   actionCreators
 )(Signup);
 

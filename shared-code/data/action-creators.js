@@ -102,6 +102,7 @@ export function logout (setCookieOnServer) {
 
 export function signup (email, password, name) {
   return function (dispatch) {
+    dispatch(() => ({type: 'SIGNUP_REQUEST'}));
     api.signup({
       email,
       password,
@@ -109,9 +110,19 @@ export function signup (email, password, name) {
       language: i18next.language
     })
       .then(credentials => {
-        dispatch(loginSuccess(email, credentials));
+        if (credentials.token) {
+          dispatch(loginSuccess(email, credentials));
+        } else {
+          dispatch(signupFailure(credentials.errorCode));
+        }
+      }, () => {
+        dispatch(signupFailure(0));
       });
   };
+}
+
+export function signupFailure (errorCode) {
+  return {type: 'SIGNUP_FAILURE', errorCode};
 }
 
 export function resetLoggedInState () {

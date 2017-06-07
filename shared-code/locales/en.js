@@ -1,3 +1,5 @@
+import * as constants from '../data/constants';
+
 const appName = 'Wordhub';
 
 const getTitle = title => `${title} — ${appName}`;
@@ -19,7 +21,17 @@ const enTranslation = {
     },
     login: {
       0: 'There’s been a server error. We’ll make our best effort to fix it soon.',
-      1: 'User with such email and password is not registered.'
+      [constants.LOGIN_INCORRECT_DATA]: 'User with such email and password is not registered.'
+    },
+    signup: {
+      0: 'There’s been a server error. We’ll make our best effort to fix it soon.',
+      [constants.SIGNUP_EMAIL_INVALID]: 'Email is invalid.',
+      [constants.SIGNUP_EMAIL_TOO_LONG]: 'Email is too long.',
+      [constants.SIGNUP_PASSWORD_TOO_SHORT]: 'Password is too short.',
+      [constants.SIGNUP_PASSWORD_TOO_LONG]: 'Password is too long.',
+      [constants.SIGNUP_PASSWORD_INVALID]: 'Password is invalid. Please check that it contains only alphanumeric characters.',
+      [constants.SIGNUP_NAME_TOO_LONG]: 'Name is too long.',
+      [constants.SIGNUP_EXISTING_USER]: 'A user with the given email is already registered.'
     },
     tokenExpired: 'Your token has expired. For your security, we require you to re-login from time to time. Please log out and log back in. Otherwise, your data won’t be synchronized with the server.'
   },

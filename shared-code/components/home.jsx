@@ -181,7 +181,7 @@ class Home extends React.Component {
 
 const StatefulContainer = connect(
   state => ({
-    loginRequesting: state.getIn(['login', 'requesting']),
+    loginRequesting: state.get('requestingLoginOrSignup'),
     loginError: state.getIn(['login', 'error'])
   }),
   actionCreators

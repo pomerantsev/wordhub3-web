@@ -1,3 +1,5 @@
+import * as constants from '../data/constants';
+
 const appName = 'Вордхаб';
 
 const getTitle = title => `${title} — ${appName}`;
@@ -19,7 +21,17 @@ const ruTranslation = {
     },
     login: {
       0: 'Ошибка на сервере. Постараемся исправить её как можно скорее.',
-      1: 'Неверный логин / пароль.'
+      [constants.LOGIN_INCORRECT_DATA]: 'Неверный логин / пароль.'
+    },
+    signup: {
+      0: 'Ошибка на сервере. Постараемся исправить её как можно скорее.',
+      [constants.SIGNUP_EMAIL_INVALID]: 'Электронная почта неверного формата.',
+      [constants.SIGNUP_EMAIL_TOO_LONG]: 'Электронная почта слишком длинная.',
+      [constants.SIGNUP_PASSWORD_TOO_SHORT]: 'Пароль слишком короткий.',
+      [constants.SIGNUP_PASSWORD_TOO_LONG]: 'Пароль слишком длинный.',
+      [constants.SIGNUP_PASSWORD_INVALID]: 'Пароль не соответствует формату. Проверьте, чтобы в нём были только латинские буквы и цифры.',
+      [constants.SIGNUP_NAME_TOO_LONG]: 'Имя слишком длинное.',
+      [constants.SIGNUP_EXISTING_USER]: 'Пользователь с такой электронной почтой уже зарегистрирован.'
     },
     tokenExpired: 'Ваша сессия истекла. Для безопасности аккаунта мы ограничиваем сессии по времени. Пожалуйста, выйдите и войдите снова. Иначе данные не будут синхронизироваться с сервером.'
   },

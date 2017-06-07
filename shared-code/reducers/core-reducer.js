@@ -27,8 +27,11 @@ const INITIAL_STATE = fromJS({
   credentials: INITIAL_CREDENTIALS,
   userData: INITIAL_USER_DATA,
   online: true,
+  requestingLoginOrSignup: null,
   login: {
-    submitting: false,
+    error: null
+  },
+  signup: {
     error: null
   }
 });
@@ -56,16 +59,23 @@ function getUpdatedState (state, action) {
 
   case 'LOGIN_REQUEST':
     return state
-      .setIn(['login', 'requesting'], true);
+      .set('requestingLoginOrSignup', true);
   case 'LOGIN_FAILURE':
     return state
-      .setIn(['login', 'requesting'], false)
+      .set('requestingLoginOrSignup', false)
       .setIn(['login', 'error'], action.errorCode);
   case 'LOGIN_SUCCESS':
     return state
-      .setIn(['login', 'requesting'], false)
-      .setIn(['login', 'error'], null);
-
+      .set('requestingLoginOrSignup', false)
+      .setIn(['login', 'error'], null)
+      .setIn(['signup', 'error'], null);
+  case 'SIGNUP_REQUEST':
+    return state
+      .set('requestingLoginOrSignup', true);
+  case 'SIGNUP_FAILURE':
+    return state
+      .set('requestingLoginOrSignup', false)
+      .setIn(['signup', 'error'], action.errorCode);
   case 'SET_ONLINE': {
     return state
       .set('online', action.online);
