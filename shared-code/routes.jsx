@@ -7,7 +7,7 @@ import * as constants from './data/constants';
 import {AppContainer} from './components/app.jsx';
 import UnauthedRoot from './components/unauthed-root.jsx';
 import Home from './components/home.jsx';
-import {SignupContainer} from './components/signup.jsx';
+import Signup from './components/signup.jsx';
 import {AuthedRootContainer} from './components/authed-root.jsx';
 import {CreateFlashcardContainer} from './components/create-flashcard.jsx';
 import {EditFlashcardContainer} from './components/edit-flashcard.jsx';
@@ -44,7 +44,7 @@ function getRoutes (store) {
 
         <Route
             path="/signup"
-            component={SignupContainer}
+            component={Signup}
         />
 
       </Route>

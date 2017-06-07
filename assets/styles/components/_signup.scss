@@ -1,0 +1,19 @@
+.signup__form-group {
+  @extend .form-group;
+}
+
+.signup__danger-text {
+  @extend .text-danger;
+}
+
+.signup__form-control {
+  @extend .form-control;
+}
+
+.signup__help-block {
+  @extend .help-block;
+}
+
+.signup__submit {
+  @extend .btn, .btn-primary, .btn-block;
+}

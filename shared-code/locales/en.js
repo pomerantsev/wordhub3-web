@@ -108,6 +108,13 @@ const enTranslation = {
   },
   signup: {
     title: getTitle('Signup'),
+    heading: 'Signup',
+    email: 'Email:',
+    notSharingEmail: 'We promise not to share it with anyone, ever.',
+    password: 'Password:',
+    anyCombination: 'Any digit and letter combination no shorter than six characters works. Password is case-sensitive.',
+    name: 'Name:',
+    howToAddress: 'How do we call you?',
     signUp: 'Sign up'
   },
   stats: {

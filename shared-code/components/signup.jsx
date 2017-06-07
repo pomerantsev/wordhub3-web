@@ -1,6 +1,5 @@
-import i18next from 'i18next';
-
 import React from 'react';
+import {translate} from 'react-i18next';
 import {connect} from 'react-redux';
 import {Helmet} from 'react-helmet';
 
@@ -41,31 +40,78 @@ class Signup extends React.Component {
   }
 
   render () {
+    const {t} = this.props;
     return (
       <div>
         <Helmet>
-          <title>{i18next.t('signup.title')}</title>
+          <title>{t('signup.title')}</title>
         </Helmet>
+        <h2>
+          {t('signup.heading')}
+        </h2>
         <form
             onSubmit={this.onSignupFormSubmit.bind(this)}>
-          <input
-              type="email"
-              onChange={this.onEmailChange.bind(this)}
-          />
-          <br />
-          <input
-              type="password"
-              onChange={this.onPasswordChange.bind(this)}
-          />
-          <br />
-          <input
-              type="text"
-              onChange={this.onNameChange.bind(this)}
-          />
-          <br />
+          <div
+              className="signup__form-group">
+            <label>
+              {t('signup.email')}
+              {' '}
+              <span
+                  className="signup__danger-text">
+                *
+              </span>
+            </label>
+            <input
+                type="email"
+                className="signup__form-control"
+                required
+                onChange={this.onEmailChange.bind(this)}
+            />
+            <p
+                className="signup__help-block">
+              {t('signup.notSharingEmail')}
+            </p>
+          </div>
+          <div
+              className="signup__form-group">
+            <label>
+              {t('signup.password')}
+              {' '}
+              <span
+                  className="signup__danger-text">
+                *
+              </span>
+            </label>
+            <input
+                type="password"
+                className="signup__form-control"
+                required
+                onChange={this.onPasswordChange.bind(this)}
+            />
+            <p
+                className="signup__help-block">
+              {t('signup.anyCombination')}
+            </p>
+          </div>
+          <div
+              className="signup__form-group">
+            <label>
+              {t('signup.name')}
+            </label>
+            <input
+                type="text"
+                className="signup__form-control"
+                onChange={this.onNameChange.bind(this)}
+            />
+            <p
+                className="signup__help-block">
+              {t('signup.howToAddress')}
+            </p>
+          </div>
           <input
               type="submit"
-              value={i18next.t('signup.signUp')}
+              className="signup__submit"
+              value={t('signup.signUp')}
           />
         </form>
       </div>
@@ -74,7 +120,9 @@ class Signup extends React.Component {
 
 }
 
-export const SignupContainer = connect(
+const StatefulContainer = connect(
   () => ({}),
   actionCreators
 )(Signup);
+
+export default translate()(StatefulContainer);
