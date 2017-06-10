@@ -20,11 +20,13 @@ const enTranslation = {
       0: 'Unfortunately, sychronization with server failed, please try running another repetition or creating another flashcard.'
     },
     login: {
-      0: 'There’s been a server error. We’ll make our best effort to fix it soon.',
+      [constants.LOGIN_NETWORK_ERROR]: 'There’s been a network error. You’re probably offline.',
+      [constants.LOGIN_SERVER_ERROR]: 'There’s been a server error. We’ll make our best effort to fix it soon.',
       [constants.LOGIN_INCORRECT_DATA]: 'User with such email and password is not registered.'
     },
     signup: {
-      0: 'There’s been a server error. We’ll make our best effort to fix it soon.',
+      [constants.SIGNUP_NETWORK_ERROR]: 'There’s been a network error. You’re probably offline.',
+      [constants.SIGNUP_SERVER_ERROR]: 'There’s been a server error. We’ll make our best effort to fix it soon.',
       [constants.SIGNUP_EMAIL_INVALID]: 'Email is invalid.',
       [constants.SIGNUP_EMAIL_TOO_LONG]: 'Email is too long.',
       [constants.SIGNUP_PASSWORD_TOO_SHORT]: 'Password is too short.',

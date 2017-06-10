@@ -39,11 +39,16 @@ export function login (email, password) {
   return function (dispatch) {
     dispatch(() => ({type: 'LOGIN_REQUEST'}));
     api.login(email, password)
-      .then(credentials => {
-        dispatch(loginSuccess(email, credentials));
+      .then(res => {
+        if (res.status < 500) {
+          return res.json().then(credentials => {
+            dispatch(loginSuccess(email, credentials));
+          });
+        } else {
+          dispatch(loginFailure(constants.LOGIN_SERVER_ERROR));
+        }
       }, () => {
-        // Server error
-        dispatch(loginFailure(0));
+        dispatch(loginFailure(constants.LOGIN_NETWORK_ERROR));
       });
   };
 }
@@ -109,14 +114,20 @@ export function signup (email, password, name) {
       name,
       language: i18next.language
     })
-      .then(credentials => {
-        if (credentials.token) {
-          dispatch(loginSuccess(email, credentials));
+      .then(res => {
+        if (res.status < 500) {
+          return res.json().then(credentials => {
+            if (credentials.token) {
+              dispatch(loginSuccess(email, credentials));
+            } else {
+              dispatch(signupFailure(credentials.errorCode));
+            }
+          });
         } else {
-          dispatch(signupFailure(credentials.errorCode));
+          dispatch(signupFailure(constants.SIGNUP_SERVER_ERROR));
         }
       }, () => {
-        dispatch(signupFailure(0));
+        dispatch(signupFailure(constants.SIGNUP_NETWORK_ERROR));
       });
   };
 }
