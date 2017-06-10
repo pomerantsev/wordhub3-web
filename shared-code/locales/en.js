@@ -126,7 +126,7 @@ const enTranslation = {
     password: 'Password:',
     anyCombination: 'Any digit and letter combination no shorter than six characters works. Password is case-sensitive.',
     name: 'Name:',
-    howToAddress: 'How do we call you?',
+    howToAddress: 'What do we call you?',
     signUp: 'Sign up'
   },
   stats: {

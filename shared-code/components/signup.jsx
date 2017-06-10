@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 import {Helmet} from 'react-helmet';
 
 import * as actionCreators from '../data/action-creators';
+import * as constants from '../data/constants';
 
 class Signup extends React.Component {
 
@@ -72,6 +73,7 @@ class Signup extends React.Component {
                 type="email"
                 className="signup__form-control"
                 required
+                maxLength={constants.MAX_EMAIL_LENGTH}
                 onChange={this.onEmailChange.bind(this)}
             />
             <p
@@ -93,6 +95,9 @@ class Signup extends React.Component {
                 type="password"
                 className="signup__form-control"
                 required
+                minLength={constants.MIN_PASSWORD_LENGTH}
+                maxLength={constants.MAX_PASSWORD_LENGTH}
+                pattern={constants.PASSWORD_REGEX.toString().slice(1, -1)}
                 onChange={this.onPasswordChange.bind(this)}
             />
             <p
@@ -108,6 +113,7 @@ class Signup extends React.Component {
             <input
                 type="text"
                 className="signup__form-control"
+                maxLength={constants.MAX_NAME_LENGTH}
                 onChange={this.onNameChange.bind(this)}
             />
             <p
