@@ -6,8 +6,6 @@ import CircularProgress from 'material-ui/CircularProgress';
 
 import * as actionCreators from '../data/action-creators';
 
-import {AuthedMenuContainer} from './authed-menu.jsx';
-
 class AuthedRoot extends React.Component {
 
   render () {
@@ -16,8 +14,6 @@ class AuthedRoot extends React.Component {
         {this.props.initialLoadingCompleted ?
           <div
               className="authed-root__container--loaded">
-            <AuthedMenuContainer
-            />
             {this.props.tokenExpired ?
               <div
                   className="authed-root__alert">

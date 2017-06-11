@@ -102,13 +102,16 @@ class AuthedMenu extends React.Component {
             <div>
               {i18next.t('menu.create')}
             </div>
-            <div
-                className="authed-menu__primary-link__small">
-              {i18next.t('menu.completedOfTotal', {
-                completed: todayFlashcardsCount,
-                total: dailyLimit
-              })}
-            </div>
+            {this.props.initialLoadingCompleted ?
+              <div
+                  className="authed-menu__primary-link__small">
+                {i18next.t('menu.completedOfTotal', {
+                  completed: todayFlashcardsCount,
+                  total: dailyLimit
+                })}
+              </div> :
+              null
+            }
           </Link>
           <Link
               className={classNames({
@@ -121,13 +124,16 @@ class AuthedMenu extends React.Component {
             <div>
               {i18next.t('menu.repeat')}
             </div>
-            <div
-                className="authed-menu__primary-link__small">
-              {i18next.t('menu.completedOfTotal', {
-                completed: repetitionCounts.completed,
-                total: repetitionCounts.total
-              })}
-            </div>
+            {this.props.initialLoadingCompleted ?
+              <div
+                  className="authed-menu__primary-link__small">
+                {i18next.t('menu.completedOfTotal', {
+                  completed: repetitionCounts.completed,
+                  total: repetitionCounts.total
+                })}
+              </div> :
+              null
+            }
           </Link>
           {this.props.online ?
             null :
@@ -179,6 +185,14 @@ class AuthedMenu extends React.Component {
                 <Link
                     className="authed-menu__secondary-menu-item"
                     activeClassName="authed-menu__menu-item--active"
+                    to="/intro">
+                  {i18next.t('menu.about')}
+                </Link>
+              </li>
+              <li>
+                <Link
+                    className="authed-menu__secondary-menu-item"
+                    activeClassName="authed-menu__menu-item--active"
                     to="/stats">
                   {i18next.t('menu.stats')}
                 </Link>
@@ -202,6 +216,14 @@ class AuthedMenu extends React.Component {
                     activeClassName="authed-menu__menu-item--active"
                     to="/flashcards">
                   {i18next.t('menu.allFlashcards')}
+                </Link>
+              </li>
+              <li>
+                <Link
+                    className="authed-menu__secondary-menu-item"
+                    activeClassName="authed-menu__menu-item--active"
+                    to="/intro">
+                  {i18next.t('menu.about')}
                 </Link>
               </li>
               <li
@@ -250,6 +272,7 @@ class AuthedMenu extends React.Component {
 
 export const AuthedMenuContainer = connect(
   state => ({
+    initialLoadingCompleted: state.getIn(['userData', 'initialLoadingCompleted']),
     todayFlashcards: getters.getTodayFlashcards(state.get('userData')),
     todayRepetitions: getters.getRepetitionsForToday(state.get('userData')),
     repetitions: getters.getRepetitions(state.get('userData')),

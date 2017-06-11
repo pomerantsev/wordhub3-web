@@ -7,6 +7,10 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import {Helmet} from 'react-helmet';
 
 import * as helpers from '../utils/helpers';
+import * as authUtils from '../utils/auth-utils';
+
+import {AuthedMenuContainer} from './authed-menu.jsx';
+import UnauthedMenu from './unauthed-menu.jsx';
 
 class App extends React.Component {
 
@@ -18,9 +22,18 @@ class App extends React.Component {
           <Helmet>
             <title>{i18next.t('appName')}</title>
           </Helmet>
-          <div
-              className="app__content">
-            {this.props.children}
+        {/* This extra div here is necessary to make the child div not affected by flex layout rules */}
+          <div>
+            <div
+                className="app__content">
+              {this.props.loggedIn ?
+                <AuthedMenuContainer
+                /> :
+                <UnauthedMenu
+                />
+              }
+              {this.props.children}
+            </div>
           </div>
           <div
               className="app__footer">
@@ -52,7 +65,8 @@ class App extends React.Component {
 
 export const AppContainer = connect(
   state => ({
-    userAgent: state.get('userAgent')
+    userAgent: state.get('userAgent'),
+    loggedIn: authUtils.isLoggedIn(state)
   }),
   {}
 )(App);

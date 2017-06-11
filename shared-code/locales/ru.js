@@ -6,6 +6,14 @@ const getTitle = title => `${title} — ${appName}`;
 
 const ruTranslation = {
   appName,
+  about: {
+    title: getTitle('О сайте подробно')
+  },
+  aboutWrapper: {
+    heading: 'О сайте',
+    intro: 'Коротко',
+    about: 'Подробно'
+  },
   createFlashcard: {
     title: getTitle('Новая карточка'),
     create: 'Создать'
@@ -93,8 +101,12 @@ const ruTranslation = {
     infoLearnMore: 'узнать о сайте больше',
     infoSignUp: 'зарегистрироваться'
   },
+  intro: {
+    title: getTitle('О сайте коротко')
+  },
   menu: {
     allFlashcards: 'Все карточки',
+    about: 'О сайте',
     create: 'Создать',
     logout: 'Выйти',
     repeat: 'Повторить',

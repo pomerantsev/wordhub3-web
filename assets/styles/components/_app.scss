@@ -6,6 +6,10 @@
   justify-content: space-between;
 }
 
+.app__content {
+  @extend .container;
+}
+
 .app__footer {
   @extend .clearfix;
   position: relative;

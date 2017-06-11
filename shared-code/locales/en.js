@@ -6,6 +6,14 @@ const getTitle = title => `${title} — ${appName}`;
 
 const enTranslation = {
   appName,
+  about: {
+    title: getTitle('About')
+  },
+  aboutWrapper: {
+    heading: 'About Wordhub',
+    intro: 'Intro',
+    about: 'About'
+  },
   createFlashcard: {
     title: getTitle('New Flashcard'),
     create: 'Create'
@@ -95,8 +103,12 @@ const enTranslation = {
     infoLearnMore: 'learn more',
     infoSignUp: 'sign up'
   },
+  intro: {
+    title: getTitle('Intro')
+  },
   menu: {
     allFlashcards: 'All Flashcards',
+    about: 'About',
     create: 'Create',
     logout: 'Logout',
     repeat: 'Repeat',

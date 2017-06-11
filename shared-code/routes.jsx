@@ -5,6 +5,9 @@ import * as authUtils from './utils/auth-utils';
 import * as constants from './data/constants';
 
 import {AppContainer} from './components/app.jsx';
+import AboutWrapper from './components/about-wrapper.jsx';
+import Intro from './components/intro.jsx';
+import About from './components/about.jsx';
 import UnauthedRoot from './components/unauthed-root.jsx';
 import Home from './components/home.jsx';
 import Signup from './components/signup.jsx';
@@ -33,6 +36,21 @@ function getRoutes (store) {
     <Route
         path="/"
         component={AppContainer}>
+
+      <Route
+          component={AboutWrapper}>
+
+        <Route
+            path="/intro"
+            component={Intro}
+        />
+
+        <Route
+            path="/about"
+            component={About}
+        />
+
+      </Route>
 
       <Route
           component={UnauthedRoot}
