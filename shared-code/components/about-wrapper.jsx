@@ -2,6 +2,7 @@ import React from 'react';
 import {translate} from 'react-i18next';
 import {Link} from 'react-router';
 import classNames from 'classnames';
+import PropTypes from 'prop-types';
 
 import Intro from './intro.jsx';
 import About from './about.jsx';
@@ -9,7 +10,7 @@ import About from './about.jsx';
 class AboutWrapper extends React.Component {
 
   static contextTypes = {
-    router: React.PropTypes.object.isRequired
+    router: PropTypes.object.isRequired
   }
 
   render () {
