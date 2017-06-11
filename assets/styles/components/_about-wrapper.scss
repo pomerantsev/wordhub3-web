@@ -1,0 +1,8 @@
+.about-wrapper__nav {
+  @extend .nav, .nav-pills;
+  margin-bottom: 20px;
+}
+
+.about-wrapper__nav__active-item {
+  @extend .active;
+}
