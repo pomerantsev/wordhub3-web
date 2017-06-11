@@ -7,7 +7,64 @@ const getTitle = title => `${title} — ${appName}`;
 const enTranslation = {
   appName,
   about: {
-    title: getTitle('About')
+    title: getTitle('About'),
+    whatToRead: {
+      header: 'What to read and how?',
+      paragraphs: {
+        0: 'Just read what you find interesting. Texts that are not too hard for understanding. Where you occasionally bump into unfamiliar words. Underline them or copy to some dedicated document. This will be your basis for learning new words.',
+        1: 'So this way you learn only the words that you encounter in real life, not something abstract.'
+      }
+    },
+    dictionary: {
+      header: 'What kind of dictionary to use?',
+      paragraph: 'Any one that you find appropriate for your needs. It can contain translations to your mother tongue or explanations in the language you are studying. It all depends on your personal preferences and your skill level.'
+    },
+    everyDay: {
+      header: 'Why is it best to study every day?',
+      paragraphs: {
+        0: 'Any training should be regular. That’s how you keep fit and motivated. If you are studying a foreign language, just like in sports, rhythm should be maintained.',
+        1: 'Try to memorize a hundred unknown words in five hours. How many will you remember a month later? It’ll probably be no more than 10%.',
+        2: 'Or repeat each of these words several times in the course of the month, spending the same five hours overall (that’s what Wordhub keeps you doing). The percentage is going to be much higher.'
+      }
+    },
+    leitner: {
+      header: 'How are words memorized?',
+      paragraphWithLinks: 'The best way to remember any information is to repeat it in increasing intervals. This is the principle of spaced repetitions, which is the basis for the Leitner system (here are the {{link1}} and {{link2}} articles on Wikipedia).',
+      link1: 'http://en.wikipedia.org/wiki/Spaced_repetition',
+      link1Text: 'first',
+      link2: 'http://en.wikipedia.org/wiki/Leitner_system',
+      link2Text: 'second',
+      paragraphs: {
+        0: 'You create a flashcard, and in several days (the first interval is one to three days) Wordhub displays it to you for repetition. If you remember the meaning of the word, then next time you will repeat it in two to nine days. The third interval is up to a month.',
+        1: 'Every time you don’t remember the given word, its flashcard is going to be back again in one to three days. The series of three repetitions is reset and started anew. Believe it or not, but sooner or later you’ll memorize the words you need.'
+      }
+    },
+    howMany: {
+      header: 'What is the best number of words to learn every day?',
+      paragraphs: {
+        0: 'Only you can tell that.',
+        1: 'If you create 10 new flashcards each day, you’ll end up repeating 30 to 40 flashcards a day. It’s about half an hour a day for creating and repeating. If you create 20 flashcards, you’ll spend double the time, and so on.',
+        2: 'Choose a pace you can sustain. Anyway, you’ll learn everything you need in its own time.'
+      },
+      paragraphWithLinks: 'That’s why it’s best to set a low limit in the {{link}}. And then increase it, but not too fast.',
+      linkText: 'settings'
+    },
+    selfControl: {
+      header: 'Self-control',
+      paragraphs: {
+        0: 'Other websites offer various types of quizzes and grade your progress. It may be fun, but it takes much time, especially if your studies are on a regular basis and if you are planning to memorize a lot of words (and that’s why you’re here, right?).',
+        1: 'Wordhub is much simpler. We’re sure that you know at a glance if you remember the word or not. You can flip the flashcard to check if you’re correct. This won’t affect the result.',
+        2: 'Wordhub compensates the lack of quizzes by helping you balance your load. You don’t need to think about what flashcards to repeat each day. The words that are easiest for you to memorize will be shown to you only three times. Those that cause mental strain at first will pop up as many times as it takes to memorize them properly.'
+      }
+    },
+    whatElse: {
+      header: 'What else can Wordhub be used for?',
+      paragraphs: {
+        0: 'Learn languages.',
+        1: 'Learn grammar rules.',
+        2: 'Learn any facts pertinent to your profession. Anything, actually.'
+      }
+    }
   },
   aboutWrapper: {
     heading: 'About Wordhub',
