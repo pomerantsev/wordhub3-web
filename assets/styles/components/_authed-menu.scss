@@ -93,8 +93,7 @@
 }
 
 .authed-menu__menu-item--active {
-  color: $active-text-gray !important;
-  background-color: $active-background-gray !important;
+  @include active-menu-item;
 }
 
 .authed-menu__menu-dropdown-item--active {

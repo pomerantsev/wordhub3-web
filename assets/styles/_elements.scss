@@ -40,3 +40,8 @@
 @mixin heading {
   margin-top: 40px;
 }
+
+@mixin active-menu-item {
+  color: $active-text-gray !important;
+  background-color: $active-background-gray !important;
+}

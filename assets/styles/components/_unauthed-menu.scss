@@ -9,3 +9,39 @@
 .unauthed-menu__brand {
   @extend .navbar-brand;
 }
+
+.unauthed-menu__toggle {
+  @extend .navbar-toggle;
+}
+
+.unauthed-menu__toggle__icon-bar {
+  @extend .icon-bar;
+  background-color: $light-gray !important;
+}
+
+%unauthed-menu__collapsing-menu {
+  @extend .navbar-collapse;
+}
+
+.unauthed-menu__collapsing-menu--collapsed {
+  @extend %unauthed-menu__collapsing-menu;
+  @media (min-width: 0) and (max-width: $breakpoint700 - 1px) {
+    display: none;
+  }
+  @media (min-width: $breakpoint700) {
+    display: block;
+  }
+}
+
+.unauthed-menu__collapsing-menu--open {
+  @extend %unauthed-menu__collapsing-menu;
+  display: block;
+}
+
+.unauthed-menu__secondary-menu {
+  @extend .nav, .navbar-nav, .navbar-right;
+}
+
+.unauthed-menu__menu-item--active {
+  @include active-menu-item;
+}
