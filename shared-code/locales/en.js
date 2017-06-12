@@ -161,7 +161,25 @@ const enTranslation = {
     infoSignUp: 'sign up'
   },
   intro: {
-    title: getTitle('Intro')
+    title: getTitle('Intro'),
+    liRead: '{{liReadLink}} and underline unfamiliar words.',
+    liReadLinkText: 'Read something interesting',
+    liDictionary: 'Have {{liDictionaryLink1}} handy and create flashcards. On a regular basis. {{liDictionaryLink2}}.',
+    liDictionaryLink1Text: 'a dictionary',
+    liDictionaryLink2Text: 'Every day',
+    liRepeat: 'And then repeat them. Yes, also {{liRepeatLink}}.',
+    liRepeatLinkText: 'every day',
+    liAnswer: 'No quizzes. When presented with a word, just press “Remember” or “Don’t remember”. {{liAnswerLink}}.',
+    liAnswerLinkText: 'Nobody but you checks your knowledge',
+    liLookUp: 'You can look words up while repeating. It won’t affect your results — you’ll memorize everything anyway.',
+    liIntervals: 'For a word to be properly memorized, it’s sufficient to repeat it several times at {{liIntervalsLink}}. For example, in a day, then in three days, and then again in ten days.',
+    liIntervalsLinkText: 'increasing intervals',
+    liThree: 'If you press “Remember” three times in a row, the word is considered learned.',
+    liContext: 'To memorize a word better, write it down with its context.',
+    liDay: 'You should just repeat words once a day, and then you can forget about them until the next day. {{liDayLink}}.',
+    liDayLinkText: 'You’ll memorize them anyway',
+    liVocab: 'You’ll be surprised how your vocabulary has grown in just a month. You should only add {{liVocabLink}}. Wordhub does the rest.',
+    liVocabLinkText: 'a few new words'
   },
   menu: {
     allFlashcards: 'All Flashcards',
