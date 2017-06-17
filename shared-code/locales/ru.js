@@ -81,26 +81,20 @@ const ruTranslation = {
     delete: 'Удалить'
   },
   errors: {
-    sync: {
-      0: 'Ошибка синхронизации с сервером. Постараемся это исправить. А пока попробуйте создать новую карточку или сделать ещё один повтор.'
-    },
-    login: {
-      [constants.LOGIN_NETWORK_ERROR]: 'Ошибка соединения. Вероятно, нет связи с сетью.',
-      [constants.LOGIN_SERVER_ERROR]: 'Ошибка на сервере. Постараемся исправить её как можно скорее.',
-      [constants.LOGIN_INCORRECT_DATA]: 'Неверный логин / пароль.'
-    },
-    signup: {
-      [constants.SIGNUP_NETWORK_ERROR]: 'Ошибка соединения. Вероятно, нет связи с сетью.',
-      [constants.SIGNUP_SERVER_ERROR]: 'Ошибка на сервере. Постараемся исправить её как можно скорее.',
-      [constants.SIGNUP_EMAIL_INVALID]: 'Электронная почта неверного формата.',
-      [constants.SIGNUP_EMAIL_TOO_LONG]: 'Электронная почта слишком длинная.',
-      [constants.SIGNUP_PASSWORD_TOO_SHORT]: 'Пароль слишком короткий.',
-      [constants.SIGNUP_PASSWORD_TOO_LONG]: 'Пароль слишком длинный.',
-      [constants.SIGNUP_PASSWORD_INVALID]: 'Пароль не соответствует формату. Проверьте, чтобы в нём были только латинские буквы и цифры.',
-      [constants.SIGNUP_NAME_TOO_LONG]: 'Имя слишком длинное.',
-      [constants.SIGNUP_EXISTING_USER]: 'Пользователь с такой электронной почтой уже зарегистрирован.'
-    },
-    tokenExpired: 'Ваша сессия истекла. Для безопасности аккаунта мы ограничиваем сессии по времени. Пожалуйста, выйдите и войдите снова. Иначе данные не будут синхронизироваться с сервером.'
+    [constants.ERROR_LOGIN_INCORRECT_DATA]: 'Неверный логин / пароль.',
+    [constants.ERROR_EMAIL_INVALID]: 'Электронная почта неверного формата.',
+    [constants.ERROR_EMAIL_TOO_LONG]: 'Электронная почта слишком длинная.',
+    [constants.ERROR_PASSWORD_TOO_SHORT]: 'Пароль слишком короткий.',
+    [constants.ERROR_PASSWORD_TOO_LONG]: 'Пароль слишком длинный.',
+    [constants.ERROR_PASSWORD_INVALID]: 'Пароль не соответствует формату. Проверьте, чтобы в нём были только латинские буквы и цифры.',
+    [constants.ERROR_NAME_TOO_LONG]: 'Имя слишком длинное.',
+    [constants.ERROR_EXISTING_USER]: 'Пользователь с такой электронной почтой уже зарегистрирован.',
+    [constants.ERROR_DAILY_LIMIT_INVALID]: `Дневной лимит должен быть не меньше 1 и не больше ${constants.MAX_DAILY_LIMIT}.`,
+    [constants.ERROR_INTERFACE_LANGUAGE_ID_INVALID]: 'Выбран несуществующий язык интерфейса.',
+    [constants.ERROR_SYNC]: 'Ошибка синхронизации с сервером. Постараемся это исправить. А пока попробуйте создать новую карточку или сделать ещё один повтор.',
+    [constants.ERROR_SERVER_GENERIC]: 'Ошибка на сервере. Постараемся исправить её как можно скорее.',
+    [constants.ERROR_NETWORK]: 'Ошибка соединения. Вероятно, нет связи с сетью.',
+    [constants.ERROR_TOKEN_EXPIRED]: 'Ваша сессия истекла. Для безопасности аккаунта мы ограничиваем сессии по времени. Пожалуйста, выйдите и войдите снова. Иначе данные не будут синхронизироваться с сервером.'
   },
   flashcardInputs: {
     frontText: 'Слово:',

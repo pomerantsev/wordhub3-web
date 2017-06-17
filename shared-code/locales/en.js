@@ -81,26 +81,20 @@ const enTranslation = {
     delete: 'Delete'
   },
   errors: {
-    sync: {
-      0: 'Unfortunately, sychronization with server failed, please try running another repetition or creating another flashcard.'
-    },
-    login: {
-      [constants.LOGIN_NETWORK_ERROR]: 'There’s been a network error. You’re probably offline.',
-      [constants.LOGIN_SERVER_ERROR]: 'There’s been a server error. We’ll make our best effort to fix it soon.',
-      [constants.LOGIN_INCORRECT_DATA]: 'User with such email and password is not registered.'
-    },
-    signup: {
-      [constants.SIGNUP_NETWORK_ERROR]: 'There’s been a network error. You’re probably offline.',
-      [constants.SIGNUP_SERVER_ERROR]: 'There’s been a server error. We’ll make our best effort to fix it soon.',
-      [constants.SIGNUP_EMAIL_INVALID]: 'Email is invalid.',
-      [constants.SIGNUP_EMAIL_TOO_LONG]: 'Email is too long.',
-      [constants.SIGNUP_PASSWORD_TOO_SHORT]: 'Password is too short.',
-      [constants.SIGNUP_PASSWORD_TOO_LONG]: 'Password is too long.',
-      [constants.SIGNUP_PASSWORD_INVALID]: 'Password is invalid. Please check that it contains only alphanumeric characters.',
-      [constants.SIGNUP_NAME_TOO_LONG]: 'Name is too long.',
-      [constants.SIGNUP_EXISTING_USER]: 'A user with the given email is already registered.'
-    },
-    tokenExpired: 'Your token has expired. For your security, we require you to re-login from time to time. Please log out and log back in. Otherwise, your data won’t be synchronized with the server.'
+    [constants.ERROR_LOGIN_INCORRECT_DATA]: 'User with such email and password is not registered.',
+    [constants.ERROR_EMAIL_INVALID]: 'Email is invalid.',
+    [constants.ERROR_EMAIL_TOO_LONG]: 'Email is too long.',
+    [constants.ERROR_PASSWORD_TOO_SHORT]: 'Password is too short.',
+    [constants.ERROR_PASSWORD_TOO_LONG]: 'Password is too long.',
+    [constants.ERROR_PASSWORD_INVALID]: 'Password is invalid. Please check that it contains only alphanumeric characters.',
+    [constants.ERROR_NAME_TOO_LONG]: 'Name is too long.',
+    [constants.ERROR_EXISTING_USER]: 'A user with the given email is already registered.',
+    [constants.ERROR_DAILY_LIMIT_INVALID]: `Daily limit should be between 1 and ${constants.MAX_DAILY_LIMIT}.`,
+    [constants.ERROR_INTERFACE_LANGUAGE_ID_INVALID]: 'Invalid interface language.',
+    [constants.ERROR_SYNC]: 'Unfortunately, sychronization with server failed, please try running another repetition or creating another flashcard.',
+    [constants.ERROR_SERVER_GENERIC]: 'There’s been a server error. We’ll make our best effort to fix it soon.',
+    [constants.ERROR_NETWORK]: 'There’s been a network error. You’re probably offline.',
+    [constants.ERROR_TOKEN_EXPIRED]: 'Your token has expired. For your security, we require you to re-login from time to time. Please log out and log back in. Otherwise, your data won’t be synchronized with the server.'
   },
   flashcardInputs: {
     frontText: 'Word:',

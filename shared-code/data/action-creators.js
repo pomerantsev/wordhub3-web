@@ -40,15 +40,11 @@ export function login (email, password) {
     dispatch(() => ({type: 'LOGIN_REQUEST'}));
     api.login(email, password)
       .then(res => {
-        if (res.status < 500) {
-          return res.json().then(credentials => {
-            dispatch(loginSuccess(email, credentials));
-          });
-        } else {
-          dispatch(loginFailure(constants.LOGIN_SERVER_ERROR));
-        }
+        return res.json().then(credentials => {
+          dispatch(loginSuccess(email, credentials));
+        });
       }, () => {
-        dispatch(loginFailure(constants.LOGIN_NETWORK_ERROR));
+        dispatch(loginFailure(constants.ERROR_NETWORK));
       });
   };
 }
@@ -115,19 +111,15 @@ export function signup (email, password, name) {
       language: i18next.language
     })
       .then(res => {
-        if (res.status < 500) {
-          return res.json().then(credentials => {
-            if (credentials.token) {
-              dispatch(loginSuccess(email, credentials));
-            } else {
-              dispatch(signupFailure(credentials.errorCode));
-            }
-          });
-        } else {
-          dispatch(signupFailure(constants.SIGNUP_SERVER_ERROR));
-        }
+        return res.json().then(credentials => {
+          if (credentials.token) {
+            dispatch(loginSuccess(email, credentials));
+          } else {
+            dispatch(signupFailure(credentials.errorCode));
+          }
+        });
       }, () => {
-        dispatch(signupFailure(constants.SIGNUP_NETWORK_ERROR));
+        dispatch(signupFailure(constants.ERROR_NETWORK));
       });
   };
 }
@@ -249,6 +241,7 @@ export function syncData () {
         }
       ).then(result => {
 
+        dispatch(setSyncError(null));
         dispatch(setUserSettings(result.userSettings));
 
         // Writing data to DB happens asynchronously and independently from the
@@ -270,12 +263,8 @@ export function syncData () {
         dispatch(setOnline(true));
         return result;
       }).catch(error => {
-        if (error.status === 401) {
-          // Token expired
-          dispatch(setTokenExpired());
-        } else if (error.status) {
+        if (error.status) {
           log.debug('Sync error:', error.body.message);
-          // An actual error happened, indicate to user
           dispatch(setSyncError(error.body.errorCode));
         } else {
           // We're offline!
@@ -300,10 +289,6 @@ export function setOnline (online) {
 
 export function setSyncError (errorCode) {
   return {type: 'SET_SYNC_ERROR', errorCode};
-}
-
-export function setTokenExpired () {
-  return {type: 'SET_TOKEN_EXPIRED'};
 }
 
 export function searchStringChange (value) {

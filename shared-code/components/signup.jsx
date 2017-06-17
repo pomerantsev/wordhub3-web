@@ -53,7 +53,7 @@ class Signup extends React.Component {
         {typeof this.props.signupError === 'number' ?
           <div
               className="home__alert">
-            {t(`errors.signup.${this.props.signupError}`)}
+            {t(`errors.${this.props.signupError}`)}
           </div> :
           null
         }

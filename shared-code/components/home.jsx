@@ -41,7 +41,7 @@ class Home extends React.Component {
         {typeof this.props.loginError === 'number' ?
           <div
               className="home__alert">
-            {i18next.t(`errors.login.${this.props.loginError}`)}
+            {i18next.t(`errors.${this.props.loginError}`)}
           </div> :
           null
         }
