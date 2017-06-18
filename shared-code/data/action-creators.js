@@ -132,6 +132,11 @@ export function resetLoggedInState () {
   return {type: 'RESET_LOGGED_IN_STATE'};
 }
 
+export async function storeUserSettings (token) {
+  const settings = await api.getUserSettings(token);
+  return {type: 'STORE_USER_SETTINGS', settings};
+}
+
 export function updateUserSettings ({dailyLimit, name, interfaceLanguageId}) {
   return function (dispatch, getState) {
     dispatch(() => ({type: 'UPDATE_USER_SETTINGS_REQUEST'}));
@@ -143,6 +148,11 @@ export function updateUserSettings ({dailyLimit, name, interfaceLanguageId}) {
       return res.json().then(data => {
         if (data.success) {
           dispatch(setOnline(true));
+          const language = helpers.getLanguage(interfaceLanguageId);
+          if (language) {
+            helpers.changeLanguage(language.name);
+          }
+          dbStorage.writeUserSettings(getState().get('openLocalDbPromise'), {dailyLimit, name, interfaceLanguageId});
           dispatch(() => ({type: 'UPDATE_USER_SETTINGS_SUCCESS', dailyLimit, name, interfaceLanguageId}));
         } else {
           dispatch(updateUserSettingsFailure(data.errorCode));
@@ -223,6 +233,10 @@ export function readDb () {
           lastSyncServerTime,
           userSettings: fromJS(userSettings)
         }));
+        const language = helpers.getLanguage(getState().getIn(['userData', 'userSettings', 'interfaceLanguageId']));
+        if (language) {
+          helpers.changeLanguage(language.name);
+        }
         dispatch(syncData());
       });
   };
@@ -273,6 +287,10 @@ export function syncData () {
 
         dispatch(setSyncError(null));
         dispatch(setUserSettings(result.userSettings));
+        const language = helpers.getLanguage(result.userSettings.interfaceLanguageId);
+        if (language) {
+          helpers.changeLanguage(language.name);
+        }
 
         // Writing data to DB happens asynchronously and independently from the
         // in-memory representation of data.

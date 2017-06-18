@@ -1,5 +1,8 @@
 import moment from 'moment';
 import {createSelectorCreator, defaultMemoize} from 'reselect';
+import i18next from 'i18next';
+
+import * as constants from '../data/constants';
 
 export const createDeepEqualSelector = createSelectorCreator(
   defaultMemoize,
@@ -67,4 +70,13 @@ export function getIndexedDB () {
 
 export function getCopyrightYears () {
   return `2013—${moment().format('YYYY')}`;
+}
+
+export function getLanguage (languageId) {
+  return constants.interfaceLanguages.find(language => language.id === languageId);
+}
+
+export function changeLanguage (languageName) {
+  i18next.changeLanguage(languageName);
+  moment.locale(languageName);
 }

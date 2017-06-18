@@ -1,33 +1,33 @@
-import i18next from 'i18next';
-
 import React from 'react';
 import {connect} from 'react-redux';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import {Helmet} from 'react-helmet';
+import {translate} from 'react-i18next';
 
 import * as helpers from '../utils/helpers';
 import * as authUtils from '../utils/auth-utils';
 
-import {AuthedMenuContainer} from './authed-menu.jsx';
+import AuthedMenu from './authed-menu.jsx';
 import UnauthedMenu from './unauthed-menu.jsx';
 
 class App extends React.Component {
 
   render () {
+    const {t} = this.props;
     return (
       <MuiThemeProvider muiTheme={getMuiTheme({userAgent: this.props.userAgent})}>
         <div
             className="app__container">
           <Helmet>
-            <title>{i18next.t('appName')}</title>
+            <title>{t('appName')}</title>
           </Helmet>
-        {/* This extra div here is necessary to make the child div not affected by flex layout rules */}
+          {/* This extra div here is necessary to make the child div not affected by flex layout rules */}
           <div>
             <div
                 className="app__content">
               {this.props.loggedIn ?
-                <AuthedMenuContainer
+                <AuthedMenu
                 /> :
                 <UnauthedMenu
                 />
@@ -45,7 +45,7 @@ class App extends React.Component {
                 {' '}
                 <a
                     href="https://www.facebook.com/pomerantsevp">
-                  {i18next.t('footer.authorName')}
+                  {t('footer.authorName')}
                 </a>
               </p>
               <p
@@ -63,10 +63,12 @@ class App extends React.Component {
   }
 }
 
-export const AppContainer = connect(
+const StatefulContainer = connect(
   state => ({
     userAgent: state.get('userAgent'),
     loggedIn: authUtils.isLoggedIn(state)
   }),
   {}
 )(App);
+
+export default translate()(StatefulContainer);

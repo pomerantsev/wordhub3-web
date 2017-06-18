@@ -1,8 +1,7 @@
-import i18next from 'i18next';
-
 import React from 'react';
 import {connect} from 'react-redux';
 import {Helmet} from 'react-helmet';
+import {translate} from 'react-i18next';
 
 import FlashcardInputs from './flashcard-inputs.jsx';
 
@@ -56,10 +55,11 @@ class CreateFlashcard extends React.Component {
   }
 
   render () {
+    const {t} = this.props;
     return (
       <div>
         <Helmet>
-          <title>{i18next.t('createFlashcard.title')}</title>
+          <title>{t('createFlashcard.title')}</title>
         </Helmet>
         <form
             onSubmit={this.onSubmit}>
@@ -72,7 +72,7 @@ class CreateFlashcard extends React.Component {
           />
           <button
               className="create-flashcard__submit">
-            {i18next.t('createFlashcard.create')}
+            {t('createFlashcard.create')}
           </button>
         </form>
       </div>
@@ -81,7 +81,9 @@ class CreateFlashcard extends React.Component {
 
 }
 
-export const CreateFlashcardContainer = connect(
+const StatefulContainer = connect(
   () => ({}),
   actionCreators
 )(CreateFlashcard);
+
+export default translate()(StatefulContainer);

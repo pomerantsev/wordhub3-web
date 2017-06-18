@@ -1,7 +1,6 @@
-import i18next from 'i18next';
-
 import React from 'react';
 import {connect} from 'react-redux';
+import {translate} from 'react-i18next';
 import CircularProgress from 'material-ui/CircularProgress';
 
 import * as actionCreators from '../data/action-creators';
@@ -9,6 +8,7 @@ import * as actionCreators from '../data/action-creators';
 class AuthedRoot extends React.Component {
 
   render () {
+    const {t} = this.props;
     return (
       <div>
         {this.props.initialLoadingCompleted ?
@@ -17,7 +17,7 @@ class AuthedRoot extends React.Component {
             {typeof this.props.syncError === 'number' ?
               <div
                   className="authed-root__alert">
-                {i18next.t(`errors.${this.props.syncError}`)}
+                {t(`errors.${this.props.syncError}`)}
               </div> :
               null
             }
@@ -39,10 +39,12 @@ class AuthedRoot extends React.Component {
 
 }
 
-export const AuthedRootContainer = connect(
+const AuthedRootContainer = connect(
   state => ({
     initialLoadingCompleted: state.getIn(['userData', 'initialLoadingCompleted']),
     syncError: state.getIn(['userData', 'syncError'])
   }),
   actionCreators
 )(AuthedRoot);
+
+export default translate()(AuthedRootContainer);

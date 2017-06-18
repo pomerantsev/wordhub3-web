@@ -216,6 +216,10 @@ export default function userDataReducer (state, action) {
     return state
       .set('syncError', action.errorCode);
   }
+  case 'STORE_USER_SETTINGS': {
+    return state
+      .set('userSettings', fromJS(action.settings));
+  }
   case 'UPDATE_USER_SETTINGS_REQUEST': {
     return state
       .set('userSettingsUpdating', true);

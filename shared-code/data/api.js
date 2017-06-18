@@ -22,6 +22,11 @@ export async function syncData (token, timestamp, data) {
   }
 }
 
+export async function getUserSettings (token) {
+  const res = await fetch(`${process.env.API_SERVER}/${API_VERSION}/user?token=${token}`);
+  return await res.json();
+}
+
 export async function updateUserSettings (token, {dailyLimit, name, interfaceLanguageId}) {
   return await fetch(`${process.env.API_SERVER}/${API_VERSION}/update-user?token=${token}`, {
     method: 'POST',

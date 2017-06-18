@@ -1,11 +1,10 @@
-import i18next from 'i18next';
-
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import {connect} from 'react-redux';
 import {Link} from 'react-router';
 import {Helmet} from 'react-helmet';
+import {translate} from 'react-i18next';
 import moment from 'moment';
 import * as helpers from '../utils/helpers';
 import * as getters from '../data/getters';
@@ -88,11 +87,12 @@ class FlashcardList extends React.Component {
   }
 
   render () {
+    const {t} = this.props;
     const displayedFlashcards = this.getDisplayedFlashcards();
     return (
       <div>
         <Helmet>
-          <title>{i18next.t('flashcardList.title')}</title>
+          <title>{t('flashcardList.title')}</title>
         </Helmet>
         {this.props.recentlyDeletedFlashcard ?
           <div
@@ -102,12 +102,12 @@ class FlashcardList extends React.Component {
                 className="flashcard-list__deleted-alert__close">
               &times;
             </button>
-            {i18next.t('flashcardList.deleted')}
+            {t('flashcardList.deleted')}
             {' '}
             <span
                 className="flashcard-list__deleted-alert__undo"
                 onClick={this.undoDeletion}>
-              {i18next.t('flashcardList.undo')}
+              {t('flashcardList.undo')}
             </span>
           </div> :
           null
@@ -116,13 +116,13 @@ class FlashcardList extends React.Component {
           <div>
             <p
                 className="flashcard-list__no-flashcards-text">
-              {i18next.t('flashcardList.noFlashcards')}
+              {t('flashcardList.noFlashcards')}
             </p>
             <p
                 className="flashcard-list__no-flashcards-text">
               <Link
                   to="/flashcards/new">
-                {i18next.t('flashcardList.create')}
+                {t('flashcardList.create')}
               </Link>
             </p>
           </div> :
@@ -140,7 +140,7 @@ class FlashcardList extends React.Component {
                       className="flashcard-list__search-form__input-group">
                     <div
                         className="flashcard-list__search-form__label">
-                      {i18next.t('flashcardList.search')}
+                      {t('flashcardList.search')}
                     </div>
                     <input
                         ref={this.searchStringRef}
@@ -153,12 +153,12 @@ class FlashcardList extends React.Component {
                 </div>
                 {this.props.searchString ?
                   <div>
-                    {i18next.t('flashcardList.searchingFor', {searchString: this.props.searchString})}
+                    {t('flashcardList.searchingFor', {searchString: this.props.searchString})}
                     {' '}
                     (<a
                         href
                         onClick={this.onClearSearchClick}>
-                      {i18next.t('flashcardList.clear')}
+                      {t('flashcardList.clear')}
                     </a>)
                   </div> :
                   null
@@ -203,7 +203,7 @@ class FlashcardList extends React.Component {
               <div>
                 <p
                     className="flashcard-list__no-flashcards-text">
-                  {i18next.t('flashcardList.noSearchResults')}
+                  {t('flashcardList.noSearchResults')}
                 </p>
               </div>
             }
@@ -220,7 +220,7 @@ class FlashcardList extends React.Component {
 
 }
 
-export const FlashcardListContainer = connect(
+const FlashcardListContainer = connect(
   state => ({
     allFlashcards: getters.getFlashcards(state.get('userData')),
     flashcards: getters.getFlashcardsSorted(state.get('userData')),
@@ -229,3 +229,5 @@ export const FlashcardListContainer = connect(
   }),
   actionCreators
 )(FlashcardList);
+
+export default translate()(FlashcardListContainer);

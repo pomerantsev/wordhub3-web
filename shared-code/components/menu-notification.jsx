@@ -1,13 +1,13 @@
-import i18next from 'i18next';
-
 import React from 'react';
+import {translate} from 'react-i18next';
 import classNames from 'classnames';
 
 import Tooltip from './tooltip.jsx';
 
-export default class MenuNotification extends React.Component {
+class MenuNotification extends React.Component {
 
   render () {
+    const {t} = this.props;
     return (
       <div
           className="menu-notification">
@@ -24,7 +24,7 @@ export default class MenuNotification extends React.Component {
           <Tooltip
               className="menu-notification__tooltip-toggle"
               text={this.props.hint}>
-            {i18next.t('notifications.whatsThis')}
+            {t('notifications.whatsThis')}
           </Tooltip>
           )
         </div>
@@ -33,3 +33,5 @@ export default class MenuNotification extends React.Component {
   }
 
 }
+
+export default translate()(MenuNotification);

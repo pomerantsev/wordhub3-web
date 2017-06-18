@@ -1,15 +1,17 @@
-import i18next from 'i18next';
-
 import React from 'react';
+import {translate} from 'react-i18next';
 import {Helmet} from 'react-helmet';
 
-export default function NotFound () {
+function NotFound (props) {
+  const {t} = props;
   return (
     <div>
       <Helmet>
-        <title>{i18next.t('notFound.title')}</title>
+        <title>{t('notFound.title')}</title>
       </Helmet>
-      {i18next.t('notFound.notFound')}
+      {t('notFound.notFound')}
     </div>
   );
 }
+
+export default translate()(NotFound);

@@ -4,19 +4,19 @@ import {IndexRoute, Route} from 'react-router';
 import * as authUtils from './utils/auth-utils';
 import * as constants from './data/constants';
 
-import {AppContainer} from './components/app.jsx';
+import App from './components/app.jsx';
 import AboutWrapper from './components/about-wrapper.jsx';
 import Intro from './components/intro.jsx';
 import About from './components/about.jsx';
 import UnauthedRoot from './components/unauthed-root.jsx';
 import Home from './components/home.jsx';
 import Signup from './components/signup.jsx';
-import {AuthedRootContainer} from './components/authed-root.jsx';
-import {CreateFlashcardContainer} from './components/create-flashcard.jsx';
-import {EditFlashcardContainer} from './components/edit-flashcard.jsx';
-import {FlashcardListContainer} from './components/flashcard-list.jsx';
-import {RepetitionsContainer} from './components/repetitions.jsx';
-import {StatsContainer} from './components/stats.jsx';
+import AuthedRoot from './components/authed-root.jsx';
+import CreateFlashcard from './components/create-flashcard.jsx';
+import EditFlashcard from './components/edit-flashcard.jsx';
+import FlashcardList from './components/flashcard-list.jsx';
+import Repetitions from './components/repetitions.jsx';
+import Stats from './components/stats.jsx';
 import Settings from './components/settings.jsx';
 import NotFound from './components/not-found.jsx';
 
@@ -36,7 +36,7 @@ function getRoutes (store) {
   return (
     <Route
         path="/"
-        component={AppContainer}>
+        component={App}>
 
       <Route
           component={AboutWrapper}>
@@ -69,32 +69,32 @@ function getRoutes (store) {
       </Route>
 
       <Route
-          component={AuthedRootContainer}
+          component={AuthedRoot}
           onEnter={onAuthedEnter.bind(null, store)}>
 
         <Route
             path="/flashcards"
-            component={FlashcardListContainer}
+            component={FlashcardList}
         />
 
         <Route
             path="/flashcards/new"
-            component={CreateFlashcardContainer}
+            component={CreateFlashcard}
         />
 
         <Route
             path="/flashcards/:uuid"
-            component={EditFlashcardContainer}
+            component={EditFlashcard}
         />
 
         <Route
             path="/repetitions"
-            component={RepetitionsContainer}
+            component={Repetitions}
         />
 
         <Route
             path="/stats"
-            component={StatsContainer}
+            component={Stats}
         />
 
         <Route

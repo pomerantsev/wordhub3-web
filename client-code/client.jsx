@@ -1,10 +1,11 @@
 import 'babel-polyfill';
-import 'whatwg-fetch';
+import 'isomorphic-fetch';
 
-import i18n from '../shared-code/locales/i18n';
+import i18next from 'i18next';
+import {i18nextOptions} from '../shared-code/locales/i18n';
 import {I18nextProvider} from 'react-i18next';
+import ClientLanguageDetector from '../shared-code/locales/client-language-detector';
 import moment from 'moment';
-moment.locale(i18n.language);
 
 import log from 'loglevel';
 if (process.env.NODE_ENV === 'development' || /(\?|&)debug/.test(window.location.search)) {
@@ -52,6 +53,16 @@ store.dispatch(actionCreators.storeUserAgent(window.navigator.userAgent));
 
 store.dispatch(actionCreators.rehydrateCredentials());
 
+i18next.use(
+  new ClientLanguageDetector(null, {
+    order: ['querystring', 'userPreference', 'navigator'],
+    lookupQuerystring: 'lng',
+    getUserLanguageId: () => store.getState().getIn(['userData', 'userSettings', 'interfaceLanguageId'])
+  })
+).init(i18nextOptions);
+
+moment.locale(i18next.language);
+
 let wasLoggedIn = authUtils.isLoggedIn(store.getState());
 
 if (wasLoggedIn) {
@@ -71,7 +82,7 @@ store.subscribe(() => {
 
 ReactDOM.render(
   <I18nextProvider
-      i18n={i18n}>
+      i18n={i18next}>
     <Provider
         store={store}>
       <Router

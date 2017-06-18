@@ -1,10 +1,9 @@
-import i18next from 'i18next';
-
 import React from 'react';
 import {Link} from 'react-router';
+import {translate} from 'react-i18next';
 import classNames from 'classnames';
 
-export default class AuthedMenu extends React.Component {
+class UnauthedMenu extends React.Component {
 
   constructor () {
     super();
@@ -46,6 +45,7 @@ export default class AuthedMenu extends React.Component {
   }
 
   render () {
+    const {t} = this.props;
     return (
       <div
           className="unauthed-menu">
@@ -54,7 +54,7 @@ export default class AuthedMenu extends React.Component {
           <Link
               to="/"
               className="unauthed-menu__brand">
-            {i18next.t('appName')}
+            {t('appName')}
           </Link>
           <button
               ref={this.toggleRef}
@@ -82,7 +82,7 @@ export default class AuthedMenu extends React.Component {
               <Link
                   activeClassName="unauthed-menu__menu-item--active"
                   to="/intro">
-                {i18next.t('menu.about')}
+                {t('menu.about')}
               </Link>
             </li>
           </ul>
@@ -92,3 +92,5 @@ export default class AuthedMenu extends React.Component {
   }
 
 }
+
+export default translate()(UnauthedMenu);

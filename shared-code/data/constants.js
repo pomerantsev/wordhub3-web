@@ -43,6 +43,6 @@ export const PASSWORD_REGEX = /^[0-9a-zA-Z]+$/;
 export const MAX_DAILY_LIMIT = 100;
 
 export const interfaceLanguages = [
-  {id: 0},
-  {id: 1}
+  {id: 0, name: 'ru'},
+  {id: 1, name: 'en'}
 ];

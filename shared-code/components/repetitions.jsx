@@ -1,11 +1,10 @@
-import i18next from 'i18next';
-
 import log from 'loglevel';
 
 import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {Helmet} from 'react-helmet';
+import {translate} from 'react-i18next';
 
 import * as actionCreators from '../data/action-creators';
 import * as getters from '../data/getters';
@@ -84,6 +83,7 @@ class Repetitions extends React.Component {
   }
 
   render () {
+    const {t} = this.props;
     if (this.startTime) {
       log.debug('Updating repetitions took ' + (Date.now() - this.startTime) + ' ms');
       this.startTime = null;
@@ -96,7 +96,7 @@ class Repetitions extends React.Component {
     return (
       <div>
         <Helmet>
-          <title>{i18next.t('repetitions.title')}</title>
+          <title>{t('repetitions.title')}</title>
         </Helmet>
         <div
             className="repetitions__flashcard"
@@ -110,7 +110,7 @@ class Repetitions extends React.Component {
             <button
                 className="repetitions__button"
                 onClick={this.runRepetition.bind(this, false)}>
-              {i18next.t('repetitions.dontRemember')}
+              {t('repetitions.dontRemember')}
             </button>
             <div
                 className="repetitions__responses-hotkey">
@@ -122,7 +122,7 @@ class Repetitions extends React.Component {
             <button
                 className="repetitions__button"
                 onClick={this.runRepetition.bind(this, true)}>
-              {i18next.t('repetitions.remember')}
+              {t('repetitions.remember')}
             </button>
             <div
                 className="repetitions__responses-hotkey">
@@ -131,7 +131,7 @@ class Repetitions extends React.Component {
           </div>
           <div
               className="repetitions__responses-hotkey-center">
-            {i18next.t('repetitions.turnOver')} : Space
+            {t('repetitions.turnOver')} : Space
           </div>
         </div>
         <div
@@ -149,7 +149,7 @@ class Repetitions extends React.Component {
 
 }
 
-export const RepetitionsContainer = connect(
+const RepetitionsContainer = connect(
   state => ({
     repetitionsForToday: getters.getRepetitionsForToday(state.get('userData')),
     remainingRepetitionsForToday: getters.getRemainingRepetitionsForToday(state.get('userData')),
@@ -159,3 +159,5 @@ export const RepetitionsContainer = connect(
   }),
   actionCreators
 )(Repetitions);
+
+export default translate()(RepetitionsContainer);

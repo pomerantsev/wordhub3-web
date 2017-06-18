@@ -1,9 +1,8 @@
-import i18next from 'i18next';
-
 import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {Helmet} from 'react-helmet';
+import {translate} from 'react-i18next';
 
 import FlashcardInputs from './flashcard-inputs.jsx';
 import NotFound from './not-found.jsx';
@@ -93,10 +92,11 @@ class EditFlashcard extends React.Component {
   }
 
   render () {
+    const {t} = this.props;
     return this.getFlashcard(this.props) ?
       <div>
         <Helmet>
-          <title>{i18next.t('editFlashcard.title')}</title>
+          <title>{t('editFlashcard.title')}</title>
         </Helmet>
         <form
             onSubmit={this.onSubmit}>
@@ -109,12 +109,12 @@ class EditFlashcard extends React.Component {
           />
           <button
               className="edit-flashcard__submit">
-            {i18next.t('editFlashcard.save')}
+            {t('editFlashcard.save')}
           </button>
           <button
               className="edit-flashcard__delete"
               onClick={this.deleteFlashcard}>
-            {i18next.t('editFlashcard.delete')}
+            {t('editFlashcard.delete')}
           </button>
         </form>
       </div> :
@@ -125,9 +125,11 @@ class EditFlashcard extends React.Component {
 
 }
 
-export const EditFlashcardContainer = connect(
+const EditFlashcardContainer = connect(
   state => ({
     flashcards: getters.getFlashcards(state.get('userData'))
   }),
   actionCreators
 )(EditFlashcard);
+
+export default translate()(EditFlashcardContainer);

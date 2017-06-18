@@ -1,8 +1,11 @@
 import dotenv from 'dotenv';
 dotenv.config({silent: true});
 
-import i18n from '../shared-code/locales/i18n';
-import {handle} from 'i18next-express-middleware';
+import 'isomorphic-fetch';
+
+import i18next from 'i18next';
+import {i18nextOptions} from '../shared-code/locales/i18n';
+import ServerLanguageDetector from '../shared-code/locales/server-language-detector';
 import {I18nextProvider} from 'react-i18next';
 
 import log from 'loglevel';
@@ -21,7 +24,6 @@ import {Provider} from 'react-redux';
 import {match, RouterContext} from 'react-router';
 import {fromJS} from 'immutable';
 import transit from 'transit-immutable-js';
-import moment from 'moment';
 
 import fs from 'fs';
 
@@ -30,6 +32,7 @@ import reducer from '../shared-code/reducers/core-reducer';
 import asyncMiddleware from '../shared-code/data/async-middleware';
 import getRoutes from '../shared-code/routes.jsx';
 import * as constants from '../shared-code/data/constants';
+import * as helpers from '../shared-code/utils/helpers';
 
 import NotFound from '../shared-code/components/not-found.jsx';
 
@@ -79,9 +82,7 @@ app.set('view engine', 'ejs');
 
 app.use(cookieParser());
 
-app.use(handle(i18n));
-
-app.use((req, res) => {
+app.use(async function (req, res) {
   function setCookieOnServer (key, jsValue) {
     if (jsValue) {
       try {
@@ -94,8 +95,6 @@ app.use((req, res) => {
     }
   }
 
-  i18n.changeLanguage(req.language);
-
   const store = applyMiddleware(asyncMiddleware)(createStore)(reducer);
 
   store.dispatch(actionCreators.storeUserAgent(req.headers['user-agent']));
@@ -105,8 +104,23 @@ app.use((req, res) => {
     store.dispatch(actionCreators.rehydrateCredentials(credentials, setCookieOnServer));
   } catch (e) {}
 
+  const token = store.getState().getIn(['credentials', 'token']);
+  if (token) {
+    store.dispatch(await actionCreators.storeUserSettings(token));
+  }
+
+  i18next.use(
+    new ServerLanguageDetector(null, {
+      order: ['querystring', 'userPreference', 'header'],
+      lookupQuerystring: 'lng',
+      getUserLanguageId: () => store.getState().getIn(['userData', 'userSettings', 'interfaceLanguageId'])
+    })
+  ).init(i18nextOptions);
+
+  const languageName = i18next.services.languageDetector.detect(req, res);
+  helpers.changeLanguage(languageName);
+
   match({routes: getRoutes(store, setCookieOnServer), location: req.url}, (error, redirectLocation, renderProps) => {
-    moment.locale(req.language);
     if (error) {
       // This is probably an error that happens during async route resolution
       return res.status(500).send(error.message);
@@ -119,7 +133,7 @@ app.use((req, res) => {
     async function renderView () {
       const InitialComponent = (
         <I18nextProvider
-            i18n={i18n}>
+            i18n={i18next}>
           <Provider store={store}>
             <RouterContext {...renderProps} />
           </Provider>
