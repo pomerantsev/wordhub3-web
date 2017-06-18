@@ -52,7 +52,7 @@ class Signup extends React.Component {
         </h2>
         {typeof this.props.signupError === 'number' ?
           <div
-              className="home__alert">
+              className="signup__alert">
             {t(`errors.${this.props.signupError}`)}
           </div> :
           null
@@ -74,6 +74,7 @@ class Signup extends React.Component {
                 className="signup__form-control"
                 required
                 maxLength={constants.MAX_EMAIL_LENGTH}
+                value={this.state.email}
                 onChange={this.onEmailChange.bind(this)}
             />
             <p
@@ -98,6 +99,7 @@ class Signup extends React.Component {
                 minLength={constants.MIN_PASSWORD_LENGTH}
                 maxLength={constants.MAX_PASSWORD_LENGTH}
                 pattern={constants.PASSWORD_REGEX.toString().slice(1, -1)}
+                value={this.state.password}
                 onChange={this.onPasswordChange.bind(this)}
             />
             <p
@@ -114,6 +116,7 @@ class Signup extends React.Component {
                 type="text"
                 className="signup__form-control"
                 maxLength={constants.MAX_NAME_LENGTH}
+                value={this.state.name}
                 onChange={this.onNameChange.bind(this)}
             />
             <p

@@ -22,6 +22,16 @@ export async function syncData (token, timestamp, data) {
   }
 }
 
+export async function updateUserSettings (token, {dailyLimit, name, interfaceLanguageId}) {
+  return await fetch(`${process.env.API_SERVER}/${API_VERSION}/update-user?token=${token}`, {
+    method: 'POST',
+    headers: new Headers({
+      'Content-Type': 'application/json'
+    }),
+    body: JSON.stringify({dailyLimit, name, interfaceLanguageId})
+  });
+}
+
 export async function login (email, password) {
   return await fetch(`${process.env.API_SERVER}/${API_VERSION}/login`, {
     method: 'POST',

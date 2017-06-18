@@ -1,3 +1,7 @@
+.signup__alert {
+  @extend .alert, .alert-danger;
+}
+
 .signup__form-group {
   @extend .form-group;
 }

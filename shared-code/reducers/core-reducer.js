@@ -8,6 +8,8 @@ const INITIAL_CREDENTIALS = Map({});
 
 const INITIAL_USER_DATA = fromJS({
   userSettings: {},
+  userSettingsUpdating: false,
+  userSettingsError: null,
   flashcards: {},
   repetitions: {},
   currentRepetition: null,

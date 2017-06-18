@@ -198,6 +198,14 @@ class AuthedMenu extends React.Component {
                 </Link>
               </li>
               <li>
+                <Link
+                    className="authed-menu__secondary-menu-item"
+                    activeClassName="authed-menu__menu-item--active"
+                    to="/settings">
+                  {i18next.t('menu.settings')}
+                </Link>
+              </li>
+              <li>
                 <a
                     className="authed-menu__secondary-menu-item"
                     onClick={this.logout}>
@@ -247,6 +255,14 @@ class AuthedMenu extends React.Component {
                         activeClassName="authed-menu__menu-dropdown-item--active"
                         to="/stats">
                       {i18next.t('menu.stats')}
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                        className="authed-menu__secondary-menu-dropdown-item"
+                        activeClassName="authed-menu__menu-dropdown-item--active"
+                        to="/settings">
+                      {i18next.t('menu.settings')}
                     </Link>
                   </li>
                   <li

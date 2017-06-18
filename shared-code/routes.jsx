@@ -17,6 +17,7 @@ import {EditFlashcardContainer} from './components/edit-flashcard.jsx';
 import {FlashcardListContainer} from './components/flashcard-list.jsx';
 import {RepetitionsContainer} from './components/repetitions.jsx';
 import {StatsContainer} from './components/stats.jsx';
+import Settings from './components/settings.jsx';
 import NotFound from './components/not-found.jsx';
 
 function onAuthedEnter (store, nextState, replace) {
@@ -94,6 +95,11 @@ function getRoutes (store) {
         <Route
             path="/stats"
             component={StatsContainer}
+        />
+
+        <Route
+            path="/settings"
+            component={Settings}
         />
 
       </Route>

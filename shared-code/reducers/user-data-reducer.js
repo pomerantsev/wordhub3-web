@@ -216,6 +216,30 @@ export default function userDataReducer (state, action) {
     return state
       .set('syncError', action.errorCode);
   }
+  case 'UPDATE_USER_SETTINGS_REQUEST': {
+    return state
+      .set('userSettingsUpdating', true);
+  }
+  case 'UPDATE_USER_SETTINGS_FAILURE': {
+    return state
+      .set('userSettingsUpdating', false)
+      .set('userSettingsError', action.errorCode);
+  }
+  case 'UPDATE_USER_SETTINGS_SUCCESS': {
+    return state
+      .set('userSettingsUpdating', false)
+      .set('userSettingsSuccess', true)
+      .set('userSettingsError', null)
+      .update('userSettings', userSettings => userSettings
+        .set('dailyLimit', action.dailyLimit)
+        .set('name', action.name)
+        .set('interfaceLanguageId', action.interfaceLanguageId));
+  }
+  case 'USER_SETTINGS_LEAVE': {
+    return state
+      .set('userSettingsSuccess', false)
+      .set('userSettingsError', null);
+  }
   case 'SEARCH_STRING_CHANGE': {
     return state
       .set('searchString', action.value);

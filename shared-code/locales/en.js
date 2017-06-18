@@ -182,6 +182,7 @@ const enTranslation = {
     logout: 'Logout',
     repeat: 'Repeat',
     completedOfTotal: '{{completed}} of {{total}}',
+    settings: 'Settings',
     stats: 'Stats'
   },
   notFound: {
@@ -200,6 +201,22 @@ const enTranslation = {
     remember: 'Remember',
     dontRemember: 'Don’t remember',
     turnOver: 'Turn over'
+  },
+  settings: {
+    title: getTitle('Settings'),
+    successMessage: 'Settings saved.',
+    offlineAlert: 'You have to be online to change settings.',
+    heading: 'Settings',
+    dailyLimit: 'Daily limit for new flashcards:',
+    dailyLimitHint: 'It’s not a hard limit, but {{dailyLimitHintLink}}.',
+    dailyLimitHintLinkText: 'it’s still a good idea to keep up the pace',
+    name: 'Name:',
+    interfaceLanguage: 'Interface language:',
+    interfaceLanguages: {
+      0: 'Русский',
+      1: 'English'
+    },
+    save: 'Save'
   },
   signup: {
     title: getTitle('Signup'),

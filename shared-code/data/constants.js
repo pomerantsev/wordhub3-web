@@ -40,3 +40,9 @@ export const MIN_PASSWORD_LENGTH = 6;
 export const MAX_PASSWORD_LENGTH = 25;
 export const MAX_NAME_LENGTH = 25;
 export const PASSWORD_REGEX = /^[0-9a-zA-Z]+$/;
+export const MAX_DAILY_LIMIT = 100;
+
+export const interfaceLanguages = [
+  {id: 0},
+  {id: 1}
+];

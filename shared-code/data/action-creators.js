@@ -132,6 +132,36 @@ export function resetLoggedInState () {
   return {type: 'RESET_LOGGED_IN_STATE'};
 }
 
+export function updateUserSettings ({dailyLimit, name, interfaceLanguageId}) {
+  return function (dispatch, getState) {
+    dispatch(() => ({type: 'UPDATE_USER_SETTINGS_REQUEST'}));
+    api.updateUserSettings(getState().getIn(['credentials', 'token']), {
+      dailyLimit,
+      name,
+      interfaceLanguageId
+    }).then(res => {
+      return res.json().then(data => {
+        if (data.success) {
+          dispatch(setOnline(true));
+          dispatch(() => ({type: 'UPDATE_USER_SETTINGS_SUCCESS', dailyLimit, name, interfaceLanguageId}));
+        } else {
+          dispatch(updateUserSettingsFailure(data.errorCode));
+        }
+      });
+    }, () => {
+      dispatch(updateUserSettingsFailure(constants.ERROR_NETWORK));
+    });
+  };
+}
+
+export function updateUserSettingsFailure (errorCode) {
+  return {type: 'UPDATE_USER_SETTINGS_FAILURE', errorCode};
+}
+
+export function userSettingsLeave () {
+  return {type: 'USER_SETTINGS_LEAVE'};
+}
+
 export function createFlashcard (frontText, backText) {
   const currentTime = Date.now();
   const flashcardUuid = uuid.v4();

@@ -1,0 +1,27 @@
+.settings__success {
+  @extend .alert, .alert-success;
+}
+
+.settings__alert {
+  @extend .alert, .alert-danger;
+}
+
+.settings__warning {
+  @extend .alert, .alert-warning;
+}
+
+.settings__form-group {
+  @extend .form-group;
+}
+
+.settings__form-control {
+  @extend .form-control;
+}
+
+.settings__help-block {
+  @extend .help-block;
+}
+
+.settings__submit {
+  @extend .btn, .btn-primary, .btn-block;
+}

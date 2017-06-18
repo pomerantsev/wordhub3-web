@@ -183,6 +183,7 @@ const ruTranslation = {
     logout: 'Выйти',
     repeat: 'Повторить',
     completedOfTotal: '{{completed}} из {{total}}',
+    settings: 'Настройки',
     stats: 'Статистика'
   },
   notFound: {
@@ -201,6 +202,22 @@ const ruTranslation = {
     remember: 'Помню',
     dontRemember: 'Не помню',
     turnOver: 'Перевернуть'
+  },
+  settings: {
+    title: getTitle('Настройки'),
+    successMessage: 'Настройки сохранены.',
+    offlineAlert: 'Для изменения настроек необходимо соединение с сетью.',
+    heading: 'Настройки',
+    dailyLimit: 'Дневной лимит на создание карточек:',
+    dailyLimitHint: 'Его необязательно соблюдать, но это {{dailyLimitHintLink}}.',
+    dailyLimitHintLinkText: 'подстёгивает',
+    name: 'Имя:',
+    interfaceLanguage: 'Язык интерфейса:',
+    interfaceLanguages: {
+      0: 'Русский',
+      1: 'English'
+    },
+    save: 'Сохранить'
   },
   signup: {
     title: getTitle('Регистрация'),
