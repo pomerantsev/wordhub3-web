@@ -145,7 +145,7 @@ const enTranslation = {
       sameWithPaper: 'You can do the same with paper flashcards. But Wordhub has several advantages:',
       advantages: {
         0: 'It’s faster. You can copy and paste words and phrases from other websites. Or you can do a little bit of typing if you’re comfortable with it.',
-        1: 'It’s accessible everywhere. Just have an Internet connection handy — and your whole flashcard collection is with you. Actually, Wordhub even works offline, while still synchronizing your flashcardы with the cloud when connection is available.',
+        1: 'It’s accessible everywhere. Just have an Internet connection handy — and your whole flashcard collection is with you. Actually, Wordhub even works offline, while still synchronizing your flashcards with the cloud when connection is available.',
         2: 'There’s less mental strain. You needn’t invent a system for your repetitions: the harder it is for you to memorize the word, the more often you have to repeat it. Wordhub takes care of the algorithm.',
         3: 'Wordhub is simpler than most other online learning systems — it just lets you add words to your vocabulary and repeat them at regular intervals. You might actually not need anything else than that.'
       }
