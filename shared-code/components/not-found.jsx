@@ -9,7 +9,10 @@ function NotFound (props) {
       <Helmet>
         <title>{t('notFound.title')}</title>
       </Helmet>
-      {t('notFound.notFound')}
+      <div
+          className="not-found__text">
+        {t('notFound.notFound')}
+      </div>
     </div>
   );
 }
