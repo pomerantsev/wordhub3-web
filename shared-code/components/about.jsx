@@ -150,12 +150,15 @@ class About extends React.Component {
             className="about__heading--top-margin">
           {t('about.whatElse.header')}
         </h4>
-        {[0, 1, 2].map(item => (
-          <p
-              key={item}>
-            {t(`about.whatElse.paragraphs.${item}`)}
-          </p>
-        ))}
+        <p>{t('about.whatElse.paragraph')}</p>
+        <ul>
+          {[0, 1, 2].map(item => (
+            <li
+                key={item}>
+              {t(`about.whatElse.listItems.${item}`)}
+            </li>
+          ))}
+        </ul>
       </div>
     );
   }
