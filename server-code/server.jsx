@@ -143,6 +143,8 @@ app.use(async function (req, res) {
       const componentHTML = renderToString(InitialComponent);
       const reactHelmet = ReactHelmet.renderStatic();
 
+      // We want to send CSS along with the HTML so that
+      // Google’s Page Speed Insigts website doesn’t complain.
       const css = await new Promise(resolve => {
         fs.readFile('dist/styles/main.css', 'utf8', (err, cssData) => {
           resolve(cssData);

@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "aws-deploy": "./scripts/aws-deploy.sh",
-    "dev": "nodemon --watch server-code --watch shared-code --watch test --ext js,jsx app.js",
+    "dev": "./node_modules/.bin/nodemon --watch server-code --watch shared-code --watch test --ext js,jsx app.js",
     "lint": "./scripts/lint.sh",
     "start": "node app.js",
     "test": "export BABEL_ENV=node; ./node_modules/.bin/mocha --compilers js:babel-register ./test/**/*.js"
