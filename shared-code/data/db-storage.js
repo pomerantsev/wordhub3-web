@@ -179,6 +179,7 @@ export function getData (openDbPromise) {
     });
   }, () => ({
     flashcards: [],
-    repetitions: []
+    repetitions: [],
+    userSettings: {}
   }));
 }
